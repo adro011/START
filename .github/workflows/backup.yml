@@ -1,0 +1,33 @@
+name: DB backup (weekly)
+
+# Free Supabase has no point-in-time recovery (plan §10), so keep a weekly
+# logical dump as a private workflow artifact. Requires repo secrets:
+#   SUPABASE_DB_URL      (postgres connection string, pooler port 6543 or direct)
+#   SUPABASE_PROJECT_REF (e.g. abcdefghijklm)
+# Manual trigger supported for pre-deploy snapshots.
+
+on:
+  schedule:
+    - cron: '0 2 * * 0' # Sundays 02:00 UTC
+  workflow_dispatch:
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Dump database (schema + data)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then echo "Missing SUPABASE_DB_URL secret" >&2; exit 1; fi
+          npx supabase db dump --db-url "$SUPABASE_DB_URL" -f backup.sql
+          ls -lh backup.sql
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pg-dump-${{ github.run_number }}
+          path: backup.sql
+          retention-days: 30

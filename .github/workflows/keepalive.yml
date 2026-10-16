@@ -1,0 +1,23 @@
+name: Keep-alive ping
+
+# Supabase free projects pause after inactivity (plan §10). Ping the
+# production site every 5 days to keep both the site and the DB warm.
+# Requires repo secret: SITE_URL (e.g. https://shop.example.com)
+
+on:
+  schedule:
+    - cron: '0 8 */5 * *' # every 5 days 08:00 UTC
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping site + health endpoint
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: |
+          if [ -z "$SITE_URL" ]; then echo "Missing SITE_URL secret" >&2; exit 1; fi
+          curl -fsS --max-time 30 "$SITE_URL" -o /dev/null -w "site %{http_code}\n"
+          curl -fsS --max-time 30 "$SITE_URL/api/health" -o /dev/null -w "health %{http_code}\n" || \
+            echo "no /api/health route yet (ok until phase 2)"

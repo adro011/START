@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="Kids editorial placeholder">
+  <title>Kids — editorial placeholder</title>
+  <defs>
+    <linearGradient id="kidsbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7E9181"/>
+      <stop offset="0.45" stop-color="#A8B5A6"/>
+      <stop offset="0.72" stop-color="#F2CCC3"/>
+      <stop offset="1" stop-color="#D5573B"/>
+    </linearGradient>
+    <radialGradient id="kidsglow" cx="0.7" cy="0.7" r="1">
+      <stop offset="0" stop-color="#FBF6F3" stop-opacity="0.55"/>
+      <stop offset="0.55" stop-color="#FBF6F3" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="kidspat" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M32 8 L40 24 L56 24 L43 33 L47 49 L32 40 L17 49 L21 33 L8 24 L24 24 Z" fill="none" stroke="#172121" stroke-opacity="0.12" stroke-width="1.5"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#kidsbg)"/>
+  <rect width="1600" height="900" fill="url(#kidspat)"/>
+  <rect width="1600" height="900" fill="url(#kidsglow)"/>
+  <rect x="70" y="70" width="1460" height="760" fill="none" stroke="#FBF6F3" stroke-opacity="0.6" stroke-width="1.5"/>
+  <text x="800" y="392" text-anchor="middle" font-family="Verdana, sans-serif" font-size="26" letter-spacing="10" fill="#172121" opacity="0.9">NEW SEASON · MADE IN BANGLADESH</text>
+  <text x="800" y="520" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="170" font-weight="500" letter-spacing="4" fill="#172121">Kids<tspan fill="#D5573B">.</tspan></text>
+  <rect x="740" y="570" width="120" height="2" fill="#172121"/>
+  <text x="800" y="622" text-anchor="middle" font-family="Verdana, sans-serif" font-size="24" letter-spacing="5" fill="#172121" opacity="0.85">PANJABI · FROCKS · SETS — 1600 × 900</text>
+</svg>

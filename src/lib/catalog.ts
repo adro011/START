@@ -1,0 +1,1179 @@
+// Plain TS data layer — intentionally NOT `server-only` so both
+// server components and client components (search palette) can import it.
+// Money is integer paisa everywhere (249000 = ৳2,490).
+
+import type { CatalogProduct } from "@/types/catalog";
+
+export type Section = "men" | "women" | "kids";
+export type VirtualSection = Section | "new-arrivals" | "sale";
+
+export type ProductImage = { src: string; alt: string };
+export type ProductColor = { name: string; hex: string };
+export type ProductVariant = {
+  sku: string;
+  size: string;
+  color: string;
+  colorHex: string;
+  stock: number;
+  priceOverridePaisa?: number | null;
+};
+
+export type Product = {
+  slug: string;
+  name: string;
+  nameBn?: string;
+  description: string;
+  fabric: string;
+  care: string;
+  fitNotes?: string;
+  section: Section;
+  /** category slug (matches CATEGORIES) */
+  category: string;
+  categoryName: string;
+  pricePaisa: number;
+  compareAtPaisa?: number;
+  images: ProductImage[];
+  sizes: string[];
+  colors: ProductColor[];
+  variants: ProductVariant[];
+  rating: number;
+  reviewCount: number;
+  isNew: boolean;
+  isSale: boolean;
+  isFeatured: boolean;
+};
+
+export type CategoryChild = { slug: string; name: string };
+export type Category = {
+  slug: string;
+  name: string;
+  nameBn?: string;
+  section: Section;
+  image?: string;
+  children?: CategoryChild[];
+};
+
+export const SECTIONS: VirtualSection[] = ["men", "women", "kids", "new-arrivals", "sale"];
+
+export function isValidSection(s: string): s is VirtualSection {
+  return (SECTIONS as string[]).includes(s);
+}
+
+export const SIZES_DEFAULT = ["S", "M", "L", "XL"] as const;
+
+/* ------------------------------------------------------------------ */
+/* Categories — mirrors DB seed tree (plan.md §6)                      */
+/* ------------------------------------------------------------------ */
+
+export const CATEGORIES: Category[] = [
+  // ---- Men ----
+  {
+    slug: "panjabi",
+    name: "Panjabi",
+    section: "men",
+    image: "/hero/men.svg",
+    children: [
+      { slug: "panjabi-cotton", name: "Cotton & Blends" },
+      { slug: "panjabi-addi", name: "Addi" },
+      { slug: "panjabi-endi", name: "Endi" },
+      { slug: "panjabi-silk", name: "Silk" },
+      { slug: "panjabi-muslin", name: "Muslin & Jamdani" },
+      { slug: "panjabi-taaga", name: "Taaga Man Panjabis" },
+    ],
+  },
+  {
+    slug: "panjabi-pajama-sets",
+    name: "Panjabi Pajama Sets",
+    section: "men",
+    children: [
+      { slug: "pajama-set-cotton", name: "Cotton & Blends" },
+      { slug: "pajama-set-silk", name: "Silk" },
+    ],
+  },
+  { slug: "pajama", name: "Pajama", section: "men" },
+  { slug: "coaty", name: "Coaty", section: "men" },
+  { slug: "short-kurta", name: "Short Kurta", section: "men" },
+  { slug: "jackets", name: "Jackets", section: "men" },
+  {
+    slug: "trousers",
+    name: "Trousers",
+    section: "men",
+    children: [
+      { slug: "trousers-chinos", name: "Chinos" },
+      { slug: "trousers-denim", name: "Denim" },
+      { slug: "trousers-lounge", name: "Lounge Wear" },
+    ],
+  },
+  {
+    slug: "shirts",
+    name: "Shirts",
+    section: "men",
+    children: [
+      { slug: "shirts-ethnic", name: "Ethnic" },
+      { slug: "shirts-casual", name: "Casual" },
+      { slug: "shirts-executive", name: "Executive" },
+    ],
+  },
+  {
+    slug: "fatua",
+    name: "Fatua",
+    section: "men",
+    children: [
+      { slug: "fatua-cotton", name: "Cotton & Blends" },
+      { slug: "fatua-endi", name: "Endi" },
+      { slug: "fatua-silk", name: "Silk" },
+    ],
+  },
+  { slug: "lungi", name: "Lungi", section: "men" },
+  { slug: "shawls", name: "Shawls", section: "men" },
+  { slug: "scarves-mufflers", name: "Scarves & Mufflers", section: "men" },
+  { slug: "t-shirts", name: "T-Shirts", section: "men" },
+  { slug: "polos", name: "Polos", section: "men" },
+  { slug: "sleeping-suits", name: "Sleeping Suits", section: "men" },
+  {
+    slug: "shoes",
+    name: "Shoes",
+    section: "men",
+    children: [
+      { slug: "shoes-sandals", name: "Sandals" },
+      { slug: "shoes-formal", name: "Shoes" },
+      { slug: "shoes-nagra", name: "Nagras" },
+    ],
+  },
+  {
+    slug: "accessories",
+    name: "Accessories",
+    section: "men",
+    children: [
+      { slug: "acc-belts", name: "Belts" },
+      { slug: "acc-wallets", name: "Wallets" },
+      { slug: "acc-card-holders", name: "Card Holders" },
+      { slug: "acc-key-rings", name: "Key Rings" },
+      { slug: "acc-bags", name: "Bags" },
+      { slug: "acc-attar", name: "Attar" },
+    ],
+  },
+  { slug: "tupi", name: "Tupi", section: "men" },
+
+  // ---- Women ----
+  { slug: "jacket", name: "Jacket", section: "women" },
+  { slug: "gown", name: "Gown", section: "women" },
+  { slug: "ladies-cap", name: "Ladies Cap", section: "women" },
+  { slug: "skirt", name: "Skirt", section: "women" },
+  { slug: "ladies-polo", name: "Ladies Polo", section: "women" },
+  {
+    slug: "tunic",
+    name: "Tunic",
+    section: "women",
+    children: [
+      { slug: "tunic-long", name: "Long Tunic" },
+      { slug: "tunic-short", name: "Short Tunic" },
+    ],
+  },
+  {
+    slug: "pcs-sets",
+    name: "3 Pcs & 2 Pcs",
+    section: "women",
+    children: [
+      { slug: "pcs-cord-set", name: "Cord-Set" },
+      { slug: "pcs-3pcs", name: "3 Pcs Set" },
+      { slug: "pcs-2pcs", name: "2 Pcs" },
+    ],
+  },
+  {
+    slug: "tops-shirt",
+    name: "Tops & Shirt",
+    section: "women",
+    children: [
+      { slug: "tops-tshirt", name: "T-shirt" },
+      { slug: "tops-polo", name: "Bangladesh Polo" },
+      { slug: "tops-top", name: "Tops" },
+    ],
+  },
+  { slug: "sharee", name: "Sharee", section: "women", image: "/hero/women.svg" },
+  { slug: "blazer", name: "Blazer", section: "women" },
+
+  // ---- Kids ----
+  {
+    slug: "boys",
+    name: "Boys",
+    section: "kids",
+    image: "/hero/kids.svg",
+    children: [
+      { slug: "boys-kabli", name: "Kabli" },
+      { slug: "boys-denim", name: "Boy's Denim" },
+      { slug: "boys-cord-set", name: "Boy's Cord Set" },
+      { slug: "boys-shirt", name: "Shirt" },
+      { slug: "boys-polo", name: "Polo Shirt" },
+      { slug: "boys-panjabi", name: "Panjabi" },
+      { slug: "boys-tank", name: "Tank Top" },
+      { slug: "boys-tshirt", name: "T-Shirt" },
+    ],
+  },
+  {
+    slug: "girls",
+    name: "Girls",
+    section: "kids",
+    image: "/hero/kids.svg",
+    children: [
+      { slug: "girls-3pcs", name: "3 Pcs" },
+      { slug: "girls-2pcs", name: "2 Pcs" },
+      { slug: "girls-jumpsuit", name: "Jumpsuit" },
+      { slug: "girls-tshirt", name: "T-Shirts" },
+      { slug: "girls-tops", name: "Tops" },
+    ],
+  },
+];
+
+export function getCategory(slug: string): Category | undefined {
+  const direct = CATEGORIES.find((c) => c.slug === slug);
+  if (direct) return direct;
+  for (const c of CATEGORIES) {
+    const child = c.children?.find((k) => k.slug === slug);
+    if (child) return { slug: child.slug, name: child.name, section: c.section };
+  }
+  return undefined;
+}
+
+/* ------------------------------------------------------------------ */
+/* Variant builder                                                     */
+/* ------------------------------------------------------------------ */
+
+function buildVariants(
+  prefix: string,
+  sizes: string[],
+  colors: ProductColor[],
+  seed = 0,
+): ProductVariant[] {
+  const out: ProductVariant[] = [];
+  sizes.forEach((size, si) => {
+    colors.forEach((c, ci) => {
+      const idx = si * colors.length + ci + seed;
+      const stock = (prefix.length * 3 + idx * 7 + seed * 5) % 13; // 0–12 deterministic
+      out.push({
+        sku: `DEMO-${prefix}-${c.name.slice(0, 3).toUpperCase()}-${size}`,
+        size,
+        color: c.name,
+        colorHex: c.hex,
+        stock,
+      });
+    });
+  });
+  return out;
+}
+
+const S = ["S", "M", "L", "XL"];
+
+/* ------------------------------------------------------------------ */
+/* 24 demo products (8 per section)                                    */
+/* ------------------------------------------------------------------ */
+
+export const PRODUCTS: Product[] = [
+  // ================= MEN =================
+  {
+    slug: "classic-cotton-panjabi-white",
+    name: "Classic Cotton Panjabi — White",
+    description:
+      "Everyday premium cotton panjabi with metal buttons, side slits and a structured band collar. Breathable weave for Jummah, office and Eid.",
+    fabric: "100% premium cotton, 140 GSM",
+    care: "Machine wash cold, hang dry in shade, warm iron.",
+    fitNotes: "Regular fit. Model is 5'9\" and wears size M.",
+    section: "men",
+    category: "panjabi",
+    categoryName: "Panjabi",
+    pricePaisa: 249000,
+    compareAtPaisa: 299000,
+    images: [
+      { src: "/hero/men.svg", alt: "Classic Cotton Panjabi front view" },
+      { src: "/hero/men.svg", alt: "Classic Cotton Panjabi collar detail" },
+      { src: "/hero/men.svg", alt: "Classic Cotton Panjabi on model" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "White", hex: "#f5f5f4" },
+      { name: "Ecru", hex: "#e7dcc8" },
+    ],
+    variants: buildVariants("PANJABI01", S, [
+      { name: "White", hex: "#f5f5f4" },
+      { name: "Ecru", hex: "#e7dcc8" },
+    ], 1),
+    rating: 4.8,
+    reviewCount: 214,
+    isNew: true,
+    isSale: true,
+    isFeatured: true,
+  },
+  {
+    slug: "premium-silk-panjabi-maroon",
+    name: "Premium Silk Panjabi — Maroon",
+    description:
+      "Festive silk-blend panjabi with subtle self-jacquard, wooden buttons and contrast piping. Made for weddings and Eid mornings.",
+    fabric: "Silk–cotton blend, artisanal finish",
+    care: "Dry clean recommended. Cool iron inside out.",
+    fitNotes: "Slim-regular fit with extra shoulder room.",
+    section: "men",
+    category: "panjabi",
+    categoryName: "Panjabi",
+    pricePaisa: 499000,
+    compareAtPaisa: 599000,
+    images: [
+      { src: "/hero/men.svg", alt: "Silk Panjabi front view" },
+      { src: "/hero/men.svg", alt: "Silk Panjabi fabric close-up" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Maroon", hex: "#7f1d1d" },
+      { name: "Navy", hex: "#1e3a5f" },
+    ],
+    variants: buildVariants("SILK02", S, [
+      { name: "Maroon", hex: "#7f1d1d" },
+      { name: "Navy", hex: "#1e3a5f" },
+    ], 2),
+    rating: 4.9,
+    reviewCount: 96,
+    isNew: false,
+    isSale: true,
+    isFeatured: true,
+  },
+  {
+    slug: "addi-panjabi-sky",
+    name: "Addi Panjabi — Sky",
+    description: "Featherlight Addi cotton panjabi with snap buttons. Coolest pick for summer prayers and all-day wear.",
+    fabric: "Addi voile cotton",
+    care: "Gentle machine wash, line dry.",
+    section: "men",
+    category: "panjabi",
+    categoryName: "Panjabi",
+    pricePaisa: 329000,
+    images: [
+      { src: "/hero/men.svg", alt: "Addi Panjabi front" },
+      { src: "/hero/men.svg", alt: "Addi Panjabi back" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Sky", hex: "#bae6fd" },
+      { name: "Mint", hex: "#a7f3d0" },
+    ],
+    variants: buildVariants("ADDI03", S, [
+      { name: "Sky", hex: "#bae6fd" },
+      { name: "Mint", hex: "#a7f3d0" },
+    ], 3),
+    rating: 4.6,
+    reviewCount: 58,
+    isNew: true,
+    isSale: false,
+    isFeatured: false,
+  },
+  {
+    slug: "endi-fatua-natural",
+    name: "Endi Fatua — Natural",
+    description: "Handloom Endi fatua with wooden toggles. Textured, breathable, proudly heritage.",
+    fabric: "Handloom Endi cotton",
+    care: "Hand wash cold with mild detergent.",
+    section: "men",
+    category: "fatua",
+    categoryName: "Fatua",
+    pricePaisa: 189000,
+    images: [
+      { src: "/hero/men.svg", alt: "Endi Fatua front" },
+      { src: "/hero/men.svg", alt: "Endi Fatua texture detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Natural", hex: "#d6c7a8" },
+      { name: "Olive", hex: "#7e9181" },
+    ],
+    variants: buildVariants("FATUA04", S, [
+      { name: "Natural", hex: "#d6c7a8" },
+      { name: "Olive", hex: "#7e9181" },
+    ], 4),
+    rating: 4.7,
+    reviewCount: 41,
+    isNew: false,
+    isSale: false,
+    isFeatured: false,
+  },
+  {
+    slug: "slim-chino-trousers-khaki",
+    name: "Slim Chinos — Khaki",
+    description: "Stretch twill chinos with clean tapered leg. Office to dawat without a change.",
+    fabric: "Cotton twill with 2% elastane",
+    care: "Machine wash, tumble low.",
+    fitNotes: "Slim fit, mid-rise. Take usual size.",
+    section: "men",
+    category: "trousers",
+    categoryName: "Trousers",
+    pricePaisa: 179000,
+    compareAtPaisa: 229000,
+    images: [
+      { src: "/hero/men.svg", alt: "Khaki chinos front" },
+      { src: "/hero/men.svg", alt: "Khaki chinos detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Khaki", hex: "#c2a878" },
+      { name: "Charcoal", hex: "#374151" },
+    ],
+    variants: buildVariants("CHINO05", S, [
+      { name: "Khaki", hex: "#c2a878" },
+      { name: "Charcoal", hex: "#374151" },
+    ], 5),
+    rating: 4.5,
+    reviewCount: 133,
+    isNew: false,
+    isSale: true,
+    isFeatured: false,
+  },
+  {
+    slug: "executive-shirt-lightblue",
+    name: "Executive Shirt — Light Blue",
+    description: "Wrinkle-resistant poplin shirt with reinforced collar. Boardroom ready.",
+    fabric: "Cotton poplin, easy-iron",
+    care: "Machine wash, warm iron.",
+    section: "men",
+    category: "shirts",
+    categoryName: "Shirts",
+    pricePaisa: 159000,
+    images: [
+      { src: "/hero/men.svg", alt: "Executive shirt front" },
+      { src: "/hero/men.svg", alt: "Executive shirt cuff detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Light Blue", hex: "#bfdbfe" },
+      { name: "White", hex: "#ffffff" },
+    ],
+    variants: buildVariants("SHIRT06", S, [
+      { name: "Light Blue", hex: "#bfdbfe" },
+      { name: "White", hex: "#ffffff" },
+    ], 6),
+    rating: 4.4,
+    reviewCount: 87,
+    isNew: true,
+    isSale: false,
+    isFeatured: false,
+  },
+  {
+    slug: "taaga-coaty-charcoal",
+    name: "Taaga Coaty — Charcoal",
+    description: "Structured sleeveless coaty to layer over any panjabi. Instant wedding-guest upgrade.",
+    fabric: "Matte suiting blend",
+    care: "Dry clean only.",
+    section: "men",
+    category: "coaty",
+    categoryName: "Coaty",
+    pricePaisa: 359000,
+    images: [
+      { src: "/hero/men.svg", alt: "Coaty front" },
+      { src: "/hero/men.svg", alt: "Coaty layered look" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Charcoal", hex: "#374151" },
+      { name: "Beige", hex: "#e5d5b8" },
+    ],
+    variants: buildVariants("COATY07", S, [
+      { name: "Charcoal", hex: "#374151" },
+      { name: "Beige", hex: "#e5d5b8" },
+    ], 7),
+    rating: 4.7,
+    reviewCount: 29,
+    isNew: false,
+    isSale: false,
+    isFeatured: true,
+  },
+  {
+    slug: "comfort-lungi-check",
+    name: "Comfort Lungi — Green Check",
+    description: "Soft combed-cotton lungi with colourfast checks. Home essential.",
+    fabric: "100% combed cotton",
+    care: "Machine wash cold, sun dry.",
+    section: "men",
+    category: "lungi",
+    categoryName: "Lungi",
+    pricePaisa: 99000,
+    compareAtPaisa: 129000,
+    images: [
+      { src: "/hero/men.svg", alt: "Lungi folded" },
+      { src: "/hero/men.svg", alt: "Lungi check detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Green Check", hex: "#4d7c0f" },
+      { name: "Blue Check", hex: "#1e40af" },
+    ],
+    variants: buildVariants("LUNGI08", S, [
+      { name: "Green Check", hex: "#4d7c0f" },
+      { name: "Blue Check", hex: "#1e40af" },
+    ], 8),
+    rating: 4.3,
+    reviewCount: 302,
+    isNew: false,
+    isSale: true,
+    isFeatured: false,
+  },
+
+  // ================= WOMEN =================
+  {
+    slug: "muslin-sharee-rose",
+    name: "Muslin Sharee — Rose",
+    description:
+      "Whisper-light muslin sharee with hand-finished edge and unstitched blouse piece. Drapes like a dream for Eid and weddings.",
+    fabric: "Pure muslin, blouse piece included",
+    care: "Dry clean recommended, store folded in muslin cloth.",
+    section: "women",
+    category: "sharee",
+    categoryName: "Sharee",
+    pricePaisa: 549000,
+    images: [
+      { src: "/hero/women.svg", alt: "Muslin sharee drape" },
+      { src: "/hero/women.svg", alt: "Muslin sharee border detail" },
+      { src: "/hero/women.svg", alt: "Muslin sharee blouse piece" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Rose", hex: "#f2ccc3" },
+      { name: "Ivory", hex: "#faf7f2" },
+    ],
+    variants: buildVariants("SHAREE09", S, [
+      { name: "Rose", hex: "#f2ccc3" },
+      { name: "Ivory", hex: "#faf7f2" },
+    ], 1),
+    rating: 4.9,
+    reviewCount: 178,
+    isNew: true,
+    isSale: false,
+    isFeatured: true,
+  },
+  {
+    slug: "jamdani-sharee-emerald",
+    name: "Jamdani Sharee — Emerald",
+    description: "Heritage Jamdani with discontinuous-weave motifs. A keeper piece woven in Demra tradition.",
+    fabric: "Fine cotton-silk Jamdani",
+    care: "Dry clean only. Kata wash by specialist as needed.",
+    section: "women",
+    category: "sharee",
+    categoryName: "Sharee",
+    pricePaisa: 899000,
+    images: [
+      { src: "/hero/women.svg", alt: "Jamdani sharee full drape" },
+      { src: "/hero/women.svg", alt: "Jamdani motif close-up" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Emerald", hex: "#065f46" },
+      { name: "Crimson", hex: "#991b1b" },
+    ],
+    variants: buildVariants("JAMD10", S, [
+      { name: "Emerald", hex: "#065f46" },
+      { name: "Crimson", hex: "#991b1b" },
+    ], 2),
+    rating: 5.0,
+    reviewCount: 64,
+    isNew: false,
+    isSale: false,
+    isFeatured: true,
+  },
+  {
+    slug: "lawn-3pcs-mint",
+    name: "Lawn 3Pcs — Mint",
+    description: "Premium lawn kameez with embroidered neckline, straight pajama and chiffon dupatta. Everyday elegance.",
+    fabric: "Swiss lawn + chiffon dupatta",
+    care: "Gentle wash, dry in shade.",
+    section: "women",
+    category: "pcs-sets",
+    categoryName: "3 Pcs & 2 Pcs",
+    pricePaisa: 299000,
+    compareAtPaisa: 359000,
+    images: [
+      { src: "/hero/women.svg", alt: "Lawn 3pcs set" },
+      { src: "/hero/women.svg", alt: "Lawn 3pcs embroidery detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Mint", hex: "#a7f3d0" },
+      { name: "Peach", hex: "#fed7aa" },
+    ],
+    variants: buildVariants("LAWN11", S, [
+      { name: "Mint", hex: "#a7f3d0" },
+      { name: "Peach", hex: "#fed7aa" },
+    ], 3),
+    rating: 4.6,
+    reviewCount: 241,
+    isNew: false,
+    isSale: true,
+    isFeatured: false,
+  },
+  {
+    slug: "cord-set-lavender",
+    name: "Cord-Set — Lavender",
+    description: "Relaxed co-ord set: boxy shirt + wide-leg trouser. Airport, brunch, repeat.",
+    fabric: "Crepe blend, no iron needed",
+    care: "Machine wash, hang dry.",
+    section: "women",
+    category: "pcs-sets",
+    categoryName: "3 Pcs & 2 Pcs",
+    pricePaisa: 249000,
+    images: [
+      { src: "/hero/women.svg", alt: "Cord set front" },
+      { src: "/hero/women.svg", alt: "Cord set back" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Lavender", hex: "#ddd6fe" },
+      { name: "Sand", hex: "#e7d8b7" },
+    ],
+    variants: buildVariants("CORD12", S, [
+      { name: "Lavender", hex: "#ddd6fe" },
+      { name: "Sand", hex: "#e7d8b7" },
+    ], 4),
+    rating: 4.5,
+    reviewCount: 73,
+    isNew: true,
+    isSale: false,
+    isFeatured: false,
+  },
+  {
+    slug: "long-tunic-terracotta",
+    name: "Long Tunic — Terracotta",
+    description: "A-line long tunic with side slits and wooden buttons. Pairs with jeans or straight pants.",
+    fabric: "Yarn-dyed cotton",
+    care: "Machine wash cold.",
+    section: "women",
+    category: "tunic",
+    categoryName: "Tunic",
+    pricePaisa: 199000,
+    images: [
+      { src: "/hero/women.svg", alt: "Long tunic front" },
+      { src: "/hero/women.svg", alt: "Long tunic side slit" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Terracotta", hex: "#d5573b" },
+      { name: "Sage", hex: "#7e9181" },
+    ],
+    variants: buildVariants("TUNIC13", S, [
+      { name: "Terracotta", hex: "#d5573b" },
+      { name: "Sage", hex: "#7e9181" },
+    ], 5),
+    rating: 4.4,
+    reviewCount: 52,
+    isNew: false,
+    isSale: false,
+    isFeatured: false,
+  },
+  {
+    slug: "georgette-gown-midnight",
+    name: "Georgette Gown — Midnight",
+    description: "Flowing georgette gown with inner slip and belt. Evening-ready in one step.",
+    fabric: "Georgette with crepe lining",
+    care: "Dry clean recommended.",
+    section: "women",
+    category: "gown",
+    categoryName: "Gown",
+    pricePaisa: 449000,
+    compareAtPaisa: 529000,
+    images: [
+      { src: "/hero/women.svg", alt: "Gown full length" },
+      { src: "/hero/women.svg", alt: "Gown waist detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Midnight", hex: "#172121" },
+      { name: "Plum", hex: "#6b21a8" },
+    ],
+    variants: buildVariants("GOWN14", S, [
+      { name: "Midnight", hex: "#172121" },
+      { name: "Plum", hex: "#6b21a8" },
+    ], 6),
+    rating: 4.7,
+    reviewCount: 39,
+    isNew: false,
+    isSale: true,
+    isFeatured: false,
+  },
+  {
+    slug: "casual-tops-floral",
+    name: "Casual Top — Floral",
+    description: "Soft rayon top with all-over floral print and smocked back. University-to-outing staple.",
+    fabric: "Viscose rayon",
+    care: "Gentle wash.",
+    section: "women",
+    category: "tops-shirt",
+    categoryName: "Tops & Shirt",
+    pricePaisa: 129000,
+    images: [
+      { src: "/hero/women.svg", alt: "Floral top front" },
+      { src: "/hero/women.svg", alt: "Floral top print detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Floral Pink", hex: "#f9a8d4" },
+      { name: "Floral Blue", hex: "#93c5fd" },
+    ],
+    variants: buildVariants("TOP15", S, [
+      { name: "Floral Pink", hex: "#f9a8d4" },
+      { name: "Floral Blue", hex: "#93c5fd" },
+    ], 7),
+    rating: 4.2,
+    reviewCount: 118,
+    isNew: true,
+    isSale: false,
+    isFeatured: false,
+  },
+  {
+    slug: "ladies-blazer-sand",
+    name: "Ladies Blazer — Sand",
+    description: "Single-breasted blazer with soft shoulder. Sharp over sharee-blouse or shirt.",
+    fabric: "Poly-viscose suiting",
+    care: "Dry clean only.",
+    section: "women",
+    category: "blazer",
+    categoryName: "Blazer",
+    pricePaisa: 399000,
+    images: [
+      { src: "/hero/women.svg", alt: "Blazer front" },
+      { src: "/hero/women.svg", alt: "Blazer lapel detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Sand", hex: "#e7d8b7" },
+      { name: "Black", hex: "#111827" },
+    ],
+    variants: buildVariants("BLAZER16", S, [
+      { name: "Sand", hex: "#e7d8b7" },
+      { name: "Black", hex: "#111827" },
+    ], 8),
+    rating: 4.6,
+    reviewCount: 27,
+    isNew: true,
+    isSale: false,
+    isFeatured: true,
+  },
+
+  // ================= KIDS =================
+  {
+    slug: "boys-kabli-mustard",
+    name: "Boys Kabli — Mustard",
+    description: "Mini kabli set with pajama. Soft cotton so he can run, jump and sit through the dawat.",
+    fabric: "Soft cotton, elastic pajama",
+    care: "Machine wash.",
+    section: "kids",
+    category: "boys",
+    categoryName: "Boys",
+    pricePaisa: 149000,
+    images: [
+      { src: "/hero/kids.svg", alt: "Boys kabli set" },
+      { src: "/hero/kids.svg", alt: "Boys kabli detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Mustard", hex: "#d97706" },
+      { name: "Teal", hex: "#0d9488" },
+    ],
+    variants: buildVariants("KABLI17", S, [
+      { name: "Mustard", hex: "#d97706" },
+      { name: "Teal", hex: "#0d9488" },
+    ], 1),
+    rating: 4.8,
+    reviewCount: 84,
+    isNew: true,
+    isSale: false,
+    isFeatured: true,
+  },
+  {
+    slug: "boys-panjabi-cream",
+    name: "Boys Panjabi — Cream",
+    description: "Classic boys panjabi with snap buttons at the back — easy change, no fuss.",
+    fabric: "Cotton blend",
+    care: "Machine wash.",
+    section: "kids",
+    category: "boys",
+    categoryName: "Boys",
+    pricePaisa: 139000,
+    images: [
+      { src: "/hero/kids.svg", alt: "Boys panjabi front" },
+      { src: "/hero/kids.svg", alt: "Boys panjabi back snap" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Cream", hex: "#fef3c7" },
+      { name: "Sky", hex: "#bae6fd" },
+    ],
+    variants: buildVariants("BPANJ18", S, [
+      { name: "Cream", hex: "#fef3c7" },
+      { name: "Sky", hex: "#bae6fd" },
+    ], 2),
+    rating: 4.7,
+    reviewCount: 61,
+    isNew: false,
+    isSale: false,
+    isFeatured: false,
+  },
+  {
+    slug: "boys-denim-set-indigo",
+    name: "Boys Denim Set — Indigo",
+    description: "Denim shirt + jogger set with grow-room. Playground proof.",
+    fabric: "Soft denim + jersey",
+    care: "Machine wash inside out.",
+    section: "kids",
+    category: "boys",
+    categoryName: "Boys",
+    pricePaisa: 189000,
+    compareAtPaisa: 229000,
+    images: [
+      { src: "/hero/kids.svg", alt: "Boys denim set" },
+      { src: "/hero/kids.svg", alt: "Boys denim set detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Indigo", hex: "#3730a3" },
+      { name: "Stone", hex: "#a8a29e" },
+    ],
+    variants: buildVariants("BDEN19", S, [
+      { name: "Indigo", hex: "#3730a3" },
+      { name: "Stone", hex: "#a8a29e" },
+    ], 3),
+    rating: 4.5,
+    reviewCount: 47,
+    isNew: false,
+    isSale: true,
+    isFeatured: false,
+  },
+  {
+    slug: "girls-3pcs-peach",
+    name: "Girls 3Pcs — Peach",
+    description: "Frock-style kameez with churidar and net dupatta. Twirl-approved for Eid.",
+    fabric: "Georgette + cotton lining",
+    care: "Gentle wash.",
+    section: "kids",
+    category: "girls",
+    categoryName: "Girls",
+    pricePaisa: 179000,
+    images: [
+      { src: "/hero/kids.svg", alt: "Girls 3pcs set" },
+      { src: "/hero/kids.svg", alt: "Girls 3pcs dupatta detail" },
+      { src: "/hero/kids.svg", alt: "Girls 3pcs back" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Peach", hex: "#fed7aa" },
+      { name: "Mint", hex: "#a7f3d0" },
+    ],
+    variants: buildVariants("G3PCS20", S, [
+      { name: "Peach", hex: "#fed7aa" },
+      { name: "Mint", hex: "#a7f3d0" },
+    ], 4),
+    rating: 4.8,
+    reviewCount: 92,
+    isNew: true,
+    isSale: false,
+    isFeatured: false,
+  },
+  {
+    slug: "girls-2pcs-sky",
+    name: "Girls 2Pcs — Sky",
+    description: "Printed tunic + pajama set in breathable cotton. School-to-play in comfort.",
+    fabric: "100% cotton",
+    care: "Machine wash.",
+    section: "kids",
+    category: "girls",
+    categoryName: "Girls",
+    pricePaisa: 159000,
+    images: [
+      { src: "/hero/kids.svg", alt: "Girls 2pcs set" },
+      { src: "/hero/kids.svg", alt: "Girls 2pcs print detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Sky", hex: "#bae6fd" },
+      { name: "Lemon", hex: "#fef08a" },
+    ],
+    variants: buildVariants("G2PCS21", S, [
+      { name: "Sky", hex: "#bae6fd" },
+      { name: "Lemon", hex: "#fef08a" },
+    ], 5),
+    rating: 4.6,
+    reviewCount: 38,
+    isNew: false,
+    isSale: false,
+    isFeatured: false,
+  },
+  {
+    slug: "girls-jumpsuit-coral",
+    name: "Girls Jumpsuit — Coral",
+    description: "One-and-done jumpsuit with tie waist and pockets for treasures.",
+    fabric: "Rayon twill",
+    care: "Machine wash.",
+    section: "kids",
+    category: "girls",
+    categoryName: "Girls",
+    pricePaisa: 149000,
+    compareAtPaisa: 189000,
+    images: [
+      { src: "/hero/kids.svg", alt: "Girls jumpsuit front" },
+      { src: "/hero/kids.svg", alt: "Girls jumpsuit pocket detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Coral", hex: "#fb7185" },
+      { name: "Denim Blue", hex: "#60a5fa" },
+    ],
+    variants: buildVariants("GJUMP22", S, [
+      { name: "Coral", hex: "#fb7185" },
+      { name: "Denim Blue", hex: "#60a5fa" },
+    ], 6),
+    rating: 4.4,
+    reviewCount: 25,
+    isNew: false,
+    isSale: true,
+    isFeatured: false,
+  },
+  {
+    slug: "kids-tee-duo-mint",
+    name: "Kids Tee Duo — Mint / White",
+    description: "Pack of 2 soft jersey tees. Tagless, itch-free, playground ready.",
+    fabric: "Cotton jersey 180 GSM",
+    care: "Machine wash.",
+    section: "kids",
+    category: "boys",
+    categoryName: "Boys",
+    pricePaisa: 99000,
+    images: [
+      { src: "/hero/kids.svg", alt: "Kids tee pack" },
+      { src: "/hero/kids.svg", alt: "Kids tee fabric" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Mint", hex: "#a7f3d0" },
+      { name: "White", hex: "#ffffff" },
+    ],
+    variants: buildVariants("KTEE23", S, [
+      { name: "Mint", hex: "#a7f3d0" },
+      { name: "White", hex: "#ffffff" },
+    ], 7),
+    rating: 4.5,
+    reviewCount: 140,
+    isNew: false,
+    isSale: false,
+    isFeatured: false,
+  },
+  {
+    slug: "girls-top-yellow",
+    name: "Girls Top — Sunny Yellow",
+    description: "Puff-sleeve top with smocked waist. Sunshine, wearable.",
+    fabric: "Cotton poplin",
+    care: "Gentle wash.",
+    section: "kids",
+    category: "girls",
+    categoryName: "Girls",
+    pricePaisa: 89000,
+    images: [
+      { src: "/hero/kids.svg", alt: "Girls yellow top" },
+      { src: "/hero/kids.svg", alt: "Girls top sleeve detail" },
+    ],
+    sizes: [...S],
+    colors: [
+      { name: "Yellow", hex: "#facc15" },
+      { name: "Pink", hex: "#f9a8d4" },
+    ],
+    variants: buildVariants("GTOP24", S, [
+      { name: "Yellow", hex: "#facc15" },
+      { name: "Pink", hex: "#f9a8d4" },
+    ], 8),
+    rating: 4.3,
+    reviewCount: 33,
+    isNew: true,
+    isSale: false,
+    isFeatured: false,
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/* Queries                                                             */
+/* ------------------------------------------------------------------ */
+
+export function getProduct(slug: string): Product | undefined {
+  return PRODUCTS.find((p) => p.slug === slug);
+}
+
+export type SortKey = "newest" | "price-asc" | "price-desc" | "rating" | "popular";
+
+export type SectionFilter = {
+  category?: string;
+  sort?: SortKey | string;
+  query?: string;
+  maxPrice?: number;
+  sizes?: string[];
+  inStock?: boolean;
+};
+
+export function getBySection(section: string, f: SectionFilter = {}): Product[] {
+  let list = [...PRODUCTS];
+  if (section === "new-arrivals") list = list.filter((p) => p.isNew);
+  else if (section === "sale") list = list.filter((p) => p.isSale);
+  else list = list.filter((p) => p.section === section);
+
+  if (f.category) list = list.filter((p) => p.category === f.category);
+  if (f.query) {
+    const q = f.query.toLowerCase().trim();
+    list = list.filter((p) =>
+      `${p.name} ${p.categoryName} ${p.section} ${p.description}`.toLowerCase().includes(q),
+    );
+  }
+  if (typeof f.maxPrice === "number" && Number.isFinite(f.maxPrice)) {
+    list = list.filter((p) => effectivePrice(p) <= (f.maxPrice as number));
+  }
+  if (f.sizes && f.sizes.length > 0) {
+    const want = new Set(f.sizes);
+    list = list.filter((p) => p.sizes.some((s) => want.has(s)));
+  }
+  if (f.inStock) list = list.filter((p) => p.variants.some((v) => v.stock > 0));
+
+  switch (f.sort) {
+    case "price-asc":
+      list.sort((a, b) => effectivePrice(a) - effectivePrice(b));
+      break;
+    case "price-desc":
+      list.sort((a, b) => effectivePrice(b) - effectivePrice(a));
+      break;
+    case "rating":
+      list.sort((a, b) => b.rating - a.rating);
+      break;
+    case "popular":
+      list.sort((a, b) => b.reviewCount - a.reviewCount);
+      break;
+    case "newest":
+      list.sort((a, b) => Number(b.isNew) - Number(a.isNew));
+      break;
+    default:
+      break;
+  }
+  return list;
+}
+
+export function getNewArrivals(limit = 8): Product[] {
+  return PRODUCTS.filter((p) => p.isNew).slice(0, limit);
+}
+
+export function getSale(limit = 8): Product[] {
+  return PRODUCTS.filter((p) => p.isSale).slice(0, limit);
+}
+
+export function getFeatured(limit = 6): Product[] {
+  const feat = PRODUCTS.filter((p) => p.isFeatured);
+  return (feat.length > 0 ? feat : PRODUCTS).slice(0, limit);
+}
+
+export function getRelated(product: Product, limit = 4): Product[] {
+  const others = PRODUCTS.filter((p) => p.slug !== product.slug);
+  const sameCat = others.filter((p) => p.category === product.category);
+  const sameSec = others.filter((p) => p.section === product.section && p.category !== product.category);
+  const rest = others.filter((p) => p.section !== product.section);
+  return [...sameCat, ...sameSec, ...rest].slice(0, limit);
+}
+
+function normalize(s: string): string {
+  return s.toLowerCase().replace(/[-_]/g, " ").trim();
+}
+
+function isSubsequence(needle: string, haystack: string): boolean {
+  const n = needle.replace(/\s+/g, "");
+  const h = haystack.replace(/\s+/g, "");
+  if (n.length === 0) return true;
+  let j = 0;
+  for (let i = 0; i < h.length && j < n.length; i++) {
+    if (h[i] === n[j]) j++;
+  }
+  return j === n.length;
+}
+
+export function searchProducts(q: string, limit = 12): Product[] {
+  const query = normalize(q);
+  if (!query) return [];
+  const scored: { p: Product; score: number }[] = [];
+  for (const p of PRODUCTS) {
+    const hay = normalize(`${p.name} ${p.slug} ${p.categoryName} ${p.section} ${p.fabric}`);
+    if (hay.includes(query)) {
+      scored.push({ p, score: 0 });
+    } else if (query.length >= 2 && isSubsequence(query, hay)) {
+      scored.push({ p, score: 1 });
+    }
+  }
+  scored.sort((a, b) => a.score - b.score || b.p.rating - a.p.rating);
+  return scored.slice(0, limit).map((s) => s.p);
+}
+
+export function priceBounds(): { min: number; max: number } {
+  let min = Number.POSITIVE_INFINITY;
+  let max = 0;
+  for (const p of PRODUCTS) {
+    const e = effectivePrice(p);
+    if (e < min) min = e;
+    if (e > max) max = e;
+  }
+  return { min: min === Number.POSITIVE_INFINITY ? 0 : min, max };
+}
+
+export function effectivePrice(p: Product): number {
+  return p.pricePaisa;
+}
+
+export function variantUnitPrice(p: Product, sku: string): number {
+  const v = p.variants.find((x) => x.sku === sku);
+  if (v?.priceOverridePaisa) return v.priceOverridePaisa;
+  return p.pricePaisa;
+}
+
+export function variantBySku(sku: string): { product: Product; variant: ProductVariant } | undefined {
+  for (const p of PRODUCTS) {
+    const v = p.variants.find((x) => x.sku === sku);
+    if (v) return { product: p, variant: v };
+  }
+  return undefined;
+}
+
+/* Tiny client-safe index for the search palette (keeps bundle small). */
+export type SearchIndexEntry = {
+  slug: string;
+  name: string;
+  section: Section;
+  category: string;
+  categoryName: string;
+};
+
+export const SEARCH_INDEX: SearchIndexEntry[] = PRODUCTS.map((p) => ({
+  slug: p.slug,
+  name: p.name,
+  section: p.section,
+  category: p.category,
+  categoryName: p.categoryName,
+}));
+
+/**
+ * Bridge to the shared card type (`@/types/catalog`): fills the localized
+ * fields the card requires from the demo data. The home page casts; prefer
+ * this adapter in new code so missing fields surface here, not at call sites.
+ */
+export function asCatalogProduct(p: Product): CatalogProduct {
+  return {
+    slug: p.slug,
+    name: p.name,
+    nameBn: p.name,
+    section: p.section,
+    category: p.category,
+    pricePaisa: p.pricePaisa,
+    compareAtPaisa: p.compareAtPaisa,
+    fabric: p.fabric,
+    sizes: [...p.sizes],
+    colors: p.colors.map((c) => ({ ...c })),
+    images: p.images.map((i) => ({ ...i })),
+    isNew: p.isNew,
+    isSale: p.isSale,
+    isFeatured: p.isFeatured,
+    rating: p.rating,
+    reviewCount: p.reviewCount,
+    fabricCare: p.care,
+    fitNotes: p.fitNotes ?? "",
+  };
+}
