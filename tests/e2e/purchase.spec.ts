@@ -24,32 +24,33 @@ test.describe('purchase flow (COD)', () => {
     await expect(page).toHaveURL(/\/men/, { timeout: 15000 });
     await expect(page.getByRole('heading', { name: /men/i }).first()).toBeVisible({ timeout: 15000 });
 
-    // 3. Open the first product (resilient to /product vs /products routes)
-    const productLink = page
-      .locator('main a[href*="/product"], main a[href*="/p/"], main article a[href], main a[href]')
-      .first();
+    // 3. Open the first product card (strict /product/ links only — never breadcrumbs/chips)
+    const productLink = page.locator('main a[href*="/product/"]').first();
     await expect(productLink, 'expected at least one product card link in <main> on /men').toBeVisible({
       timeout: 15000,
     });
-    const before = page.url();
     await productLink.click();
-    // Product page: URL changed away from the listing (slug route varies by implementation).
+    // Product page: URL changed to the /product/[slug] route.
     await expect
       .poll(async () => page.url(), { timeout: 15000 })
-      .not.toBe(before);
+      .toMatch(/\/product\//);
     await expect(page.locator('main, [role="main"]').first()).toBeVisible({ timeout: 15000 });
 
-    // 4. Select a size if the picker exists (buttons or radios labelled S/M/L/XL/2XL or numbers)
-    const sizeOption = page
-      .getByRole('button', { name: /^(XS|S|M|L|XL|XXL|2XL|3XL|\d{2,3})$/i })
-      .or(page.getByRole('radio', { name: /^(XS|S|M|L|XL|XXL|2XL|3XL|\d{2,3})$/i }))
-      .first();
-    if ((await sizeOption.count()) > 0) {
-      await sizeOption.click().catch(() => {});
-    }
-
-    // 5. Add to cart -> cart drawer/dialog becomes visible
+    // 4-5. Select a size (retry: clicks during client-side nav transitions can
+    // land on detaching nodes) and verify the Add button appears after each.
+    const sizeCandidates = page
+      .locator('main button:not([disabled])')
+      .filter({ hasText: /^(XS|S|M|L|XL|XXL|2XL|3XL|\d{2,3})$/ });
+    await expect(sizeCandidates.first()).toBeVisible({ timeout: 15000 });
     const addBtn = page.getByRole('button', { name: /add to (cart|bag)/i }).first();
+    const nSizes = await sizeCandidates.count();
+    for (let i = 0; i < nSizes; i++) {
+      const btn = sizeCandidates.nth(i);
+      if (await btn.isVisible().catch(() => false)) {
+        await btn.click().catch(() => {});
+        if (await addBtn.isVisible({ timeout: 2500 }).catch(() => false)) break;
+      }
+    }
     await expect(addBtn, 'expected an "Add to cart" button on the product page').toBeVisible({ timeout: 15000 });
     await addBtn.click();
     const drawer = page
@@ -71,39 +72,31 @@ test.describe('purchase flow (COD)', () => {
     }
     await expect(page).toHaveURL(/\/checkout/, { timeout: 15000 });
 
-    // 7. Fill the COD form (label-first, placeholder/name fallbacks)
-    const nameField = page
-      .getByLabel(/name/i)
-      .or(page.locator('input[name*="name" i], input[placeholder*="name" i]'))
-      .first();
-    const phoneField = page
-      .getByLabel(/phone|mobile/i)
-      .or(page.locator('input[name*="phone" i], input[type="tel"], input[placeholder*="01" i]'))
-      .first();
-    const addressField = page
-      .getByLabel(/address|area|street|line1/i)
-      .or(page.locator('input[name*="address" i], textarea[name*="address" i], input[placeholder*="address" i]'))
-      .first();
+    // 7. Fill the COD form (placeholder-anchored, main-scoped CSS)
+    const nameField = page.locator('main input[placeholder*="Full name"]').first();
+    const phoneField = page.locator('main input[placeholder*="01"]').first();
 
     await expect(nameField, 'checkout: name field').toBeVisible({ timeout: 15000 });
     await expect(phoneField, 'checkout: phone field').toBeVisible({ timeout: 15000 });
     await nameField.fill('Playwright Tester');
-    // Valid BD mobile per ^01[3-9]\d{8}$ (use a 017 number that passes zod + Turnstile-exempt test envs)
+    // Valid BD mobile per ^01[3-9]\d{8}$
     await phoneField.fill('01712345678');
-    if ((await addressField.count()) > 0) {
-      await addressField.fill('House 1, Road 2, Dhanmondi, Dhaka').catch(() => {});
-    }
+    // Address has two required inputs: Area + House/road/landmark.
+    const areaField = page.locator('main input[placeholder*="Area"]').first();
+    const lineField = page.locator('main input[placeholder*="House"]').first();
+    if ((await areaField.count()) > 0) await areaField.fill('Dhanmondi, Dhaka').catch(() => {});
+    if ((await lineField.count()) > 0) await lineField.fill('House 1, Road 2').catch(() => {});
 
-    // District/division selects vary (select vs text input); fill only if present.
-    const districtSelect = page.locator('select[name*="district" i]').first();
+    // District is the second <select>; pick Dhaka when offered.
+    const districtSelect = page.locator('main select').nth(1);
     if ((await districtSelect.count()) > 0) {
       const options = await districtSelect.locator('option').allTextContents().catch(() => [] as string[]);
       const dhaka = options.find((o) => /dhaka/i.test(o));
       if (dhaka) await districtSelect.selectOption({ label: dhaka }).catch(() => {});
     }
 
-    // 8. Choose COD if a payment choice exists (default is COD; skip if absent)
-    const cod = page.getByRole('radio', { name: /cash on delivery|^cod$/i }).first();
+    // 8. Choose COD (first payment radio; default is COD)
+    const cod = page.locator('main input[name="payment"]').first();
     if ((await cod.count()) > 0) {
       await cod.check().catch(() => {});
     }

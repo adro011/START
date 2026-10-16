@@ -31,7 +31,7 @@ export default function CraftPage() {
         <ol className="divide-y divide-[#172121]/10 border-y border-[#172121]/10">
           {STEPS.map((s) => (
             <li key={s.n} className="grid gap-2 py-8 sm:grid-cols-[80px_220px_1fr] sm:gap-6">
-              <span className="font-serif text-4xl text-[#D5573B]">{s.n}</span>
+              <span className="font-serif text-4xl text-clay">{s.n}</span>
               <h2 className="font-serif text-2xl">{s.title}</h2>
               <p className="leading-relaxed text-[#172121]/80">{s.body}</p>
             </li>
@@ -50,10 +50,10 @@ export default function CraftPage() {
           ))}
         </div>
         <div className="mt-10 flex flex-wrap gap-3">
-          <Link href="/size-guides" className="bg-[#172121] px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-[#FBF6F3] hover:bg-[#D5573B]">
+          <Link href="/size-guides" className="bg-[#172121] px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-[#FBF6F3] hover:bg-clay">
             Find your size →
           </Link>
-          <Link href="/shipping-returns" className="border border-[#172121]/25 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-[#D5573B] hover:text-[#D5573B]">
+          <Link href="/shipping-returns" className="border border-[#172121]/25 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-[#D5573B] hover:text-clay">
             Shipping & returns
           </Link>
         </div>

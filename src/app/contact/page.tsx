@@ -47,10 +47,10 @@ export default function ContactPage() {
             <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <p data-form-status role="status" aria-live="polite" className="hidden text-sm font-medium" />
             <button type="submit" data-form-submit
-              className="w-full bg-[#D5573B] px-6 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-white hover:bg-[#172121] disabled:opacity-60 sm:w-auto sm:px-10">
+              className="w-full bg-clay px-6 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-white hover:bg-[#172121] disabled:opacity-60 sm:w-auto sm:px-10">
               Send message →
             </button>
-            <script dangerouslySetInnerHTML={{ __html: `(function(){var f=document.querySelector('[data-contact-form]');if(!f)return;var s=f.querySelector('[data-form-status]');var b=f.querySelector('[data-form-submit]');function show(m,ok){if(!s)return;s.textContent=m;s.classList.remove('hidden');s.style.color=ok?'#2f6b3a':'#D5573B';}f.addEventListener('submit',function(e){if(!window.fetch)return;e.preventDefault();var fd=new FormData(f);if(fd.get('company'))return;var payload={name:String(fd.get('name')||''),email:String(fd.get('email')||''),message:String(fd.get('message')||'')};if(b){b.disabled=true;b.textContent='Sending…';}fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});}).then(function(r){if(r.ok&&r.j.ok){f.reset();show('Thank you — message received. We reply within 1–2 working days.',true);}else{show((r.j&&r.j.error)||'Something went wrong. Please email us directly.',false);} }).catch(function(){show('Network error. Please email us directly.',false);}).finally(function(){if(b){b.disabled=false;b.textContent='Send message →';}});});})();` }} />
+            <script dangerouslySetInnerHTML={{ __html: `(function(){var f=document.querySelector('[data-contact-form]');if(!f)return;var s=f.querySelector('[data-form-status]');var b=f.querySelector('[data-form-submit]');function show(m,ok){if(!s)return;s.textContent=m;s.classList.remove('hidden');s.style.color=ok?'#2f6b3a':'#A93A24';}f.addEventListener('submit',function(e){if(!window.fetch)return;e.preventDefault();var fd=new FormData(f);if(fd.get('company'))return;var payload={name:String(fd.get('name')||''),email:String(fd.get('email')||''),message:String(fd.get('message')||'')};if(b){b.disabled=true;b.textContent='Sending…';}fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});}).then(function(r){if(r.ok&&r.j.ok){f.reset();show('Thank you — message received. We reply within 1–2 working days.',true);}else{show((r.j&&r.j.error)||'Something went wrong. Please email us directly.',false);} }).catch(function(){show('Network error. Please email us directly.',false);}).finally(function(){if(b){b.disabled=false;b.textContent='Send message →';}});});})();` }} />
           </form>
           <aside className="space-y-4">
             <div className="bg-[#172121] p-6 text-[#FBF6F3]">
@@ -63,7 +63,7 @@ export default function ContactPage() {
             </div>
             <div className="border border-[#172121]/10 bg-white/60 p-6 text-sm leading-relaxed text-[#172121]/80">
               <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-[#172121]">Track an order</h2>
-              <p className="mt-2">Use your order number + phone on our <Link href="/track" className="text-[#D5573B] underline underline-offset-4">tracking page</Link>.</p>
+              <p className="mt-2">Use your order number + phone on our <Link href="/track" className="text-clay underline underline-offset-4">tracking page</Link>.</p>
             </div>
           </aside>
         </div>

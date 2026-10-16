@@ -12,7 +12,7 @@ export default function Error({
 }) {
   return (
     <div className="mx-auto flex max-w-[720px] flex-col items-center px-4 py-24 text-center sm:px-6">
-      <p className="text-[13px] font-semibold tracking-[0.24em] text-[#D5573B] uppercase">
+      <p className="text-[13px] font-semibold tracking-[0.24em] text-clay uppercase">
         A loose thread
       </p>
       <h1
@@ -34,7 +34,7 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className="bg-[#D5573B] px-7 py-3 text-[12px] font-semibold tracking-[0.16em] text-white uppercase hover:bg-[#7D451B]"
+          className="bg-clay px-7 py-3 text-[12px] font-semibold tracking-[0.16em] text-white uppercase hover:bg-[#7D451B]"
         >
           Try again
         </button>

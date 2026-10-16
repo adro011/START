@@ -95,7 +95,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
         {/* Badges */}
         <div className="absolute top-2 left-2 flex gap-1.5">
           {onSale && (
-            <span className="bg-[#D5573B] px-2 py-1 text-[10.5px] font-semibold tracking-[0.12em] text-white uppercase">
+            <span className="bg-clay px-2 py-1 text-[10.5px] font-semibold tracking-[0.12em] text-white uppercase">
               Sale
             </span>
           )}
@@ -114,7 +114,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
           onClick={() => setWished((w) => !w)}
           className={cn(
             "absolute top-2 right-2 rounded-full bg-[#FBF6F3]/90 p-2 backdrop-blur transition-all duration-200 active:scale-90",
-            wished ? "text-[#D5573B]" : "text-[#172121]/60 hover:text-[#D5573B]",
+            wished ? "text-clay" : "text-[#172121]/80 hover:text-clay",
             wished && "scale-110",
           )}
         >
@@ -133,7 +133,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
                 "w-full py-2.5 text-[12px] font-semibold tracking-[0.14em] uppercase backdrop-blur transition-colors",
                 added
                   ? "bg-[#7E9181] text-white"
-                  : "bg-[#172121]/90 text-[#FBF6F3] hover:bg-[#D5573B]",
+                  : "bg-[#172121]/90 text-[#FBF6F3] hover:bg-clay",
               )}
             >
               {added ? "Added ✓" : `Quick add · ${firstSize}`}
@@ -150,17 +150,17 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
           {p.name}
         </Link>
         <div className="flex items-baseline gap-2">
-          <span className="text-[15px] font-semibold text-[#7D451B]">
+          <span className="text-[15px] font-semibold text-clay">
             {formatBDT(p.pricePaisa)}
           </span>
           {p.compareAtPaisa != null && p.compareAtPaisa > p.pricePaisa && (
-            <s className="text-[13px] text-[#172121]/45">
+            <s className="text-[13px] text-[#172121]/70">
               {formatBDT(p.compareAtPaisa)}
             </s>
           )}
         </div>
         {rating !== null && (
-          <p className="text-[12.5px] text-[#172121]/60" aria-label={`Rated ${rating} out of 5`}>
+          <p className="text-[12.5px] text-[#172121]/80" aria-label={`Rated ${rating} out of 5`}>
             <span aria-hidden="true" className="tracking-[0.1em] text-[#7D451B]">
               {"★".repeat(Math.round(rating))}
               <span className="text-[#172121]/25">

@@ -8,6 +8,7 @@ const csp = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https:",
   "style-src 'self' 'unsafe-inline' https:",
+  "font-src 'self' https: data:",
   "img-src 'self' data: blob: https:",
   "connect-src 'self' https:",
 ].join("; ");

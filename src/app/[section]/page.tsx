@@ -66,13 +66,13 @@ export default async function SectionPage({
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-6">
-      <nav className="text-xs text-neutral-500" aria-label="Breadcrumb">
+      <nav className="text-xs text-neutral-600" aria-label="Breadcrumb">
         <Link href="/" className="underline">Home</Link> / <span className="capitalize text-neutral-800">{title}</span>
       </nav>
       <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold capitalize md:text-3xl">{title}</h1>
-          <p className="text-sm text-neutral-500">{filtered.length} result{filtered.length === 1 ? "" : "s"}</p>
+          <p className="text-sm text-neutral-600">{filtered.length} result{filtered.length === 1 ? "" : "s"}</p>
         </div>
         <Suspense>
           <SortSelect />
@@ -96,7 +96,7 @@ export default async function SectionPage({
           {visible.length === 0 ? (
             <div className="rounded-xl border p-10 text-center">
               <p className="font-medium">No products match those filters.</p>
-              <p className="mt-1 text-sm text-neutral-500">Try clearing the price cap or trying “Panjabi”, “Sharee”, “Kabli”.</p>
+              <p className="mt-1 text-sm text-neutral-600">Try clearing the price cap or trying “Panjabi”, “Sharee”, “Kabli”.</p>
               <Link href={`/${section}`} className="mt-3 inline-block underline text-sm">Clear filters</Link>
             </div>
           ) : (

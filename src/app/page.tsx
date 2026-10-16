@@ -40,7 +40,7 @@ function SectionHeading({
   return (
     <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <p className="text-[12px] font-semibold tracking-[0.2em] text-[#D5573B] uppercase">
+        <p className="text-[12px] font-semibold tracking-[0.2em] text-clay uppercase">
           {kicker}
         </p>
         <h2
@@ -178,14 +178,14 @@ export default async function HomePage() {
                 <span className="mt-1 block text-[14.5px] text-white/80">
                   {h.copy}
                 </span>
-                <span className="mt-4 inline-block border border-white/70 px-5 py-2.5 text-[12px] font-semibold tracking-[0.16em] text-white uppercase transition-colors group-hover:bg-[#D5573B] group-hover:border-[#D5573B]">
+                <span className="mt-4 inline-block border border-white/70 px-5 py-2.5 text-[12px] font-semibold tracking-[0.16em] text-white uppercase transition-colors group-hover:bg-clay group-hover:border-[#D5573B]">
                   Shop {h.title} →
                 </span>
               </span>
             </Link>
           ))}
         </div>
-        <p className="mx-auto max-w-[1280px] overflow-hidden py-3 text-center text-[12px] font-medium tracking-[0.24em] text-[#172121]/50 uppercase">
+        <p className="mx-auto max-w-[1280px] overflow-hidden py-3 text-center text-[12px] font-medium tracking-[0.24em] text-[#172121]/75 uppercase">
           Handcrafted · Made in Bangladesh · Free exchange
         </p>
       </section>
@@ -207,7 +207,7 @@ export default async function HomePage() {
             ))}
           </div>
         ) : (
-          <p className="border border-dashed border-[#172121]/20 px-6 py-10 text-center text-[14.5px] text-[#172121]/60">
+          <p className="border border-dashed border-[#172121]/20 px-6 py-10 text-center text-[14.5px] text-[#172121]/80">
             Fresh pieces are on the cutting table — check back very soon.
           </p>
         )}
@@ -282,7 +282,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-[1280px] px-4 py-14 sm:px-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-[12px] font-semibold tracking-[0.2em] text-[#D5573B] uppercase">
+              <p className="text-[12px] font-semibold tracking-[0.2em] text-blush uppercase">
                 Up to honest markdowns
               </p>
               <h2
@@ -297,7 +297,7 @@ export default async function HomePage() {
             </div>
             <Link
               href="/sale"
-              className="bg-[#D5573B] px-6 py-3 text-[12px] font-semibold tracking-[0.16em] uppercase transition-colors hover:bg-[#7D451B]"
+              className="bg-clay px-6 py-3 text-[12px] font-semibold tracking-[0.16em] uppercase transition-colors hover:bg-[#7D451B]"
             >
               Shop sale →
             </Link>
@@ -305,7 +305,7 @@ export default async function HomePage() {
           {sale.length > 0 && (
             <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
               {sale.slice(0, 8).map((p) => (
-                <div key={p.slug} className="w-[220px] shrink-0 snap-start sm:w-[250px] [&_a]:text-[#FBF6F3] [&_p]:text-white/70">
+                <div key={p.slug} className="w-[220px] shrink-0 snap-start sm:w-[250px] [&_a]:text-[#FBF6F3] [&_p]:text-white/70 [&_s]:text-white/70 [&_.text-clay]:text-blush">
                   <ProductCard product={asCard(p)} />
                 </div>
               ))}
@@ -322,7 +322,7 @@ export default async function HomePage() {
         />
         <div className="relative mx-auto grid max-w-[1280px] gap-8 px-4 py-20 sm:px-6 md:grid-cols-2 md:items-center">
           <div>
-            <p className="text-[12px] font-semibold tracking-[0.2em] text-[#D5573B] uppercase">
+            <p className="text-[12px] font-semibold tracking-[0.2em] text-clay uppercase">
               Woven, not rushed
             </p>
             <h2
@@ -376,7 +376,7 @@ export default async function HomePage() {
               <blockquote className="mt-3 text-[15px] leading-relaxed text-[#172121]/85">
                 “{t.quote}”
               </blockquote>
-              <figcaption className="mt-3 text-[13px] font-medium tracking-wide text-[#172121]/60">
+              <figcaption className="mt-3 text-[13px] font-medium tracking-wide text-[#172121]/80">
                 — {t.name}
               </figcaption>
             </figure>
@@ -394,7 +394,7 @@ export default async function HomePage() {
           ].map(([t, c]) => (
             <div key={t} className="flex flex-col items-center text-center">
               <p className="text-[13px] font-semibold tracking-[0.18em] uppercase">{t}</p>
-              <p className="mt-1 max-w-[34ch] text-[14px] text-[#172121]/60">{c}</p>
+              <p className="mt-1 max-w-[34ch] text-[14px] text-[#172121]/80">{c}</p>
             </div>
           ))}
         </div>
@@ -414,7 +414,7 @@ export default async function HomePage() {
         </p>
         <a
           href="#newsletter"
-          className="mt-6 inline-block bg-[#172121] px-8 py-3.5 text-[12px] font-semibold tracking-[0.16em] text-[#FBF6F3] uppercase transition-colors hover:bg-[#D5573B]"
+          className="mt-6 inline-block bg-[#172121] px-8 py-3.5 text-[12px] font-semibold tracking-[0.16em] text-[#FBF6F3] uppercase transition-colors hover:bg-clay"
         >
           Subscribe below ↓
         </a>

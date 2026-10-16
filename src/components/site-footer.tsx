@@ -89,7 +89,7 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
             <button
               type="submit"
               disabled={state === "busy"}
-              className="h-12 bg-[#D5573B] px-7 text-[13px] font-semibold tracking-[0.14em] uppercase transition-colors hover:bg-[#7D451B] disabled:opacity-60"
+              className="h-12 bg-clay px-7 text-[13px] font-semibold tracking-[0.14em] uppercase transition-colors hover:bg-[#7D451B] disabled:opacity-60"
             >
               {state === "busy" ? "…" : d.newsletter_cta}
             </button>
@@ -107,7 +107,7 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
             </p>
           )}
           {state === "err" && (
-            <p className="text-[14px] text-[#D5573B] md:col-span-2">
+            <p className="text-[14px] text-blush md:col-span-2">
               {d.newsletter_error}
             </p>
           )}

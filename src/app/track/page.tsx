@@ -34,7 +34,7 @@ export default function TrackPage() {
   return (
     <main className="mx-auto max-w-xl px-4 py-6">
       <h1 className="text-2xl font-semibold">Track your order</h1>
-      <p className="mt-1 text-sm text-neutral-500">Enter the order no (e.g. BR-100231) + the phone used at checkout.</p>
+      <p className="mt-1 text-sm text-neutral-600">Enter the order no (e.g. BR-100231) + the phone used at checkout.</p>
       <form onSubmit={submit} className="mt-4 space-y-2 rounded-xl border p-4">
         <input value={orderNo} onChange={(e) => setOrderNo(e.target.value)} placeholder="BR-123456" aria-label="Order number" className="w-full rounded border px-3 py-2 font-mono text-sm uppercase" />
         <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="01XXXXXXXXX" aria-label="Phone" inputMode="numeric" className="w-full rounded border px-3 py-2 text-sm" />
@@ -52,7 +52,7 @@ export default function TrackPage() {
               </li>
             ))}
           </ol>
-          <p className="mt-3 text-xs text-neutral-500">Demo timeline — live tracking connects to courier webhooks in production.</p>
+          <p className="mt-3 text-xs text-neutral-600">Demo timeline — live tracking connects to courier webhooks in production.</p>
         </div>
       )}
     </main>

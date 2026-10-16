@@ -50,7 +50,7 @@ export default function SizeGuide({ section }: { section: Section }) {
             </div>
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b text-left text-neutral-500">
+                <tr className="border-b text-left text-neutral-600">
                   <th className="py-2">Size</th>
                   <th>Chest</th>
                   <th>Length</th>
@@ -66,7 +66,7 @@ export default function SizeGuide({ section }: { section: Section }) {
                 ))}
               </tbody>
             </table>
-            <p className="mt-3 text-xs text-neutral-500">
+            <p className="mt-3 text-xs text-neutral-600">
               Between sizes? Take the larger for panjabi/sharee drape, smaller for fitted tops.
             </p>
           </div>

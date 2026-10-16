@@ -111,7 +111,7 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
             <input value={phone} onChange={(e) => setPhone(e.target.value)} required inputMode="numeric" placeholder="01XXXXXXXXX" aria-describedby="phone-hint" className="rounded border px-3 py-2 text-sm" />
             <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email (receipt, optional)" className="rounded border px-3 py-2 text-sm" />
           </div>
-          <p id="phone-hint" className="text-xs text-neutral-500">BD mobile format: ^01[3-9]\d{8}$ — guest checkout allowed, or sign in later.</p>
+          <p id="phone-hint" className="text-xs text-neutral-600">BD mobile format: ^01[3-9]\d{8}$ — guest checkout allowed, or sign in later.</p>
         </fieldset>
 
         <fieldset className="space-y-2 rounded-xl border p-4">
@@ -152,7 +152,7 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
         </fieldset>
 
         {/* Turnstile placeholder + honeypot */}
-        <div className="rounded-xl border border-dashed p-3 text-xs text-neutral-500" aria-label="Bot protection">
+        <div className="rounded-xl border border-dashed p-3 text-xs text-neutral-600" aria-label="Bot protection">
           Turnstile widget placeholder — wire `NEXT_PUBLIC_TURNSTILE_SITE_KEY` here in production.
         </div>
         <input value={company} onChange={(e) => setCompany(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden className="hidden" placeholder="Company" />
@@ -175,7 +175,7 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
           <span>Subtotal</span>
           <span>{formatBDT(subtotal)}</span>
         </div>
-        <p className="text-xs text-neutral-500">Shipping + discounts recalculated securely on the server.</p>
+        <p className="text-xs text-neutral-600">Shipping + discounts recalculated securely on the server.</p>
         <button type="submit" disabled={loading || items.length === 0} className="w-full rounded-full bg-neutral-900 py-3 text-sm font-semibold text-white disabled:opacity-50">
           {loading ? "Placing order…" : "Place order"}
         </button>

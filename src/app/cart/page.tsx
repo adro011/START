@@ -45,7 +45,7 @@ export default function CartPage() {
               <li key={i.sku} className="flex gap-3 rounded-xl border p-3">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{i.name}</p>
-                  <p className="text-xs text-neutral-500">{i.size} · {i.color} · {i.sku}</p>
+                  <p className="text-xs text-neutral-600">{i.size} · {i.color} · {i.sku}</p>
                   <p className="mt-1 text-sm font-semibold">{formatBDT(i.pricePaisa)}</p>
                   <div className="mt-2 flex items-center gap-2">
                     <button onClick={() => setQty(i.sku, i.qty - 1)} aria-label="Decrease quantity" className="rounded border px-2">−</button>
@@ -85,7 +85,7 @@ export default function CartPage() {
                 <span>−{formatBDT(discount)}</span>
               </div>
             )}
-            <p className="text-xs text-neutral-500">Shipping calculated at checkout (Dhaka ৳60 · outside ৳120).</p>
+            <p className="text-xs text-neutral-600">Shipping calculated at checkout (Dhaka ৳60 · outside ৳120).</p>
             <Link href="/checkout" className="block rounded-full bg-neutral-900 py-3 text-center text-sm font-semibold text-white">
               Checkout →
             </Link>

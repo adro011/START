@@ -55,10 +55,10 @@ export default function StoriesPage() {
                   className="object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
               </div>
               <div className="p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#D5573B]">{s.eyebrow}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-clay">{s.eyebrow}</p>
                 <h2 className="mt-2 font-serif text-2xl leading-snug">{s.title}</h2>
                 <p className="mt-2 text-[0.95rem] leading-relaxed text-[#172121]/75">{s.excerpt}</p>
-                <span className="mt-4 inline-block text-sm font-semibold uppercase tracking-[0.14em] underline underline-offset-4 group-hover:text-[#D5573B]">
+                <span className="mt-4 inline-block text-sm font-semibold uppercase tracking-[0.14em] underline underline-offset-4 group-hover:text-clay">
                   Read story →
                 </span>
               </div>
@@ -67,10 +67,10 @@ export default function StoriesPage() {
         </div>
         <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-[#172121]/10 pt-8">
           <p className="text-sm text-[#172121]/70">Like this? Get one thoughtful email a month — no spam.</p>
-          <Link href="/#newsletter" className="bg-[#172121] px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-[#FBF6F3] hover:bg-[#D5573B]">
+          <Link href="/#newsletter" className="bg-[#172121] px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-[#FBF6F3] hover:bg-clay">
             Join the letter
           </Link>
-          <Link href="/about" className="px-2 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-[#D5573B] underline underline-offset-4">
+          <Link href="/about" className="px-2 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-clay underline underline-offset-4">
             About {SITE.name}
           </Link>
         </div>

@@ -26,7 +26,7 @@ export function LoadMore({ total, pageSize = 12 }: { total: number; pageSize?: n
   if (shown >= total) return null;
   return (
     <div className="mt-8 text-center">
-      <p className="text-sm text-neutral-500">
+      <p className="text-sm text-neutral-600">
         Showing {shown} of {total}
       </p>
       <button
@@ -107,7 +107,7 @@ export default function Filters({
           onChange={(e) => update("maxPrice", e.target.value)}
           className="w-full"
         />
-        <div className="flex justify-between text-xs text-neutral-500">
+        <div className="flex justify-between text-xs text-neutral-600">
           <span>{formatBDT(bounds.min)}</span>
           <span>{formatBDT(bounds.max)}</span>
         </div>

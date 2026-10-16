@@ -20,7 +20,7 @@ export default async function OrderSuccessPage({
           Order no: <span className="font-mono font-semibold">{order}</span>
         </p>
       ) : (
-        <p className="mt-2 text-sm text-neutral-500">No order number in URL — did you refresh?</p>
+        <p className="mt-2 text-sm text-neutral-600">No order number in URL — did you refresh?</p>
       )}
       <p className="mt-2 text-sm text-neutral-600">
         We’ll call to confirm, then dispatch in 24–48h. Track anytime with your order no + phone.

@@ -103,7 +103,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
               {"href" in t && t.href ? (
                 <Link
                   href={t.href}
-                  className="flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 active:text-[#D5573B]"
+                   className="flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 active:text-clay"
                 >
                   <Icon d={t.icon} label={t.label} />
                   {t.label}
@@ -112,7 +112,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                 <button
                   type="button"
                   onClick={"action" in t && t.action ? t.action : undefined}
-                  className="flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 active:text-[#D5573B]"
+                  className="flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 active:text-clay"
                   aria-label={t.label}
                 >
                   <Icon d={t.icon} label={t.label} />
@@ -125,7 +125,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
             <button
               type="button"
               onClick={() => setCartOpen(true)}
-              className="relative flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 active:text-[#D5573B]"
+              className="relative flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 active:text-clay"
               aria-label={`${d.cart} (${count})`}
             >
               <span className="relative">
@@ -134,7 +134,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                   label={d.cart}
                 />
                 {count > 0 && (
-                  <span className="absolute -top-1.5 -right-2 min-w-[18px] rounded-full bg-[#D5573B] px-1 text-center text-[10px] leading-[18px] font-semibold text-white">
+                  <span className="absolute -top-1.5 -right-2 min-w-[18px] rounded-full bg-clay px-1 text-center text-[10px] leading-[18px] font-semibold text-white">
                     {count > 99 ? "99+" : count}
                   </span>
                 )}
@@ -180,7 +180,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
               type="button"
               onClick={() => setOpen(false)}
               aria-label={d.close}
-              className="p-2 text-[#172121]/70 hover:text-[#D5573B]"
+              className="p-2 text-[#172121]/70 hover:text-clay"
             >
               ✕
             </button>
@@ -206,7 +206,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                     onClick={() =>
                       setExpanded(expanded === s.key ? null : s.key)
                     }
-                    className="p-2 text-[#172121]/60"
+                    className="p-2 text-[#172121]/80"
                   >
                     <span
                       className={cn(
@@ -232,7 +232,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                         <Link
                           href={s.href}
                           onClick={() => setOpen(false)}
-                          className="block py-1.5 text-[14px] text-[#D5573B]"
+                          className="block py-1.5 text-[14px] text-clay"
                         >
                           {d.view_all} →
                         </Link>
@@ -275,7 +275,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
               {d.account}
             </Link>
           </div>
-          <div className="border-t border-[#172121]/10 px-5 py-4 text-[13px] text-[#172121]/60">
+          <div className="border-t border-[#172121]/10 px-5 py-4 text-[13px] text-[#172121]/80">
             Cash on delivery · 7-day exchange
           </div>
         </aside>

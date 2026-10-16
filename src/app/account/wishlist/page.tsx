@@ -11,12 +11,12 @@ export default function WishlistPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-6">
-      <nav className="text-xs text-neutral-500" aria-label="Breadcrumb">
+      <nav className="text-xs text-neutral-600" aria-label="Breadcrumb">
         <Link href="/account" className="underline">Account</Link> / <span className="text-neutral-800">Wishlist</span>
       </nav>
       <h1 className="mt-2 text-2xl font-semibold">Wishlist ({slugs.length})</h1>
       {products.length === 0 ? (
-        <p className="mt-4 text-sm text-neutral-500">
+        <p className="mt-4 text-sm text-neutral-600">
           Nothing saved yet — tap the ♡ on any product. Stored on this device (persisted); syncs to Supabase wishlist after sign-in.
         </p>
       ) : (

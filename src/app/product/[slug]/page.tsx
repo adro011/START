@@ -52,7 +52,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <main className="mx-auto max-w-6xl px-4 pb-24 pt-6">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <TrackRecent slug={product.slug} />
-      <nav className="text-xs text-neutral-500" aria-label="Breadcrumb">
+      <nav className="text-xs text-neutral-600" aria-label="Breadcrumb">
         <Link href={`/${product.section}`} className="capitalize underline">{product.section}</Link>
         {" / "}
         <Link href={`/${product.section}?category=${product.category}`} className="underline">{product.categoryName}</Link>
@@ -68,7 +68,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {product.isSale && <span className="rounded-full bg-red-700 px-2.5 py-0.5 text-xs font-medium text-white">Sale</span>}
           </div>
           <h1 className="mt-2 text-2xl font-semibold md:text-3xl">{product.name}</h1>
-          <p className="mt-1 text-sm text-neutral-500">
+          <p className="mt-1 text-sm text-neutral-600">
             {product.categoryName} · ★ {product.rating.toFixed(1)} ({product.reviewCount} reviews)
           </p>
 

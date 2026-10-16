@@ -250,8 +250,8 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
               className={cn(
                 "relative block px-5 py-3 text-[13px] font-medium tracking-[0.14em] uppercase transition-colors",
                 openKey === s.key
-                  ? "text-[#D5573B]"
-                  : "text-[#172121] hover:text-[#D5573B]",
+                  ? "text-clay"
+                  : "text-[#172121] hover:text-clay",
               )}
             >
               {s.label}
@@ -286,8 +286,8 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
               className={cn(
                 "block px-5 py-3 text-[13px] font-medium tracking-[0.14em] uppercase transition-colors",
                 "hot" in l && l.hot
-                  ? "text-[#D5573B] hover:text-[#7D451B]"
-                  : "text-[#172121] hover:text-[#D5573B]",
+                  ? "text-clay hover:text-[#7D451B]"
+                  : "text-[#172121] hover:text-clay",
               )}
             >
               {l.label}
@@ -328,7 +328,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
                       <Link
                         href={l.href}
                         onClick={() => setOpenKey(null)}
-                        className="text-[14px] text-[#172121]/70 underline-offset-4 transition-colors hover:text-[#D5573B] hover:underline"
+                        className="text-[14px] text-[#172121]/70 underline-offset-4 transition-colors hover:text-clay hover:underline"
                       >
                         {l.label}
                       </Link>
@@ -357,7 +357,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
               <Link
                 href={s.href}
                 onClick={() => setOpenKey(null)}
-                className="mt-4 inline-block bg-[#172121] px-5 py-2.5 text-[12px] font-medium tracking-[0.14em] text-[#FBF6F3] uppercase transition-colors hover:bg-[#D5573B]"
+                className="mt-4 inline-block bg-[#172121] px-5 py-2.5 text-[12px] font-medium tracking-[0.14em] text-[#FBF6F3] uppercase transition-colors hover:bg-clay"
               >
                 {d.shop} {s.label}
               </Link>

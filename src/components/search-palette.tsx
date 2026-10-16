@@ -117,7 +117,7 @@ export default function SearchPalette() {
         <div className="max-h-80 overflow-y-auto p-2">
           {debounced === "" && recent.length > 0 && (
             <div className="px-2 py-1">
-              <p className="px-2 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+              <p className="px-2 text-xs font-semibold uppercase tracking-wider text-neutral-600">
                 Recent
               </p>
               {recent.map((r) => (
@@ -133,7 +133,7 @@ export default function SearchPalette() {
           )}
           {catSuggestions.length > 0 && (
             <div className="px-2 py-1">
-              <p className="px-2 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+              <p className="px-2 text-xs font-semibold uppercase tracking-wider text-neutral-600">
                 Categories
               </p>
               <div className="flex flex-wrap gap-1 px-2 py-1">
@@ -160,13 +160,13 @@ export default function SearchPalette() {
               className="block rounded px-3 py-2 text-sm hover:bg-neutral-100"
             >
               <span className="font-medium">{r.name}</span>
-              <span className="ml-2 text-xs text-neutral-500">
+              <span className="ml-2 text-xs text-neutral-600">
                 {r.categoryName} · {r.section}
               </span>
             </Link>
           ))}
           {debounced !== "" && results.length === 0 && (
-            <div className="px-3 py-6 text-center text-sm text-neutral-500">
+            <div className="px-3 py-6 text-center text-sm text-neutral-600">
               No matches for “{debounced}”. Try “panjabi”, “sharee” or “kabli”.
               <div>
                 <button

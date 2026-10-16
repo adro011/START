@@ -45,7 +45,7 @@ export default function VariantPicker({ product }: { product: Product }) {
       <div className="flex items-baseline gap-2">
         <p className="text-2xl font-semibold">{formatBDT(unitPrice)}</p>
         {product.compareAtPaisa && product.compareAtPaisa > product.pricePaisa && (
-          <p className="text-sm text-neutral-500 line-through">{formatBDT(product.compareAtPaisa)}</p>
+          <p className="text-sm text-neutral-600 line-through">{formatBDT(product.compareAtPaisa)}</p>
         )}
       </div>
 
@@ -101,7 +101,7 @@ export default function VariantPicker({ product }: { product: Product }) {
             );
           })}
         </div>
-        {!size && <p className="mt-1 text-xs text-neutral-500">Select a size to see stock.</p>}
+        {!size && <p className="mt-1 text-xs text-neutral-600">Select a size to see stock.</p>}
         {selected && stock > 0 && stock <= 3 && (
           <p className="mt-1 text-sm font-medium text-red-700">Only {stock} left in {selected.size} / {selected.color}</p>
         )}

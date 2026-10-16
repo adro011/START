@@ -17,7 +17,7 @@ export default function StickyATC({
     <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 p-3 backdrop-blur md:hidden">
       <div className="flex items-center gap-3">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-xs text-neutral-500">{name}</p>
+          <p className="truncate text-xs text-neutral-600">{name}</p>
           <p className="text-base font-semibold">{formatBDT(pricePaisa)}</p>
         </div>
         <button

@@ -31,12 +31,12 @@ function HeaderIcon({
   children: ReactNode;
 }) {
   const cls =
-    "relative rounded-full p-2.5 text-[#172121] transition-colors hover:bg-[#F2CCC3]/60 hover:text-[#D5573B] focus-visible:outline-2 focus-visible:outline-[#D5573B]";
+    "relative rounded-full p-2.5 text-[#172121] transition-colors hover:bg-[#F2CCC3]/60 hover:text-clay focus-visible:outline-2 focus-visible:outline-[#D5573B]";
   const inner = (
     <>
       {children}
       {typeof badge === "number" && badge > 0 && (
-        <span className="absolute top-0.5 right-0.5 min-w-[18px] rounded-full bg-[#D5573B] px-1 text-center text-[10px] leading-[18px] font-semibold text-white">
+        <span className="absolute top-0.5 right-0.5 min-w-[18px] rounded-full bg-clay px-1 text-center text-[10px] leading-[18px] font-semibold text-white">
           {badge > 99 ? "99+" : badge}
         </span>
       )}
@@ -97,7 +97,7 @@ export function SiteHeader() {
               href={`https://wa.me/${SITE.whatsappDigits}`}
               target="_blank"
               rel="noreferrer"
-              className="hidden text-[12.5px] font-medium tracking-[0.08em] text-[#172121]/60 uppercase underline-offset-4 hover:text-[#D5573B] hover:underline lg:block"
+              className="hidden text-[12.5px] font-medium tracking-[0.08em] text-[#172121]/80 uppercase underline-offset-4 hover:text-clay hover:underline lg:block"
             >
               WhatsApp {SITE.whatsappDisplay}
             </a>

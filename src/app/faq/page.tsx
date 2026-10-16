@@ -35,7 +35,7 @@ export default function FaqPage() {
         <h1 className="mt-3 font-serif text-4xl leading-tight sm:text-5xl">Good questions.</h1>
         <p className="mt-4 leading-relaxed text-[#172121]/80">
           Ordering, payments, delivery and exchanges — answered plainly. Still stuck?{" "}
-          <a className="text-[#D5573B] underline underline-offset-4" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+          <a className="text-clay underline underline-offset-4" href={`mailto:${SITE.email}`}>{SITE.email}</a>
           {" "}· {SITE.phone}
         </p>
         <div aria-hidden="true" className="my-8 h-px w-full bg-[#172121]/10" />
@@ -43,7 +43,7 @@ export default function FaqPage() {
           {FAQS.map((f) => (
             <details key={f.q} className="group py-5">
               <summary className="cursor-pointer list-none font-serif text-xl leading-snug marker:hidden [&::-webkit-details-marker]:hidden">
-                <span className="mr-3 inline-block text-[#D5573B] transition-transform group-open:rotate-45">+</span>
+                <span className="mr-3 inline-block text-clay transition-transform group-open:rotate-45">+</span>
                 {f.q}
               </summary>
               <p className="mt-3 pl-7 leading-relaxed text-[#172121]/80">{f.a}</p>

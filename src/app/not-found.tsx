@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div className="mx-auto flex max-w-[720px] flex-col items-center px-4 py-24 text-center sm:px-6">
-      <p className="text-[13px] font-semibold tracking-[0.24em] text-[#D5573B] uppercase">
+      <p className="text-[13px] font-semibold tracking-[0.24em] text-clay uppercase">
         404 · Off the rack
       </p>
       <h1
@@ -20,7 +20,7 @@ export default function NotFound() {
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link
           href="/"
-          className="bg-[#172121] px-7 py-3 text-[12px] font-semibold tracking-[0.16em] text-[#FBF6F3] uppercase hover:bg-[#D5573B]"
+          className="bg-[#172121] px-7 py-3 text-[12px] font-semibold tracking-[0.16em] text-[#FBF6F3] uppercase hover:bg-clay"
         >
           Home
         </Link>
@@ -32,7 +32,7 @@ export default function NotFound() {
         </Link>
         <Link
           href="/sale"
-          className="border border-[#D5573B] px-7 py-3 text-[12px] font-semibold tracking-[0.16em] text-[#D5573B] uppercase hover:bg-[#D5573B] hover:text-white"
+          className="border border-[#D5573B] px-7 py-3 text-[12px] font-semibold tracking-[0.16em] text-clay uppercase hover:bg-clay hover:text-white"
         >
           Sale
         </Link>

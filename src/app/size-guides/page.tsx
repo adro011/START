@@ -34,7 +34,7 @@ export default function SizeGuidesPage() {
           All measurements in <strong>inches</strong>. Measure over light clothing and compare
           with your best-fitting garment. Between sizes? Size up for panjabis and festive
           wear, down for fitted shirts and tops. Questions? Write to{" "}
-          <a className="text-[#D5573B] underline underline-offset-4" href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+          <a className="text-clay underline underline-offset-4" href={`mailto:${SITE.email}`}>{SITE.email}</a>.
         </p>
         <div aria-hidden="true" className="my-8 h-px w-full bg-[#172121]/10" />
 
@@ -60,7 +60,7 @@ export default function SizeGuidesPage() {
         </div>
 
         <div className="mt-10 rounded-none border border-[#7E9181]/40 bg-[#F2CCC3]/40 px-5 py-4 text-sm leading-relaxed text-[#172121]/80">
-          <p><strong>Still unsure?</strong> Send your chest/length + the product name to {SITE.phone} (WhatsApp) and we&apos;ll confirm your size before you order. Exchanges are free within 7 days — see <Link href="/shipping-returns" className="text-[#D5573B] underline underline-offset-4">Shipping &amp; Returns</Link>.</p>
+          <p><strong>Still unsure?</strong> Send your chest/length + the product name to {SITE.phone} (WhatsApp) and we&apos;ll confirm your size before you order. Exchanges are free within 7 days — see <Link href="/shipping-returns" className="text-clay underline underline-offset-4">Shipping &amp; Returns</Link>.</p>
         </div>
       </article>
     </main>

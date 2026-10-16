@@ -67,7 +67,7 @@ export function CartDrawer() {
             onClick={close}
             aria-label="Close cart"
             tabIndex={open ? 0 : -1}
-            className="p-2 text-[#172121]/60 hover:text-[#D5573B]"
+            className="p-2 text-[#172121]/80 hover:text-clay"
           >
             ✕
           </button>
@@ -108,14 +108,14 @@ export function CartDrawer() {
               <p className="font-display text-[28px] text-[#172121]">
                 Your bag is empty
               </p>
-              <p className="max-w-[28ch] text-[14px] text-[#172121]/60">
+              <p className="max-w-[28ch] text-[14px] text-[#172121]/80">
                 Beautiful things take a moment. Start with what just landed.
               </p>
               <Link
                 href="/new-arrivals"
                 onClick={close}
                 tabIndex={open ? 0 : -1}
-                className="mt-2 bg-[#172121] px-6 py-3 text-[12px] font-semibold tracking-[0.14em] text-[#FBF6F3] uppercase hover:bg-[#D5573B]"
+                className="mt-2 bg-[#172121] px-6 py-3 text-[12px] font-semibold tracking-[0.14em] text-[#FBF6F3] uppercase hover:bg-clay"
               >
                 Shop new arrivals
               </Link>
@@ -157,7 +157,7 @@ export function CartDrawer() {
                         onClick={() => remove(l.sku)}
                         aria-label={`Remove ${l.name}`}
                         tabIndex={open ? 0 : -1}
-                        className="p-1 text-[16px] text-[#172121]/45 hover:text-[#D5573B]"
+                        className="p-1 text-[16px] text-[#172121]/70 hover:text-clay"
                       >
                         ×
                       </button>
@@ -213,7 +213,7 @@ export function CartDrawer() {
               href="/checkout"
               onClick={close}
               tabIndex={open ? 0 : -1}
-              className="mt-3 block bg-[#D5573B] py-3.5 text-center text-[13px] font-semibold tracking-[0.16em] text-white uppercase transition-colors hover:bg-[#7D451B]"
+              className="mt-3 block bg-clay py-3.5 text-center text-[13px] font-semibold tracking-[0.16em] text-white uppercase transition-colors hover:bg-[#7D451B]"
             >
               Checkout →
             </Link>

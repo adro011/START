@@ -42,7 +42,7 @@ export default function Reviews({ slug, rating, reviewCount }: { slug: string; r
             <article key={`${r.name}-${i}`} className="rounded-xl border p-3">
               <p className="text-sm font-medium">{r.title} <span className="ml-1 text-amber-500"><Stars n={r.rating} /></span></p>
               <p className="mt-1 text-sm">{r.body}</p>
-              <p className="mt-1 text-xs text-neutral-500">{r.name} · {r.date} · product {slug}</p>
+              <p className="mt-1 text-xs text-neutral-600">{r.name} · {r.date} · product {slug}</p>
             </article>
           ))}
         </div>
@@ -59,7 +59,7 @@ export default function Reviews({ slug, rating, reviewCount }: { slug: string; r
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" required className="w-full rounded border px-3 py-2 text-sm" />
           <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title (optional)" className="w-full rounded border px-3 py-2 text-sm" />
           <textarea value={body} onChange={(e) => setBody(e.target.value)} placeholder="Fit, fabric, delivery…" required rows={3} className="w-full rounded border px-3 py-2 text-sm" />
-          <p className="text-xs text-neutral-500">Photos: max 3 per review (upload coming with accounts — describe them for now).</p>
+          <p className="text-xs text-neutral-600">Photos: max 3 per review (upload coming with accounts — describe them for now).</p>
           <button type="submit" className="rounded-full bg-neutral-900 px-5 py-2 text-sm font-medium text-white">
             Submit review
           </button>

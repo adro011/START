@@ -57,17 +57,17 @@ export default function AboutPage() {
         <h2 className="font-serif text-3xl">Come say hello</h2>
         <p className="mt-3 max-w-2xl leading-relaxed text-[#172121]/80">
           Questions about fit, fabric or delivery to your district? Write to{" "}
-          <a className="text-[#D5573B] underline underline-offset-4" href={`mailto:${SITE.email}`}>{SITE.email}</a>{" "}
-          or call <a className="text-[#D5573B] underline underline-offset-4" href={`tel:${SITE.phone}`}>{SITE.phone}</a>.
+          <a className="text-clay underline underline-offset-4" href={`mailto:${SITE.email}`}>{SITE.email}</a>{" "}
+          or call <a className="text-clay underline underline-offset-4" href={`tel:${SITE.phone}`}>{SITE.phone}</a>.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link href="/craft" className="bg-[#D5573B] px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-white hover:bg-[#172121]">
+          <Link href="/craft" className="bg-clay px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-white hover:bg-[#172121]">
             Our craft →
           </Link>
-          <Link href="/stories" className="border border-[#172121]/25 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-[#D5573B] hover:text-[#D5573B]">
+          <Link href="/stories" className="border border-[#172121]/25 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-[#D5573B] hover:text-clay">
             Journal
           </Link>
-          <Link href="/contact" className="border border-[#172121]/25 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-[#D5573B] hover:text-[#D5573B]">
+          <Link href="/contact" className="border border-[#172121]/25 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-[#D5573B] hover:text-clay">
             Contact
           </Link>
         </div>
