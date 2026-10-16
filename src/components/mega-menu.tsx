@@ -224,6 +224,12 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
       aria-label="Primary"
       className="relative hidden border-t border-[#172121]/10 lg:block"
       onMouseLeave={scheduleClose}
+      onBlur={(e) => {
+        // Keyboard users tabbing out of the whole nav should close the panel.
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+          setOpenKey(null);
+        }
+      }}
     >
       <ul className="mx-auto flex max-w-[1280px] items-stretch justify-center gap-1 px-4">
         {sections.map((s) => (
@@ -248,7 +254,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
                 if (e.key === "Escape") setOpenKey(null);
               }}
               className={cn(
-                "relative block px-5 py-3 text-[13px] font-medium tracking-[0.14em] uppercase transition-colors",
+                "relative block px-5 py-3 text-[13px] font-medium tracking-[0.14em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none",
                 openKey === s.key
                   ? "text-clay"
                   : "text-[#172121] hover:text-clay",
@@ -258,7 +264,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
               <span
                 aria-hidden="true"
                 className={cn(
-                  "absolute inset-x-5 -bottom-px h-0.5 origin-left bg-[#D5573B] transition-transform duration-200",
+                  "absolute inset-x-5 -bottom-px h-0.5 origin-left bg-[#D5573B] transition-transform duration-200 motion-reduce:transition-none",
                   openKey === s.key
                     ? "scale-x-100"
                     : "scale-x-0 group-hover:scale-x-100 group-focus-within:scale-x-100",
@@ -284,7 +290,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
             <Link
               href={l.href}
               className={cn(
-                "block px-5 py-3 text-[13px] font-medium tracking-[0.14em] uppercase transition-colors",
+                "block px-5 py-3 text-[13px] font-medium tracking-[0.14em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none",
                 "hot" in l && l.hot
                   ? "text-clay hover:text-[#7D451B]"
                   : "text-[#172121] hover:text-clay",
@@ -299,7 +305,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
       {/* Full-width panel */}
       <div
         className={cn(
-          "absolute inset-x-0 top-full z-40 border-y border-[#172121]/10 bg-[#FBF6F3] shadow-[0_24px_48px_rgba(23,33,33,0.12)] transition-all duration-200",
+          "absolute inset-x-0 top-full z-40 border-y border-[#172121]/10 bg-[#FBF6F3] shadow-[0_24px_48px_rgba(23,33,33,0.12)] transition-all duration-200 motion-reduce:transition-none",
           openKey
             ? "visible opacity-100 [clip-path:inset(0_0_0_0)]"
             : "invisible opacity-0 [clip-path:inset(0_0_100%_0)]",
@@ -316,7 +322,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
             {s.groups.map((g, gi) => (
               <div
                 key={g.heading + gi}
-                className="transition-all duration-200"
+                className="transition-all duration-200 motion-reduce:transition-none"
                 style={{ transitionDelay: `${gi * 40}ms` }}
               >
                 <p className="mb-3 text-[12px] font-semibold tracking-[0.16em] text-[#172121] uppercase">
@@ -328,7 +334,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
                       <Link
                         href={l.href}
                         onClick={() => setOpenKey(null)}
-                        className="text-[14px] text-[#172121]/70 underline-offset-4 transition-colors hover:text-clay hover:underline"
+                        className="text-[14px] text-[#172121]/70 underline-offset-4 transition-colors hover:text-clay hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none"
                       >
                         {l.label}
                       </Link>
@@ -338,7 +344,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
                 <Link
                   href={g.href ?? s.href}
                   onClick={() => setOpenKey(null)}
-                  className="mt-4 inline-block text-[12px] font-medium tracking-[0.14em] text-[#7D451B] uppercase underline-offset-4 hover:underline"
+                  className="mt-4 inline-block text-[12px] font-medium tracking-[0.14em] text-[#7D451B] uppercase underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
                 >
                   {d.view_all} →
                 </Link>
@@ -357,7 +363,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
               <Link
                 href={s.href}
                 onClick={() => setOpenKey(null)}
-                className="mt-4 inline-block bg-[#172121] px-5 py-2.5 text-[12px] font-medium tracking-[0.14em] text-[#FBF6F3] uppercase transition-colors hover:bg-clay"
+                className="mt-4 inline-block bg-[#172121] px-5 py-2.5 text-[12px] font-medium tracking-[0.14em] text-[#FBF6F3] uppercase transition-colors hover:bg-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none"
               >
                 {d.shop} {s.label}
               </Link>

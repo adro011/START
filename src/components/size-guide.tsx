@@ -1,7 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Section } from "@/lib/catalog";
+import { cn } from "@/lib/format";
+
+const RING =
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]";
 
 const TABLES: Record<Section, { size: string; chest: string; length: string }[]> = {
   men: [
@@ -27,14 +31,42 @@ const TABLES: Record<Section, { size: string; chest: string; length: string }[]>
 export default function SizeGuide({ section }: { section: Section }) {
   const [open, setOpen] = useState(false);
   const rows = TABLES[section];
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const prevFocus = useRef<HTMLElement | null>(null);
+
+  // Esc closes, scroll locks, focus enters the dialog and returns on close.
+  useEffect(() => {
+    if (!open) return;
+    prevFocus.current = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+      prevFocus.current?.focus?.();
+    };
+  }, [open ]);
 
   return (
     <>
-      <button onClick={() => setOpen(true)} className="text-sm underline underline-offset-2">
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-controls="size-guide-dialog"
+        className={cn("text-sm underline underline-offset-2", RING)}
+      >
         Size guide
       </button>
       {open && (
         <div
+          id="size-guide-dialog"
           role="dialog"
           aria-modal="true"
           aria-label="Size guide"
@@ -44,7 +76,13 @@ export default function SizeGuide({ section }: { section: Section }) {
           <div className="w-full max-w-md rounded-xl bg-white p-5" onClick={(e) => e.stopPropagation()}>
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-base font-semibold capitalize">Size guide · {section}</h2>
-              <button onClick={() => setOpen(false)} aria-label="Close size guide" className="rounded-full border px-2.5 py-1 text-sm">
+              <button
+                ref={closeRef}
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close size guide"
+                className={cn("rounded-full border px-2.5 py-1 text-sm", RING)}
+              >
                 ✕
               </button>
             </div>

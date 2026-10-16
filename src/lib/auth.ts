@@ -26,7 +26,11 @@ function hasSupabaseEnv(): boolean {
 
 export async function getSession(): Promise<Session | null> {
   // Dev fallback: no Supabase env → treat as logged-in admin so /admin is usable locally.
-  if (!hasSupabaseEnv()) return DEV_SESSION;
+  // Fail closed in production: missing env must mean unauthenticated, never admin.
+  if (!hasSupabaseEnv()) {
+    if (process.env.NODE_ENV === 'production') return null;
+    return DEV_SESSION;
+  }
   try {
     // createClient() is async + null-safe by contract — null means unauthenticated.
     const supabase = (await createClient()) as unknown as {

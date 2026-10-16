@@ -1,0 +1,102 @@
+# FINAL REPORT — Meraki brand-store (docs pass)
+
+Docs-finalization pass only. No code changes, no install/build/test runs, no git commits.
+Scope owned here: `README.md` (rewritten), `DECISIONS.md` (entries 5–6 appended), this file (new).
+
+## 1. Repo state
+
+- Root: `X:\START\brand-store`, Next.js 15.5 + Supabase fashion e-commerce, brand **Meraki** (`BRAND_NAME` only in `src/config/site.ts`).
+- Git: local repo on branch `master`, **no remote configured** (not yet pushed). Working tree has 3 uncommitted modifications: `.gitignore`, `src/app/feed.xml/route.ts`, `src/app/robots.ts`, `src/app/sitemap.ts` (per `git status` at docs time).
+- Migrations present and read: `0001_schema.sql` (16 tables, order sequence from BR-100231, 5-image trigger), `0002_rls.sql` (`is_admin()` / `is_staff_or_admin()`, per-table policies, `product-images` bucket), `0003_rpcs.sql` (`create_order`, `search_products`, `adjust_stock`, `cancel_order`), `0004_seed.sql` (category tree, zones, coupons, 24 `demo-*` products).
+- Storefront + admin routes, 19 components, 6 API routes (health, products, contact, newsletter, waitlist, webhooks/sslcommerz), 3 unit test files, 2 e2e specs, CI/backup/keepalive workflows — all present and described factually in the rewritten `README.md`.
+- This pass executed **zero** verification runs (forbidden by task constraints), so quality numbers below are placeholders for the main agent.
+
+## 2. How to run
+
+```bash
+npm install
+copy .env.example .env.local   # fill in Supabase URL / anon key / service-role key
+npm run dev                    # http://localhost:3000
+```
+
+Useful: `npm run build` + `npm run start` · `npm run lint` · `npm run typecheck` ·
+`npm run test` (Vitest) · `npm run test:e2e` (Playwright chromium) ·
+`npx @lhci/cli autorun` after build+start (config `lighthouserc.json`).
+Without Supabase env vars the app runs on the local demo catalog with a dev-admin fallback for `/admin`.
+
+## 3. URLs
+
+- **Live URL:** `PLACEHOLDER_LIVE_URL` (not deployed yet — run `vercel --prod` per the README go-live checklist, then replace).
+- **Repo URL:** local git only — no remote configured (not yet pushed). To publish:
+
+```bash
+gh repo create meraki-brand-store --private --source=. --push
+```
+
+## 4. Admin steps
+
+1. Local (no Supabase env): open `/admin` — dev fallback signs you in as `dev@example.com` admin automatically.
+2. Live: sign up via `/login`, then in the Supabase SQL editor run:
+
+```sql
+update profiles set role = 'admin' where id = '<user-id>';
+```
+
+3. Manage: Dashboard · Products (variants, ≤5 images) · Orders (status workflow, courier/tracking, invoice + packing-slip PDF, cancel restores stock) · Coupons · Categories · Settings. Staff role covers orders/stock only.
+4. After importing real products, remove demos:
+
+```sql
+DELETE FROM products WHERE slug LIKE 'demo-%';
+```
+
+## 5. Env var table
+
+See `README.md` § Env vars (full table) — source of truth is `.env.example`:
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (server-only),
+`NEXT_PUBLIC_SITE_URL`, `RESEND_API_KEY` (optional), `SSLCOMMERZ_STORE_ID` / `SSLCOMMERZ_STORE_PASS` /
+`SSLCOMMERZ_ENDPOINT` + `PAYMENT_SSLCOMMERZ_ENABLED=false`, `UPSTASH_REDIS_REST_URL` /
+`UPSTASH_REDIS_REST_TOKEN` (optional), `NEXT_PUBLIC_TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY`.
+
+## 6. Demo data inventory
+
+- **24 products** (8 each Men / Women / Kids) in DB seed (`demo-*` slugs, e.g. `demo-cotton-panjabi`, `demo-muslin-sharee`, `demo-boys-kabli`) **and** 24 marketing entries in `src/lib/catalog.ts` (e.g. `classic-cotton-panjabi-white`); 2 `DEMO-` variants + 2 `/hero/<section>.svg` placeholder images per DB product.
+- **Coupons:** `WELCOME10` (10% off, min ৳1,000, cap noted in `src/lib/coupons.ts`, limit 5000, 2025–2030), `FREESHIP` (free shipping, min ৳1,500).
+- **Zones:** Dhaka city (৳60 fee, free over ৳2,000, 2–3 days) / Outside Dhaka (৳120 fee, free over ৳3,000, 3–5 days); `site_settings` announcements + hero_copy + shipping_config.
+- Placeholders to replace at go-live: hero photos, `public/logo.svg`, `+8801XXXXXXXXX` phone/WhatsApp, `hello@example.com`, social links.
+
+## 7. User-must-supply list
+
+1. Supabase project (URL, anon key, service-role key) + `db push` + seed.
+2. Resend API key + domain verification (SPF/DKIM).
+3. SSLCommerz credentials (sandbox now, live merchant account after approval) + IPN verification.
+4. Cloudflare Turnstile site + secret keys.
+5. 3 hero photos (`public/hero/men.jpg`, `women.jpg`, `kids.jpg`), logo, real product data/images.
+6. Custom domain + DNS records from Vercel; decision on Vercel Pro vs Cloudflare Pages for commercial use.
+
+## 8. Quality results
+
+`PLACEHOLDER_SCORES` — to be filled by the main agent after running the suites
+(docs pass ran nothing by instruction):
+
+- Lighthouse CI (`/`, `/men`; budgets ≥ 0.90 ×4, LCP ≤ 2500 ms, CLS ≤ 0.05): ___
+- Axe (`/`, `/men`, `/cart`; zero serious/critical): ___
+- Unit — 36 tests (`money` 5, `cart` 6, `validators` 25): ___
+- E2E — 4 tests (1 COD purchase flow + 3 axe pages): ___
+
+## 9. Known limitations (all verified in-repo)
+
+1. **Demo checkout RPC wiring is TODO:** `src/actions/checkout.ts::placeOrder` reprices against the local TS catalog and returns a random `BR-` number; the comment marks the call to Supabase RPC `create_order` (stock decrement, persistence, emails) as not yet wired.
+2. **No live Supabase yet:** no `.env.local` values and no linked project in-repo; DB-backed paths (auth roles, orders, RLS) are unexercised until §7 item 1 is done.
+3. **Motion is CSS-only:** `motion`/`lenis`/`gsap` are not in `package.json`; hero/parallax/scroll-rail effects from plan §5 are not implemented as specified.
+4. **Service worker unregistered:** `public/sw.js` exists (static cache + `/offline` fallback) but a repo-wide search finds no `serviceWorker.register` call in `src` — PWA install/offline works only after registration lands.
+5. Hero visuals are `.svg` placeholders (`men.svg`/`women.svg`/`kids.svg`); contact info, WhatsApp number, and social links are placeholders (`src/config/site.ts`).
+6. Turnstile/Resend/Upstash integrations are env-gated stubs, not end-to-end verified.
+
+## 10. Prioritized next steps
+
+1. **Merchant feed polish** — `/feed.xml` route exists; validate against Google/Meta Merchant specs (availability, GTIN-less BD apparel, BDT pricing) and add scheduled refresh.
+2. **Abandoned-cart emails** — persist guest carts, scheduled Resend reminders with coupon incentive.
+3. **Loyalty points** — earn/burn ledger on orders, member tiers in `profiles`.
+4. **Size recommendation** — fit quiz + order-history fit model on product pages.
+5. **Gift cards** — issuable codes, balance ledger, checkout redemption.
+6. **B2B wholesale** — wholesale price lists, MOQ rules, tax-invoice PDFs, staff-assisted ordering.

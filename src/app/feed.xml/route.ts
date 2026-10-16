@@ -1,10 +1,10 @@
 import { SITE } from '@/config/site';
 import { PRODUCTS } from '@/lib/catalog';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://example.com';
+const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
 function esc(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 }
 
 interface FeedRow {

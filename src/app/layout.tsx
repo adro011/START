@@ -8,6 +8,7 @@ import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
 import { CartDrawer } from "../components/cart-drawer";
 import SearchPalette from "../components/search-palette";
+import { SwRegister } from "../components/sw-register";
 
 export const metadata: Metadata = {
   title: {
@@ -71,6 +72,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <SiteFooter />
           <CartDrawer />
           <SearchPalette />
+          <SwRegister />
         </Providers>
         {/* Paper-grain overlay (`.grain` defined here; foundation owns globals.css).
             Same recipe as plan §4: SVG noise, ~3% opacity, pointer-events none. */}

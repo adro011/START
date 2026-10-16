@@ -22,6 +22,7 @@ export default function SortSelect() {
       <span className="sr-only">Sort products</span>
       <select
         value={sort}
+        aria-label="Sort products"
         onChange={(e) => {
           const next = new URLSearchParams(params.toString());
           if (e.target.value) next.set("sort", e.target.value);
@@ -29,7 +30,7 @@ export default function SortSelect() {
           next.delete("page");
           router.replace(`${pathname}?${next.toString()}`, { scroll: false });
         }}
-        className="rounded-lg border px-3 py-2 text-sm"
+        className="rounded-lg border px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
       >
         {OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>

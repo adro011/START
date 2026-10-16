@@ -30,8 +30,9 @@ export function LoadMore({ total, pageSize = 12 }: { total: number; pageSize?: n
         Showing {shown} of {total}
       </p>
       <button
+        type="button"
         onClick={() => router.replace(`${pathname}?${setParam(params, "page", String(page + 1))}`, { scroll: false })}
-        className="mt-2 rounded-full border px-6 py-2 text-sm font-medium hover:bg-neutral-100"
+        className="mt-2 rounded-full border px-6 py-2 text-sm font-medium hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
       >
         Load more
       </button>
@@ -76,16 +77,20 @@ export default function Filters({
         <p className="mb-2 font-semibold">Category</p>
         <div className="flex flex-wrap gap-1.5">
           <button
+            type="button"
             onClick={() => update("category", null)}
-            className={`rounded-full border px-3 py-1 text-xs ${activeCat === "" ? "bg-neutral-900 text-white" : "hover:bg-neutral-100"}`}
+            aria-pressed={activeCat === ""}
+            className={`rounded-full border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] ${activeCat === "" ? "bg-neutral-900 text-white" : "hover:bg-neutral-100"}`}
           >
             All
           </button>
           {categories.map((c) => (
             <button
               key={c.slug}
+              type="button"
               onClick={() => update("category", activeCat === c.slug ? null : c.slug)}
-              className={`rounded-full border px-3 py-1 text-xs ${activeCat === c.slug ? "bg-neutral-900 text-white" : "hover:bg-neutral-100"}`}
+              aria-pressed={activeCat === c.slug}
+              className={`rounded-full border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] ${activeCat === c.slug ? "bg-neutral-900 text-white" : "hover:bg-neutral-100"}`}
             >
               {c.name}
             </button>
@@ -105,7 +110,7 @@ export default function Filters({
           step={10000}
           value={maxPrice ? Number(maxPrice) : bounds.max}
           onChange={(e) => update("maxPrice", e.target.value)}
-          className="w-full"
+          className="w-full accent-[#D5573B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
         />
         <div className="flex justify-between text-xs text-neutral-600">
           <span>{formatBDT(bounds.min)}</span>
@@ -119,9 +124,10 @@ export default function Filters({
           {sizes.map((s) => (
             <button
               key={s}
+              type="button"
               onClick={() => toggleSize(s)}
               aria-pressed={activeSizes.includes(s)}
-              className={`rounded border px-3 py-1 text-xs ${activeSizes.includes(s) ? "bg-neutral-900 text-white" : "hover:bg-neutral-100"}`}
+              className={`rounded border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] ${activeSizes.includes(s) ? "bg-neutral-900 text-white" : "hover:bg-neutral-100"}`}
             >
               {s}
             </button>
@@ -134,14 +140,16 @@ export default function Filters({
           type="checkbox"
           checked={inStock}
           onChange={(e) => update("inStock", e.target.checked ? "1" : null)}
+          className="accent-[#D5573B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
         />
         In stock only
       </label>
 
       {(activeCat || maxPrice || activeSizes.length > 0 || inStock) && (
         <button
+          type="button"
           onClick={() => router.replace(pathname, { scroll: false })}
-          className="text-xs underline"
+          className="text-xs underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
         >
           Clear all filters
         </button>

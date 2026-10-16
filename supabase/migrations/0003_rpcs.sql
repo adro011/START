@@ -143,7 +143,7 @@ BEGIN
       RAISE EXCEPTION 'Coupon requires a minimum subtotal of %', v_c_min;
     END IF;
     IF v_c_type = 'percent' THEN
-      v_discount := (v_subtotal * v_c_value) / 100;
+      v_discount := LEAST((v_subtotal * v_c_value) / 100, v_subtotal);
     ELSIF v_c_type = 'fixed' THEN
       v_discount := LEAST(v_c_value, v_subtotal);
     ELSIF v_c_type = 'free_shipping' THEN
@@ -178,7 +178,7 @@ BEGIN
 
   -- Write order -------------------------------------------------------------------
   v_order_no := 'BR-' || nextval('public.order_no_seq')::text;
-  v_order_id := gen_random_uuid();
+  v_order_id := public.gen_random_uuid();
 
   INSERT INTO public.orders (
     id, order_no, user_id, guest_email, guest_phone, status,
@@ -328,3 +328,12 @@ BEGIN
   RETURN jsonb_build_object('id', p_order, 'status', 'cancelled');
 END;
 $$;
+
+-- PostgREST exposure: functions in `public` are callable via the API only
+-- with EXECUTE grants. create_order + search_products serve guests (anon);
+-- adjust_stock / cancel_order enforce staff checks internally, so grant them
+-- to authenticated only (anon calls would just raise 'Forbidden').
+GRANT EXECUTE ON FUNCTION public.create_order(jsonb, jsonb, text, text) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.search_products(text, text, integer) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.adjust_stock(uuid, integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.cancel_order(uuid) TO authenticated;

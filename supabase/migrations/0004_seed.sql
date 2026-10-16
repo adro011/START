@@ -138,11 +138,13 @@ INSERT INTO public.shipping_zones (name, districts, fee_paisa, free_over_paisa, 
   ('Dhaka city',
    ARRAY['Dhaka', 'Gazipur', 'Narayanganj', 'Munshiganj', 'Narsingdi', 'Manikganj'],
    6000, 200000, '2-3 days'),
-  ('Outside Dhaka',
-   ARRAY['Chattogram', 'Cumilla', 'Sylhet', 'Rajshahi', 'Khulna', 'Barishal',
-         'Rangpur', 'Mymensingh', 'Cox''s Bazar', 'Jashore', 'Dinajpur', 'Bogra'],
-   12000, 300000, '3-5 days')
-ON CONFLICT (id) DO NOTHING;
+   ('Outside Dhaka',
+    ARRAY['Chattogram', 'Cumilla', 'Sylhet', 'Rajshahi', 'Khulna', 'Barishal',
+          'Rangpur', 'Mymensingh', 'Cox''s Bazar', 'Jashore', 'Dinajpur', 'Bogra'],
+    12000, 300000, '3-5 days')
+ON CONFLICT (name) DO UPDATE SET
+  districts = EXCLUDED.districts, fee_paisa = EXCLUDED.fee_paisa,
+  free_over_paisa = EXCLUDED.free_over_paisa, eta_days = EXCLUDED.eta_days;
 
 -- Coupons ------------------------------------------------------------------------------------------------
 INSERT INTO public.coupons

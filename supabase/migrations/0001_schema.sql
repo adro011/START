@@ -328,3 +328,6 @@ CREATE INDEX IF NOT EXISTS idx_reviews_product ON public.reviews (product_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_user ON public.reviews (user_id);
 CREATE INDEX IF NOT EXISTS idx_alerts_variant ON public.stock_alerts (variant_id);
 CREATE INDEX IF NOT EXISTS idx_audit_entity ON public.audit_log (entity, entity_id);
+-- Zone names are the seed upsert key (0004 ON CONFLICT (name)); separate unique
+-- index (not inline UNIQUE) so it also applies when the table already exists.
+CREATE UNIQUE INDEX IF NOT EXISTS uniq_shipping_zones_name ON public.shipping_zones (name);

@@ -80,7 +80,7 @@ export function SiteHeader() {
     <>
       <header
         className={cn(
-          "sticky top-0 z-40 transition-all duration-300",
+          "sticky top-0 z-40 transition-all duration-300 motion-reduce:transition-none",
           scrolled
             ? "border-b border-[#172121]/10 bg-[#FBF6F3]/95 shadow-[0_1px_16px_rgba(23,33,33,0.10)] backdrop-blur"
             : "border-b border-transparent bg-[#FBF6F3]",
@@ -88,7 +88,7 @@ export function SiteHeader() {
       >
         <div
           className={cn(
-            "mx-auto grid max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 transition-all duration-300 sm:px-6",
+            "mx-auto grid max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 transition-all duration-300 motion-reduce:transition-none sm:px-6",
             scrolled ? "py-2" : "py-4",
           )}
         >
@@ -97,7 +97,7 @@ export function SiteHeader() {
               href={`https://wa.me/${SITE.whatsappDigits}`}
               target="_blank"
               rel="noreferrer"
-              className="hidden text-[12.5px] font-medium tracking-[0.08em] text-[#172121]/80 uppercase underline-offset-4 hover:text-clay hover:underline lg:block"
+              className="hidden text-[12.5px] font-medium tracking-[0.08em] text-[#172121]/80 uppercase underline-offset-4 hover:text-clay hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] lg:block"
             >
               WhatsApp {SITE.whatsappDisplay}
             </a>
@@ -107,7 +107,7 @@ export function SiteHeader() {
             href="/"
             aria-label={`${SITE.name} — home`}
             className={cn(
-              "text-center font-semibold tracking-[0.08em] text-[#172121] uppercase transition-all duration-300",
+              "text-center font-semibold tracking-[0.08em] text-[#172121] uppercase transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none",
               scrolled ? "text-[26px]" : "text-[32px]",
             )}
             style={{ fontFamily: "'Cormorant Garamond', serif" }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/store/cart";
@@ -15,11 +15,36 @@ import { cn, formatBDT } from "../lib/format";
 export function CartDrawer() {
   const { items, subtotal, open, setOpen, setQty, remove } = useCart();
   const close = () => setOpen(false);
+  const drawerRef = useRef<HTMLElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const prevFocus = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!open) return;
+    // Move focus into the drawer and restore it on close.
+    prevFocus.current = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
+      if (e.key === "Escape") {
+        close();
+        return;
+      }
+      // Traps-ish Tab cycle: keep focus on the drawer's controls.
+      if (e.key === "Tab") {
+        const root = drawerRef.current;
+        if (!root) return;
+        const items = [...root.querySelectorAll<HTMLElement>("a[href], button:not([disabled])")];
+        if (items.length === 0) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -27,6 +52,7 @@ export function CartDrawer() {
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      prevFocus.current?.focus?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open ]);
@@ -41,20 +67,22 @@ export function CartDrawer() {
     <div
       className={cn("fixed inset-0 z-[60]", !open && "pointer-events-none")}
       aria-hidden={!open}
+      inert={!open}
     >
       <div
         className={cn(
-          "absolute inset-0 bg-[#172121]/50 transition-opacity duration-300",
+          "absolute inset-0 bg-[#172121]/50 transition-opacity duration-300 motion-reduce:transition-none",
           open ? "opacity-100" : "opacity-0",
         )}
         onClick={close}
       />
       <aside
+        ref={drawerRef}
         role="dialog"
         aria-modal="true"
         aria-label="Shopping cart"
         className={cn(
-          "absolute top-0 right-0 flex h-full w-[92vw] max-w-[420px] flex-col bg-[#FBF6F3] shadow-2xl transition-transform duration-300 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
+          "absolute top-0 right-0 flex h-full w-[92vw] max-w-[420px] flex-col bg-[#FBF6F3] shadow-2xl transition-transform duration-300 motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
@@ -63,11 +91,12 @@ export function CartDrawer() {
             Your bag {items.length > 0 && `(${items.length})`}
           </p>
           <button
+            ref={closeRef}
             type="button"
             onClick={close}
             aria-label="Close cart"
             tabIndex={open ? 0 : -1}
-            className="p-2 text-[#172121]/80 hover:text-clay"
+            className="p-2 text-[#172121]/80 hover:text-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
           >
             ✕
           </button>
@@ -95,7 +124,7 @@ export function CartDrawer() {
             aria-valuemax={100}
           >
             <div
-              className="h-full rounded-full bg-[#D5573B] transition-[width] duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]"
+              className="h-full rounded-full bg-[#D5573B] transition-[width] duration-500 motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -115,7 +144,7 @@ export function CartDrawer() {
                 href="/new-arrivals"
                 onClick={close}
                 tabIndex={open ? 0 : -1}
-                className="mt-2 bg-[#172121] px-6 py-3 text-[12px] font-semibold tracking-[0.14em] text-[#FBF6F3] uppercase hover:bg-clay"
+                className="mt-2 bg-[#172121] px-6 py-3 text-[12px] font-semibold tracking-[0.14em] text-[#FBF6F3] uppercase hover:bg-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
               >
                 Shop new arrivals
               </Link>
@@ -155,9 +184,9 @@ export function CartDrawer() {
                       <button
                         type="button"
                         onClick={() => remove(l.sku)}
-                        aria-label={`Remove ${l.name}`}
+                        aria-label={`Remove ${l.name} (${l.size}) from cart`}
                         tabIndex={open ? 0 : -1}
-                        className="p-1 text-[16px] text-[#172121]/70 hover:text-clay"
+                        className="p-1 text-[16px] text-[#172121]/70 hover:text-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
                       >
                         ×
                       </button>
@@ -167,9 +196,9 @@ export function CartDrawer() {
                         <button
                           type="button"
                           onClick={() => setQty(l.sku, l.qty - 1)}
-                          aria-label="Decrease quantity"
+                          aria-label={`Decrease quantity of ${l.name} (${l.size})`}
                           tabIndex={open ? 0 : -1}
-                          className="px-2.5 py-1 text-[15px] hover:bg-[#F2CCC3]/60"
+                          className="px-2.5 py-1 text-[15px] hover:bg-[#F2CCC3]/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
                         >
                           −
                         </button>
@@ -179,9 +208,9 @@ export function CartDrawer() {
                         <button
                           type="button"
                           onClick={() => setQty(l.sku, l.qty + 1)}
-                          aria-label="Increase quantity"
+                          aria-label={`Increase quantity of ${l.name} (${l.size})`}
                           tabIndex={open ? 0 : -1}
-                          className="px-2.5 py-1 text-[15px] hover:bg-[#F2CCC3]/60"
+                          className="px-2.5 py-1 text-[15px] hover:bg-[#F2CCC3]/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
                         >
                           +
                         </button>
@@ -213,7 +242,7 @@ export function CartDrawer() {
               href="/checkout"
               onClick={close}
               tabIndex={open ? 0 : -1}
-              className="mt-3 block bg-clay py-3.5 text-center text-[13px] font-semibold tracking-[0.16em] text-white uppercase transition-colors hover:bg-[#7D451B]"
+              className="mt-3 block bg-clay py-3.5 text-center text-[13px] font-semibold tracking-[0.16em] text-white uppercase transition-colors hover:bg-[#7D451B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none"
             >
               Checkout →
             </Link>
@@ -221,7 +250,7 @@ export function CartDrawer() {
               type="button"
               onClick={close}
               tabIndex={open ? 0 : -1}
-              className="mt-2 w-full py-2 text-center text-[13px] font-medium tracking-[0.1em] text-[#172121]/70 uppercase underline-offset-4 hover:text-[#172121] hover:underline"
+              className="mt-2 w-full py-2 text-center text-[13px] font-medium tracking-[0.1em] text-[#172121]/70 uppercase underline-offset-4 hover:text-[#172121] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
             >
               Keep browsing
             </button>

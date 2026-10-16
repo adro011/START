@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/store/cart";
 import { CATEGORIES } from "@/lib/catalog";
@@ -65,11 +65,36 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const { count, setOpen: setCartOpen } = useCart();
+  const drawerRef = useRef<HTMLElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const prevFocus = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!open) return;
+    // Move focus into the drawer and restore it on close.
+    prevFocus.current = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      // Traps-ish Tab cycle: keep focus on the drawer's controls.
+      if (e.key === "Tab") {
+        const root = drawerRef.current;
+        if (!root) return;
+        const items = [...root.querySelectorAll<HTMLElement>("a[href], button:not([disabled])")];
+        if (items.length === 0) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -77,6 +102,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      prevFocus.current?.focus?.();
     };
   }, [open ]);
 
@@ -95,6 +121,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
     <>
       <nav
         aria-label="Mobile"
+        inert={open}
         className="fixed inset-x-0 bottom-0 z-40 border-t border-[#172121]/10 bg-[#FBF6F3]/95 backdrop-blur lg:hidden"
       >
         <ul className="grid grid-cols-5">
@@ -103,7 +130,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
               {"href" in t && t.href ? (
                 <Link
                   href={t.href}
-                   className="flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 active:text-clay"
+                   className="flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] active:text-clay"
                 >
                   <Icon d={t.icon} label={t.label} />
                   {t.label}
@@ -112,8 +139,10 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                 <button
                   type="button"
                   onClick={"action" in t && t.action ? t.action : undefined}
-                  className="flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 active:text-clay"
+                  className="flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] active:text-clay"
                   aria-label={t.label}
+                  aria-expanded={"key" in t && t.key === "shop" ? open : undefined}
+                  aria-controls={"key" in t && t.key === "shop" ? "mobile-nav-drawer" : undefined}
                 >
                   <Icon d={t.icon} label={t.label} />
                   {t.label}
@@ -125,7 +154,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
             <button
               type="button"
               onClick={() => setCartOpen(true)}
-              className="relative flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 active:text-clay"
+              className="relative flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] active:text-clay"
               aria-label={`${d.cart} (${count})`}
             >
               <span className="relative">
@@ -152,20 +181,23 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
           open ? "visible" : "invisible",
         )}
         aria-hidden={!open}
+        inert={!open}
       >
         <div
           className={cn(
-            "absolute inset-0 bg-[#172121]/50 transition-opacity duration-300",
+            "absolute inset-0 bg-[#172121]/50 transition-opacity duration-300 motion-reduce:transition-none",
             open ? "opacity-100" : "opacity-0",
           )}
           onClick={() => setOpen(false)}
         />
         <aside
+          ref={drawerRef}
+          id="mobile-nav-drawer"
           role="dialog"
           aria-modal="true"
           aria-label={d.menu}
           className={cn(
-            "absolute top-0 left-0 flex h-full w-[86vw] max-w-[340px] flex-col bg-[#FBF6F3] transition-transform duration-300 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
+            "absolute top-0 left-0 flex h-full w-[86vw] max-w-[340px] flex-col bg-[#FBF6F3] transition-transform duration-300 motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
             open ? "translate-x-0" : "-translate-x-full",
           )}
         >
@@ -177,10 +209,11 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
               Meraki
             </span>
             <button
+              ref={closeRef}
               type="button"
               onClick={() => setOpen(false)}
               aria-label={d.close}
-              className="p-2 text-[#172121]/70 hover:text-clay"
+              className="p-2 text-[#172121]/70 hover:text-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
             >
               ✕
             </button>
@@ -195,22 +228,23 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                   <Link
                     href={s.href}
                     onClick={() => setOpen(false)}
-                    className="flex-1 py-3.5 text-[15px] font-medium tracking-wide"
+                    className="flex-1 py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
                   >
                     {s.label}
                   </Link>
                   <button
                     type="button"
                     aria-expanded={expanded === s.key}
+                    aria-controls={`mobile-nav-sub-${s.key}`}
                     aria-label={`${s.label} subcategories`}
                     onClick={() =>
                       setExpanded(expanded === s.key ? null : s.key)
                     }
-                    className="p-2 text-[#172121]/80"
+                    className="p-2 text-[#172121]/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
                   >
                     <span
                       className={cn(
-                        "inline-block transition-transform duration-200",
+                        "inline-block transition-transform duration-200 motion-reduce:transition-none",
                         expanded === s.key && "rotate-180",
                       )}
                     >
@@ -219,8 +253,9 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                   </button>
                 </div>
                 <div
+                  id={`mobile-nav-sub-${s.key}`}
                   className={cn(
-                    "grid transition-all duration-200",
+                    "grid transition-all duration-200 motion-reduce:transition-none",
                     expanded === s.key
                       ? "grid-rows-[1fr] opacity-100"
                       : "grid-rows-[0fr] opacity-0",
@@ -232,7 +267,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                         <Link
                           href={s.href}
                           onClick={() => setOpen(false)}
-                          className="block py-1.5 text-[14px] text-clay"
+                          className="block py-1.5 text-[14px] text-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
                         >
                           {d.view_all} →
                         </Link>
@@ -241,7 +276,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                         <Link
                           href="/new-arrivals"
                           onClick={() => setOpen(false)}
-                          className="block py-1.5 text-[14px] text-[#172121]/70"
+                          className="block py-1.5 text-[14px] text-[#172121]/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
                         >
                           {d.nav_new}
                         </Link>
@@ -250,7 +285,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                         <Link
                           href="/sale"
                           onClick={() => setOpen(false)}
-                          className="block py-1.5 text-[14px] text-[#172121]/70"
+                          className="block py-1.5 text-[14px] text-[#172121]/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
                         >
                           {d.nav_sale}
                         </Link>
@@ -263,14 +298,14 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
             <Link
               href="/stories"
               onClick={() => setOpen(false)}
-              className="block py-3.5 text-[15px] font-medium tracking-wide"
+              className="block py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
             >
               {d.nav_stories}
             </Link>
             <Link
               href="/account"
               onClick={() => setOpen(false)}
-              className="block py-3.5 text-[15px] font-medium tracking-wide text-[#172121]/70"
+              className="block py-3.5 text-[15px] font-medium tracking-wide text-[#172121]/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
             >
               {d.account}
             </Link>

@@ -282,6 +282,8 @@ CREATE POLICY "audit admin read" ON public.audit_log
   FOR SELECT TO authenticated USING (public.is_admin());
 
 -- Storage: product-images bucket -------------------------------------------------
+-- Runs as postgres so it works on fresh projects. Dashboard fallback if ever
+-- needed: Storage -> New bucket -> id `product-images`, Public ON.
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('product-images', 'product-images', true)
 ON CONFLICT (id) DO UPDATE SET public = true;

@@ -11,6 +11,11 @@ const csp = [
   "font-src 'self' https: data:",
   "img-src 'self' data: blob: https:",
   "connect-src 'self' https:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'self'",
+  "upgrade-insecure-requests",
 ].join("; ");
 
 const nextConfig: NextConfig = {

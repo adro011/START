@@ -4,8 +4,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CATEGORIES, SEARCH_INDEX } from "@/lib/catalog";
+import { cn } from "@/lib/format";
 
 const RECENT_KEY = "brand-search-recent";
+
+const RING =
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]";
 
 function subsequenceMatch(needle: string, haystack: string): boolean {
   const n = needle.toLowerCase().replace(/\s+/g, "");
@@ -21,7 +25,10 @@ export default function SearchPalette() {
   const [query, setQuery] = useState("");
   const [debounced, setDebounced] = useState("");
   const [recent, setRecent] = useState<string[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const prevFocus = useRef<HTMLElement | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -52,8 +59,19 @@ export default function SearchPalette() {
     return () => clearTimeout(t);
   }, [query]);
 
+  // Focus the input on open (remember the trigger), lock scroll, restore on close.
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 30);
+    if (!open) return;
+    prevFocus.current = document.activeElement as HTMLElement | null;
+    setActiveIndex(null);
+    const t = setTimeout(() => inputRef.current?.focus(), 30);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      clearTimeout(t);
+      document.body.style.overflow = prevOverflow;
+      prevFocus.current?.focus?.();
+    };
   }, [open ]);
 
   const results = useMemo(() => {
@@ -63,6 +81,17 @@ export default function SearchPalette() {
     ).slice(0, 8);
   }, [debounced]);
 
+  // Arrow target resets whenever the result set changes.
+  useEffect(() => {
+    setActiveIndex(null);
+  }, [debounced]);
+
+  // Keep the arrow-highlighted option on screen.
+  useEffect(() => {
+    if (activeIndex === null) return;
+    document.getElementById(`search-palette-opt-${activeIndex}`)?.scrollIntoView({ block: "nearest" });
+  }, [activeIndex ]);
+
   const catSuggestions = useMemo(() => {
     if (!debounced) return CATEGORIES.slice(0, 6);
     return CATEGORIES.filter((c) =>
@@ -70,9 +99,7 @@ export default function SearchPalette() {
     ).slice(0, 6);
   }, [debounced]);
 
-  function commitSearch(q: string) {
-    const v = q.trim();
-    if (!v) return;
+  function recordRecent(v: string) {
     setRecent((r) => {
       const next = [v, ...r.filter((x) => x !== v)].slice(0, 6);
       try {
@@ -82,11 +109,70 @@ export default function SearchPalette() {
       }
       return next;
     });
+  }
+
+  function commitSearch(q: string) {
+    const v = q.trim();
+    if (!v) return;
+    recordRecent(v);
     setOpen(false);
     router.push(`/search?q=${encodeURIComponent(v)}`);
   }
 
+  function visitResult(index: number) {
+    const r = results[index];
+    if (!r) return;
+    recordRecent(r.name);
+    setOpen(false);
+    router.push(`/product/${r.slug}`);
+  }
+
+  function onInputKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (results.length === 0) return;
+      setActiveIndex((a) => (a === null ? 0 : (a + 1) % results.length));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (results.length === 0) return;
+      setActiveIndex((a) =>
+        a === null ? results.length - 1 : (a - 1 + results.length) % results.length,
+      );
+    } else if (e.key === "Home") {
+      if (results.length === 0) return;
+      e.preventDefault();
+      setActiveIndex(0);
+    } else if (e.key === "End") {
+      if (results.length === 0) return;
+      e.preventDefault();
+      setActiveIndex(results.length - 1);
+    } else if (e.key === "Enter") {
+      // Enter on a highlighted result visits it; otherwise commit the search.
+      if (activeIndex !== null && results[activeIndex]) {
+        e.preventDefault();
+        visitResult(activeIndex);
+      }
+    } else if (e.key === "Tab") {
+      // Traps-ish Tab cycle inside the palette panel.
+      const root = panelRef.current;
+      if (!root) return;
+      const items = [...root.querySelectorAll<HTMLElement>("input, a[href], button:not([disabled])")];
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }
+
   if (!open) return null;
+
+  const activeId = activeIndex !== null ? `search-palette-opt-${activeIndex}` : undefined;
 
   return (
     <div
@@ -97,6 +183,7 @@ export default function SearchPalette() {
       onClick={() => setOpen(false)}
     >
       <div
+        ref={panelRef}
         className="mt-16 w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
@@ -110,8 +197,15 @@ export default function SearchPalette() {
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={onInputKeyDown}
+            role="combobox"
+            aria-expanded={results.length > 0}
+            aria-controls="search-palette-listbox"
+            aria-activedescendant={activeId}
+            aria-label="Search products"
+            autoComplete="off"
             placeholder="Search panjabi, sharee, kabli…  (Esc to close)"
-            className="w-full border-b px-4 py-3 text-base outline-none"
+            className={cn("w-full border-b px-4 py-3 text-base outline-none", RING)}
           />
         </form>
         <div className="max-h-80 overflow-y-auto p-2">
@@ -123,8 +217,9 @@ export default function SearchPalette() {
               {recent.map((r) => (
                 <button
                   key={r}
+                  type="button"
                   onClick={() => commitSearch(r)}
-                  className="block w-full rounded px-2 py-1.5 text-left text-sm hover:bg-neutral-100"
+                  className={cn("block w-full rounded px-2 py-1.5 text-left text-sm hover:bg-neutral-100", RING)}
                 >
                   {r}
                 </button>
@@ -142,7 +237,7 @@ export default function SearchPalette() {
                     key={c.slug}
                     href={`/${c.section}?category=${c.slug}`}
                     onClick={() => setOpen(false)}
-                    className="rounded-full border px-2.5 py-1 text-xs hover:bg-neutral-100"
+                    className={cn("rounded-full border px-2.5 py-1 text-xs hover:bg-neutral-100", RING)}
                   >
                     {c.name} · {c.section}
                   </Link>
@@ -150,28 +245,39 @@ export default function SearchPalette() {
               </div>
             </div>
           )}
-          {results.map((r) => (
-            <Link
-              key={r.slug}
-              href={`/product/${r.slug}`}
-              onClick={() => {
-                commitSearch(r.name);
-              }}
-              className="block rounded px-3 py-2 text-sm hover:bg-neutral-100"
-            >
-              <span className="font-medium">{r.name}</span>
-              <span className="ml-2 text-xs text-neutral-600">
-                {r.categoryName} · {r.section}
-              </span>
-            </Link>
-          ))}
+          <div role="listbox" id="search-palette-listbox" aria-label="Product results">
+            {results.map((r, i) => (
+              <Link
+                key={r.slug}
+                id={`search-palette-opt-${i}`}
+                role="option"
+                aria-selected={i === activeIndex}
+                href={`/product/${r.slug}`}
+                onClick={() => {
+                  commitSearch(r.name);
+                }}
+                onMouseEnter={() => setActiveIndex(i)}
+                className={cn(
+                  "block rounded px-3 py-2 text-sm hover:bg-neutral-100",
+                  RING,
+                  i === activeIndex && "bg-neutral-100",
+                )}
+              >
+                <span className="font-medium">{r.name}</span>
+                <span className="ml-2 text-xs text-neutral-600">
+                  {r.categoryName} · {r.section}
+                </span>
+              </Link>
+            ))}
+          </div>
           {debounced !== "" && results.length === 0 && (
             <div className="px-3 py-6 text-center text-sm text-neutral-600">
               No matches for “{debounced}”. Try “panjabi”, “sharee” or “kabli”.
               <div>
                 <button
+                  type="button"
                   onClick={() => commitSearch(debounced)}
-                  className="mt-2 underline"
+                  className={cn("mt-2 underline", RING)}
                 >
                   Search anyway →
                 </button>

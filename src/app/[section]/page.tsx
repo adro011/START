@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import Filters, { LoadMore } from "@/components/filters";
 import SortSelect from "@/components/sort-select";
 import { ProductCard } from "@/components/product-card";
+import Reveal from "@/components/reveal";
 import { CATEGORIES, asCatalogProduct, getBySection, isValidSection } from "@/lib/catalog";
 
 export function generateStaticParams() {
@@ -101,8 +102,10 @@ export default async function SectionPage({
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-              {visible.map((p) => (
-                <ProductCard key={p.slug} product={asCatalogProduct(p)} />
+              {visible.map((p, i) => (
+                <Reveal key={p.slug} delay={(i % 6) * 50}>
+                  <ProductCard product={asCatalogProduct(p)} />
+                </Reveal>
               ))}
             </div>
           )}

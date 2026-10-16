@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { DEMO_CATEGORIES } from '@/lib/admin-data';
 import { PRODUCTS } from '@/lib/catalog';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://example.com';
+const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
