@@ -48,8 +48,13 @@ export default function Preloader() {
       onClick={() => setState("hidden")}
       className={`preloader ${state === "leaving" ? "preloader-leaving" : ""}`}
     >
-      <p className="preloader-word">{SITE.name}</p>
-      <p className="preloader-sub">{SITE.tagline}</p>
+      <p className="kicker mb-2 text-[#F2CCC3]/80">Quality · Beauty · Elegance</p>
+      <p className="preloader-word tracking-tight">{SITE.name}</p>
+      <p className="preloader-sub mt-2">{SITE.tagline}</p>
+      <span aria-hidden="true" className="mt-6 block h-px w-40 overflow-hidden bg-white/15">
+        <span className="block h-full w-full origin-left animate-[preloader-bar_850ms_cubic-bezier(0.22,1,0.36,1)_both] bg-[#D5573B]" />
+      </span>
+      <style>{`@keyframes preloader-bar{from{transform:scaleX(0)}to{transform:scaleX(1)}}`}</style>
     </div>
   );
 }

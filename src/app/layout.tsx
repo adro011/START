@@ -10,13 +10,15 @@ import { CartDrawer } from "../components/cart-drawer";
 import SearchPalette from "../components/search-palette";
 import { SwRegister } from "../components/sw-register";
 
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+
 export const metadata: Metadata = {
   title: {
     default: `${SITE.name} — ${SITE.tagline}`,
     template: `%s · ${SITE.name}`,
   },
   description: SITE.description,
-  metadataBase: new URL("https://example.com"),
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     type: "website",
     siteName: SITE.name,

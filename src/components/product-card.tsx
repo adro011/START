@@ -51,8 +51,8 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
   };
 
   return (
-    <article className="group relative flex w-full flex-col">
-      <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-[#F2CCC3] via-[#FBF6F3] to-[#7E9181]/30">
+    <article className="group relative flex w-full flex-col" data-cursor="View">
+      <div className="lift card-sheen relative aspect-[3/4] overflow-hidden border border-[#172121]/8 bg-gradient-to-br from-[#F2CCC3] via-[#FBF6F3] to-[#7E9181]/30 shadow-[0_0_0_rgba(0,0,0,0)] group-hover:shadow-[0_24px_48px_rgba(23,33,33,0.16)]">
         {first ? (
           <Link
             href={`/product/${p.slug}`}
@@ -64,7 +64,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
               alt={first.alt || p.name}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
-              className="object-cover transition-all duration-500 group-hover:scale-[1.04]"
+              className="object-cover transition-all duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
             />
             {second && (
               <Image
@@ -72,7 +72,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
                 alt={second.alt || p.name}
                 fill
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
-                className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                className="object-cover opacity-0 transition-all duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06] group-hover:opacity-100"
                 aria-hidden="true"
               />
             )}
@@ -93,14 +93,14 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
         )}
 
         {/* Badges */}
-        <div className="absolute top-2 left-2 flex gap-1.5">
+        <div className="absolute top-3 left-3 flex gap-1.5">
           {onSale && (
-            <span className="bg-clay px-2 py-1 text-[10.5px] font-semibold tracking-[0.12em] text-white uppercase">
+            <span className="bg-clay px-2.5 py-1 text-[10.5px] font-semibold tracking-[0.16em] text-white uppercase shadow-[0_8px_20px_rgba(213,87,59,0.35)]">
               Sale
             </span>
           )}
           {p.isNew && (
-            <span className="bg-[#172121] px-2 py-1 text-[10.5px] font-semibold tracking-[0.12em] text-[#FBF6F3] uppercase">
+            <span className="glass-dark px-2.5 py-1 text-[10.5px] font-semibold tracking-[0.16em] text-[#FBF6F3] uppercase">
               New
             </span>
           )}
@@ -113,9 +113,8 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
           aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
           onClick={() => setWished((w) => !w)}
           className={cn(
-            "absolute top-2 right-2 rounded-full bg-[#FBF6F3]/90 p-2 backdrop-blur transition-all duration-200 active:scale-90",
-            wished ? "text-clay" : "text-[#172121]/80 hover:text-clay",
-            wished && "scale-110",
+            "absolute top-3 right-3 rounded-full border border-white/40 bg-[#FBF6F3]/85 p-2 shadow-[0_8px_20px_rgba(23,33,33,0.12)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 active:scale-90",
+            wished ? "text-clay pop" : "text-[#172121]/80 hover:text-clay",
           )}
         >
           <svg viewBox="0 0 24 24" fill={wished ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.8} strokeLinejoin="round" className="h-[17px] w-[17px]" aria-hidden="true">
@@ -142,15 +141,16 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-1 px-0.5 pt-3 pb-1">
+      <div className="flex flex-1 flex-col gap-1 px-0.5 pt-3.5 pb-1">
+        <p className="text-[11px] font-semibold tracking-[0.2em] text-[#172121]/40 uppercase">{p.colors[0]?.name ?? "Heritage"}</p>
         <Link
           href={`/product/${p.slug}`}
-          className="text-[14.5px] leading-snug font-medium text-[#172121] underline-offset-4 hover:text-[#7D451B] hover:underline"
+          className="link-lux w-fit text-[15px] leading-snug font-medium text-[#172121] hover:text-[#7D451B]"
         >
           {p.name}
         </Link>
-        <div className="flex items-baseline gap-2">
-          <span className="text-[15px] font-semibold text-clay">
+        <div className="mt-0.5 flex items-baseline gap-2">
+          <span className="price text-[16px] font-semibold tracking-tight text-[#7D451B]" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "19px" }}>
             {formatBDT(p.pricePaisa)}
           </span>
           {p.compareAtPaisa != null && p.compareAtPaisa > p.pricePaisa && (

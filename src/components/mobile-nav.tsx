@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/store/cart";
+import { SITE } from "@/config/site";
 import { CATEGORIES } from "@/lib/catalog";
 import { getDict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/dictionary";
@@ -203,10 +204,10 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
         >
           <div className="flex items-center justify-between border-b border-[#172121]/10 px-5 py-4">
             <span
-              className="text-[24px] font-semibold"
+              className="text-[22px] font-semibold tracking-wide"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              Meraki
+              {SITE.name}
             </span>
             <button
               ref={closeRef}

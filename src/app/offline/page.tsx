@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { SITE } from "@/config/site";
 
 export const metadata = {
-  title: 'Offline — Brand Store',
+  title: `Offline — ${SITE.name}`,
   robots: { index: false, follow: false },
 };
 

@@ -1,11 +1,11 @@
-# FINAL REPORT — Meraki brand-store (docs pass)
+# FINAL REPORT — ABRAR-EXCLUSIVE brand-store (docs pass)
 
 Docs-finalization pass only. No code changes, no install/build/test runs, no git commits.
 Scope owned here: `README.md` (rewritten), `DECISIONS.md` (entries 5–6 appended), this file (new).
 
 ## 1. Repo state
 
-- Root: `X:\START\brand-store`, Next.js 15.5 + Supabase fashion e-commerce, brand **Meraki** (`BRAND_NAME` only in `src/config/site.ts`).
+- Root: `X:\START\brand-store`, Next.js 15.5 + Supabase fashion e-commerce, brand **ABRAR-EXCLUSIVE** (`BRAND_NAME` only in `src/config/site.ts`).
 - Git: local repo on branch `master`, **no remote configured** (not yet pushed). Working tree has 3 uncommitted modifications: `.gitignore`, `src/app/feed.xml/route.ts`, `src/app/robots.ts`, `src/app/sitemap.ts` (per `git status` at docs time).
 - Migrations present and read: `0001_schema.sql` (16 tables, order sequence from BR-100231, 5-image trigger), `0002_rls.sql` (`is_admin()` / `is_staff_or_admin()`, per-table policies, `product-images` bucket), `0003_rpcs.sql` (`create_order`, `search_products`, `adjust_stock`, `cancel_order`), `0004_seed.sql` (category tree, zones, coupons, 24 `demo-*` products).
 - Storefront + admin routes, 19 components, 6 API routes (health, products, contact, newsletter, waitlist, webhooks/sslcommerz), 3 unit test files, 2 e2e specs, CI/backup/keepalive workflows — all present and described factually in the rewritten `README.md`.
@@ -30,7 +30,7 @@ Without Supabase env vars the app runs on the local demo catalog with a dev-admi
 - **Repo URL:** local git only — no remote configured (not yet pushed). To publish:
 
 ```bash
-gh repo create meraki-brand-store --private --source=. --push
+gh repo create abrar-exclusive-store --private --source=. --push
 ```
 
 ## 4. Admin steps
@@ -92,7 +92,33 @@ See `README.md` § Env vars (full table) — source of truth is `.env.example`:
 5. Hero visuals are `.svg` placeholders (`men.svg`/`women.svg`/`kids.svg`); contact info, WhatsApp number, and social links are placeholders (`src/config/site.ts`).
 6. Turnstile/Resend/Upstash integrations are env-gated stubs, not end-to-end verified.
 
-## 10. Prioritized next steps
+## 10. Addendum 2026-10-16 — live DB + motion + pre-commit fixes (uncommitted at docs-pass time, now in repo)
+
+- **Supabase live:** CLI linked to project START (`lsyrqkrzuzkkezpycgcu`); migrations `0001`–`0005` pushed
+  (`0005_fix_extensions.sql` moves `pgcrypto`/`pg_trgm` into `public`; `0002_rls.sql` gained `DROP POLICY IF EXISTS`
+  guards + INSERT coverage in `guard_profile_role`). E2E proved `create_order` (`BR-100232`, `WELCOME10` + Dhaka-zone
+  math, atomic stock −2), then cleaned up. `src/app/api/health/route.ts` reports live product counts (`source: supabase`).
+- **Checkout:** `src/actions/checkout.ts::placeOrder` tries live RPC `create_order` (sku→variant resolution via
+  server-only service-role client `src/lib/supabase/service-role.ts`, RPC via anon client) and falls back to the local
+  demo repricer when env is missing or cart items have no DB variant. Generated types in `src/types/supabase.ts`.
+- **Motion:** Lenis (`lenis` in `package.json`) + CSS reveals, magnetic CTAs, cursor ring, session preloader;
+  header is condense-on-scroll only (hide-on-scroll reverted: it would strand the open mega menu).
+- **Contrast fixes in this commit:** Sale badge / sale CTA / newsletter button / mega featured-CTA hover restored to
+  `bg-clay` (white-on-terracotta is 4.00:1, fails AA; white-on-clay is 6.33:1); product price uses umber
+  (7.15:1 on paper) with a `[&_.price]:text-blush` override in the dark sale band (umber-on-ink is 2.42:1).
+  Hero gold hover kept (white-on-`#917300` is 4.51:1, passes).
+- **Hero:** `public/hero/{men,women,kids}.jpg` are sharp-converted mozjpeg q84 files from the new `library/` PNG portraits
+  (245/412/410KB, ≤1080w, progressive); `.svg` files remain as fallbacks.
+  Multi-MB originals stay in local `library/` (git-ignored, not committed); `supabase/.temp/` also ignored.
+- **PWA:** `src/components/sw-register.tsx` is rendered by `src/app/layout.tsx` — the §9 limitation about an
+  unregistered SW no longer applies. `metadataBase` now uses `NEXT_PUBLIC_SITE_URL`.
+- **Brand:** ABRAR-EXCLUSIVE, "Quality, beauty and elegance" (single source `src/config/site.ts`; zero stale strings in `src`+`public`).
+- **Product page:** rebuilt per reference — 2-up gallery grid + lightbox, sticky buy column (qty stepper, live free-ship meter,
+  WhatsApp secondary, dark trust panel, pairs-well-with card).
+- Remaining TODOs unchanged: catalog-slug unification (so live RPC fires for storefront carts), Turnstile/Resend/Upstash
+  end-to-end verification, real product data + photography, deploy + domain.
+
+## 11. Prioritized next steps
 
 1. **Merchant feed polish** — `/feed.xml` route exists; validate against Google/Meta Merchant specs (availability, GTIN-less BD apparel, BDT pricing) and add scheduled refresh.
 2. **Abandoned-cart emails** — persist guest carts, scheduled Resend reminders with coupon incentive.

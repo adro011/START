@@ -1,6 +1,7 @@
-# Meraki — Premium Bangladeshi Fashion (Men / Women / Kids)
+# ABRAR-EXCLUSIVE — Premium Bangladeshi Fashion (Men / Women / Kids)
 
-Fashion e-commerce storefront + admin for the brand **Meraki** (Dhaka, Bangladesh).
+Fashion e-commerce storefront + admin for the brand **ABRAR-EXCLUSIVE** (Dhaka, Bangladesh).
+Tagline: **Quality, beauty and elegance**.
 Sections: **Men, Women, Kids** ("New Arrivals" and "Sale" are product flags, not categories).
 Currency is **BDT (৳) as integer paisa** in the DB, logic, and demo catalog. Payments: **COD by default + SSLCommerz** (bKash/Nagad/cards) behind a feature flag. Locales: `en` + `bn` (`en-BD` conventions, Bangla fields via `*_bn` columns).
 
@@ -17,13 +18,13 @@ Currency is **BDT (৳) as integer paisa** in the DB, logic, and demo catalog. P
 | Cart / wishlist | Zustand (persisted) | installed (`src/store/cart.ts`, `src/store/wishlist.ts`) |
 | Validation | `zod` (server actions, checkout) | installed |
 | Server-only code | `server-only` | installed |
-| Motion | CSS-only (transform/opacity); no motion library installed | factual — `motion`/`lenis`/`gsap` are NOT in `package.json` |
+| Motion | Lenis smooth scroll + CSS reveals (transform/opacity), magnetic CTAs, cursor ring, session preloader | installed (`lenis`; see `DECISIONS.md` 7, 9) |
 | Bot protection | Cloudflare Turnstile + honeypot field (checkout schema) | env-gated, not yet wired to verification API |
 | Email | Resend (order emails) | env key only, optional |
 | Rate limit / cache | Upstash Redis with in-memory fallback in dev | env keys only, optional |
 | Tests | Vitest, Playwright, `@axe-core/playwright`, Lighthouse CI | installed / configured |
 | CI/CD | GitHub Actions: lint → typecheck → unit → e2e → Lighthouse; weekly DB backup; keep-alive ping | `.github/workflows/` |
-| PWA | `public/sw.js` + `src/app/manifest.ts` + `/offline` route | SW file exists but is **not registered** (no registration code in `src`) |
+| PWA | `public/sw.js` + `src/app/manifest.ts` + `/offline` route | SW registered via `src/components/sw-register.tsx` (rendered in `src/app/layout.tsx`) |
 
 ## Quickstart
 
@@ -77,12 +78,13 @@ src/
     feed.xml/ sitemap.ts robots.ts opengraph-image.tsx manifest.ts
     offline/              # PWA offline fallback page
     about/ craft/ stories/ contact/ faq/ shipping-returns/ size-guides/ privacy/ terms/
-  actions/checkout.ts     # placeOrder server action (zod, BD phone ^01[3-9]\d{8}, coupon, shipping)
+   actions/checkout.ts     # placeOrder server action (zod, BD phone ^01[3-9]\d{8}, coupon, shipping;
+                           # tries live Supabase RPC create_order first, falls back to local demo repricer)
   components/             # 19 files: site-header, mega-menu, mobile-nav, announcement-bar,
                           # search-palette, product-card, gallery, filters, sort-select,
                           # cart-drawer, sticky-atc, size-guide, reviews, recently-viewed,
                           # back-in-stock, whatsapp-order, site-footer, legal-layout, providers
-  config/site.ts          # BRAND_NAME="Meraki", tagline, socials, placeholder phone/email,
+  config/site.ts          # BRAND_NAME="ABRAR-EXCLUSIVE", tagline, socials, placeholder phone/email,
                           # DISTRICTS (10), FREE_SHIP_THRESHOLD_PAISA = 250_000 (৳2,500)
   lib/                    # catalog.ts (24 demo products), coupons.ts, format.ts, auth.ts,
                           # admin-data.ts, dictionary.ts, supabase/
@@ -100,9 +102,8 @@ tests/
   e2e/                    # purchase.spec.ts (COD flow), a11y.spec.ts (/, /men, /cart)
   rls/                    # RLS test assets
 public/
-  hero/                   # men.svg, women.svg, kids.svg (SVG placeholders — plan calls for
-                          # /public/hero/{men,women,kids}.jpg photos; not yet replaced)
-  logo.svg icons/ sw.js   # sw.js exists but nothing registers it yet
+   hero/                   # men.jpg, women.jpg, kids.jpg (compressed) + men.svg/women.svg/kids.svg fallbacks
+   logo.svg icons/ sw.js   # sw.js registered via src/components/sw-register.tsx
 .github/workflows/       # ci.yml (lint/typecheck/unit → e2e → lighthouse), backup.yml, keepalive.yml
 ```
 

@@ -1,12 +1,12 @@
 import type { MetadataRoute } from 'next';
+import { SITE } from '@/config/site';
 
-// PWA manifest. Brand name is intentionally generic here until
-// src/config/site.ts (BRAND_NAME, plan §0) is populated, then
-// import the name from there to keep a single source of truth.
+// PWA manifest. Brand name comes from src/config/site.ts (BRAND_NAME,
+// plan §0) — the single source of truth.
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Brand Store — Premium Fashion Bangladesh',
-    short_name: 'Brand Store',
+    name: `${SITE.name} — Premium Fashion Bangladesh`,
+    short_name: 'ABRAR',
     description: 'Premium Men, Women and Kids fashion. COD across Bangladesh.',
     start_url: '/',
     scope: '/',

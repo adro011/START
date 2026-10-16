@@ -31,7 +31,7 @@ function HeaderIcon({
   children: ReactNode;
 }) {
   const cls =
-    "relative rounded-full p-2.5 text-[#172121] transition-colors hover:bg-[#F2CCC3]/60 hover:text-clay focus-visible:outline-2 focus-visible:outline-[#D5573B]";
+    "relative rounded-full p-2.5 text-[#172121] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#F2CCC3]/60 hover:text-clay hover:shadow-[0_8px_20px_rgba(213,87,59,0.18)] focus-visible:outline-2 focus-visible:outline-[#D5573B]";
   const inner = (
     <>
       {children}
@@ -65,7 +65,17 @@ export function SiteHeader() {
 
   useEffect(() => {
     setLocale(readLocale());
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    // Condense-on-scroll only (no hide-on-scroll: it would strand the open
+    // mega menu and drop keyboard focus off-screen). rAF-throttled.
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 24);
+        ticking = false;
+      });
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -80,9 +90,9 @@ export function SiteHeader() {
     <>
       <header
         className={cn(
-          "sticky top-0 z-40 transition-all duration-300 motion-reduce:transition-none",
+          "site-header sticky top-0 z-40 motion-reduce:transition-none",
           scrolled
-            ? "border-b border-[#172121]/10 bg-[#FBF6F3]/95 shadow-[0_1px_16px_rgba(23,33,33,0.10)] backdrop-blur"
+            ? "border-b border-[#172121]/10 bg-[#FBF6F3]/85 shadow-[0_12px_40px_rgba(23,33,33,0.12)] backdrop-blur-xl"
             : "border-b border-transparent bg-[#FBF6F3]",
         )}
       >
@@ -107,8 +117,8 @@ export function SiteHeader() {
             href="/"
             aria-label={`${SITE.name} — home`}
             className={cn(
-              "text-center font-semibold tracking-[0.08em] text-[#172121] uppercase transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none",
-              scrolled ? "text-[26px]" : "text-[32px]",
+              "text-center font-semibold tracking-[0.06em] whitespace-nowrap text-[#172121] uppercase transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none",
+              scrolled ? "text-[19px]" : "text-[22px] sm:text-[25px]",
             )}
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >

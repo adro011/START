@@ -4,6 +4,8 @@ import { z } from "zod";
 import { getProduct } from "@/lib/catalog";
 import { validateCoupon } from "@/lib/coupons";
 import { FREE_SHIP_THRESHOLD_PAISA } from "@/config/site";
+import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 
 const itemSchema = z.object({
   slug: z.string().min(1),
@@ -55,7 +57,15 @@ export async function placeOrder(raw: CheckoutInput): Promise<CheckoutResult> {
     return { ok: false, error: "Online payment is not enabled right now. Please choose Cash on Delivery." };
   }
 
-  // Recalculate everything from the catalog — never trust client totals.
+  // Live path: Supabase RPC `create_order` (transactional stock decrement,
+  // DB repricing, coupon + zone logic, order + items + event persistence).
+  // Falls back to the local demo repricer when env is missing OR when the
+  // cart holds TS-catalog items with no DB variant yet (catalog unification
+  // is a follow-up; the RPC activates automatically once slugs match).
+  const live = await tryLiveOrder(input);
+  if (live) return live;
+
+  // Demo path: recalculate everything from the catalog — never trust client totals.
   let subtotal = 0;
   for (const item of input.items) {
     const product = getProduct(item.slug);
@@ -88,9 +98,111 @@ export async function placeOrder(raw: CheckoutInput): Promise<CheckoutResult> {
 
   const total = afterDiscount + shipping;
 
-  // TODO: call Supabase RPC `create_order(cart, address, coupon, payment)` here to
-  // decrement stock transactionally, persist order + items + event, and send emails.
   const orderNo = `BR-${Math.floor(100000 + Math.random() * 900000)}`;
 
   return { ok: true, orderNo, total, subtotal, discount, shipping };
+}
+
+type ParsedInput = z.infer<typeof checkoutSchema>;
+
+/**
+ * Attempt a real transactional order via `create_order`.
+ * Returns the CheckoutResult on success, a user-facing error when the DB
+ * rejects the order (stock, coupon, zone), or null when live ordering is
+ * unavailable (no env, or cart items have no DB variant) → caller falls
+ * back to the demo repricer.
+ */
+async function tryLiveOrder(
+  input: ParsedInput,
+): Promise<CheckoutResult | null> {
+  try {
+    const anon = await createClient();
+    const admin = createServiceRoleClient();
+    if (!anon || !admin) return null;
+
+    // Resolve TS cart lines (slug/sku) to DB variant uuids.
+    const cart: { variant_id: string; qty: number }[] = [];
+    for (const item of input.items) {
+      const { data, error } = await admin
+        .from("product_variants")
+        .select("id, products!inner(slug, active, deleted_at)")
+        .eq("sku", item.sku)
+        .single();
+      if (error || !data) return null; // no DB variant yet → demo fallback
+      const prod = data.products as unknown as {
+        slug: string;
+        active: boolean;
+        deleted_at: string | null;
+      };
+      if (!prod || prod.active !== true || prod.deleted_at !== null) return null;
+      cart.push({ variant_id: data.id as string, qty: item.qty });
+    }
+    if (cart.length === 0) return null;
+
+    // RPC is case-sensitive on coupon codes — normalize before sending.
+    const coupon = (input.coupon ?? "").trim().toUpperCase() || null;
+
+    const { data, error } = await anon.rpc("create_order", {
+      p_cart: cart,
+      p_address: {
+        name: input.name,
+        phone: input.phone,
+        email: input.email || "",
+        division: input.division,
+        district: input.district,
+        area: input.area,
+        line1: input.line1,
+        notes: input.notes || "",
+      },
+      p_coupon: coupon,
+      p_payment: input.payment,
+    });
+    if (error) {
+      return { ok: false, error: friendlyRpcError(error.message) };
+    }
+    const created = data as unknown as {
+      id: string;
+      order_no: string;
+      total_paisa: number;
+    } | null;
+    if (!created?.order_no) {
+      return { ok: false, error: "Order could not be placed. Please try again." };
+    }
+
+    // Authoritative breakdown for the receipt (service-role read).
+    const { data: row } = await admin
+      .from("orders")
+      .select("subtotal_paisa, discount_paisa, shipping_paisa, total_paisa")
+      .eq("id", created.id)
+      .single();
+    const r = row as unknown as {
+      subtotal_paisa: number;
+      discount_paisa: number;
+      shipping_paisa: number;
+      total_paisa: number;
+    } | null;
+    return {
+      ok: true,
+      orderNo: created.order_no,
+      total: r?.total_paisa ?? created.total_paisa,
+      subtotal: r?.subtotal_paisa ?? 0,
+      discount: r?.discount_paisa ?? 0,
+      shipping: r?.shipping_paisa ?? 0,
+    };
+  } catch (e) {
+    console.warn("checkout: live order failed, demo fallback", e);
+    return null;
+  }
+}
+
+/** Map PostgREST/RPC errors to user-facing messages (no internals leaked). */
+function friendlyRpcError(message: string): string {
+  const m = message.toLowerCase();
+  if (m.includes("insufficient stock")) return "Some items just sold out. Please adjust quantities.";
+  if (m.includes("variant not found")) return "A variant is no longer available. Please re-add it to your bag.";
+  if (m.includes("invalid coupon") || m.includes("minimum subtotal") || m.includes("coupon"))
+    return "That coupon code is not valid for this order.";
+  if (m.includes("shipping zone") || m.includes("district"))
+    return "We could not determine shipping for that district. Please check the address.";
+  return "Order could not be placed. Please try again.";
 }

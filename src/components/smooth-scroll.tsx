@@ -18,7 +18,7 @@ export default function SmoothScroll() {
     const lenis = new Lenis({
       lerp: 0.11,
       wheelMultiplier: 1,
-      touchMultiplier: 1.4,
+      touchMultiplier: 1,
       smoothWheel: true,
       anchors: true,
     });
@@ -30,10 +30,21 @@ export default function SmoothScroll() {
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
+    // Pause the rAF driver when the tab is hidden (battery + CPU).
+    const onVis = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      } else if (!raf) {
+        raf = requestAnimationFrame(loop);
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
 
     document.documentElement.classList.add("lenis");
     return () => {
       cancelAnimationFrame(raf);
+      document.removeEventListener("visibilitychange", onVis);
       lenis.destroy();
       document.documentElement.classList.remove("lenis");
       delete (window as unknown as { __lenis?: Lenis }).__lenis;

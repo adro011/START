@@ -6,13 +6,13 @@
  * (plan.md §0: brand placeholder lives in src/config/site.ts)
  */
 
-export const BRAND_NAME = "Meraki";
+export const BRAND_NAME = "ABRAR-EXCLUSIVE";
 
 export const SITE = {
   name: BRAND_NAME,
-  tagline: "Modern heritage wear, made in Bangladesh",
+  tagline: "Quality, beauty and elegance",
   description:
-    "Meraki is a modern Bangladeshi heritage label — panjabis, sharees, kurtas and kids' wear in breathable fabrics, cut for real life and made to be reworn.",
+    "ABRAR-EXCLUSIVE is a modern Bangladeshi heritage label — panjabis, sharees, kurtas and kids' wear in breathable fabrics, cut for real life and made to be reworn.",
   phone: "+8801XXXXXXXXX",
   whatsapp: "+8801XXXXXXXXX",
   /** Digits-only WhatsApp for wa.me links (derived, keeps placeholder in one place). */
@@ -22,10 +22,10 @@ export const SITE = {
   currency: "৳" as const,
   locale: "en-BD" as const,
   socials: {
-    facebook: "https://facebook.com/meraki.bd",
-    instagram: "https://instagram.com/meraki.bd",
-    youtube: "https://youtube.com/@meraki.bd",
-    tiktok: "https://tiktok.com/@meraki.bd",
+    facebook: "https://facebook.com/abrarexclusive.bd",
+    instagram: "https://instagram.com/abrarexclusive.bd",
+    youtube: "https://youtube.com/@abrarexclusive.bd",
+    tiktok: "https://tiktok.com/@abrarexclusive.bd",
   },
   supportHours: "Sat–Thu, 10am–8pm (BST)",
 } as const;

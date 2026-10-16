@@ -254,7 +254,259 @@ html.lenis body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
 }
 
+/* ── Premium editorial system (1000x pass) ─────────────────── */
+:root {
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+  --display: "Cormorant Garamond", "Playfair Display", "Noto Serif Bengali", Georgia, serif;
+  --sans: "Jost", "Poppins", "Hind Siliguri", ui-sans-serif, system-ui, sans-serif;
+}
+
+::selection {
+  background: #d5573b;
+  color: #fbf6f3;
+}
+
+:focus-visible {
+  outline: 2px solid #d5573b;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Fluid editorial type */
+.display-mega {
+  font-family: var(--display);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  font-size: clamp(3.2rem, 10vw, 10.5rem);
+  text-wrap: balance;
+}
+.display-xl {
+  font-family: var(--display);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+  font-size: clamp(2.6rem, 6vw, 5.5rem);
+  text-wrap: balance;
+}
+.kicker {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Elegant display voice: refined serif, tight architectural leading */
+.display-mega,
+.display-xl,
+.hero-panel span[class*="text-[clamp"] {
+  font-family: "Cormorant Garamond", "Playfair Display", "Noto Serif Bengali", Georgia, serif;
+  letter-spacing: 0.01em;
+}
+
+/* Animated editorial underline */
+.link-lux {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 450ms var(--ease-lux), color 250ms ease;
+  text-underline-offset: 5px;
+}
+.link-lux:hover,
+.group:hover .link-lux {
+  background-size: 100% 1px;
+}
+
+/* Frosted glass */
+.glass {
+  background: color-mix(in srgb, #fbf6f3 72%, transparent);
+  backdrop-filter: blur(18px) saturate(1.25);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  border: 1px solid color-mix(in srgb, #172121 12%, transparent);
+}
+.glass-dark {
+  background: color-mix(in srgb, #172121 62%, transparent);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border: 1px solid rgba(251, 246, 243, 0.14);
+}
+
+/* Cinematic hero panels */
+@keyframes kenburns {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+.hero-panel img {
+  animation: kenburns 2.4s var(--ease-lux) both;
+  will-change: transform;
+}
+.hero-shell:hover .hero-panel:not(:hover) {
+  filter: saturate(0.82) brightness(0.72);
+}
+.hero-shell .hero-panel {
+  transition: flex-grow 650ms var(--ease-lux), filter 550ms var(--ease-lux);
+}
+@media (hover: hover) and (pointer: fine) {
+  /* Ken Burns owns the img transform (animation fill); hover only lifts
+     brightness so the two never fight and cause a snap-back jank frame. */
+  .hero-panel:hover img {
+    filter: brightness(1.06);
+  }
+  .hero-panel img {
+    transition: filter 550ms var(--ease-lux);
+  }
+}
+
+/* Below-fold sections skip rendering until near viewport (free FPS). */
+.cv {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+/* Kill the heaviest paint work on small screens. */
+@media (max-width: 768px) {
+  .drift,
+  .drift-2 {
+    display: none;
+  }
+  .reveal-blur {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+    filter: none;
+  }
+}
+
+/* Slow marquee for luxury strip */
+@keyframes marquee-lux {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-lux {
+  animation: marquee-lux 26s linear infinite;
+  will-change: transform;
+}
+.marquee-lux:hover {
+  animation-play-state: paused;
+}
+
+/* Floating depth orbs */
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(14px, -18px, 0); }
+}
+.drift {
+  animation: drift 9s ease-in-out infinite;
+  will-change: transform;
+}
+.drift-2 {
+  animation: drift 12s ease-in-out -4s infinite reverse;
+  will-change: transform;
+}
+
+/* Dimensional card lift */
+.lift {
+  transition: transform 500ms var(--ease-lux), box-shadow 500ms var(--ease-lux), border-color 300ms ease;
+  will-change: transform;
+}
+@media (hover: hover) and (pointer: fine) {
+  .lift:hover {
+    transform: translateY(-5px);
+  }
+}
+
+/* Outlined ghost numerals */
+.text-ghost {
+  -webkit-text-stroke: 1px rgba(251, 246, 243, 0.22);
+  color: transparent;
+}
+.text-ghost-ink {
+  -webkit-text-stroke: 1px rgba(23, 33, 33, 0.16);
+  color: transparent;
+}
+
+/* Thin luxury scrollbar for rails */
+.rail {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(23, 33, 33, 0.28) transparent;
+}
+.rail::-webkit-scrollbar {
+  height: 6px;
+}
+.rail::-webkit-scrollbar-thumb {
+  background: rgba(23, 33, 33, 0.24);
+}
+.rail-dark::-webkit-scrollbar-thumb {
+  background: rgba(251, 246, 243, 0.28);
+}
+
+/* Scroll cue */
+@keyframes cue-drop {
+  0% { transform: translateY(-100%); }
+  55% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+.cue-line {
+  overflow: hidden;
+}
+.cue-line > span {
+  display: block;
+  animation: cue-drop 1.8s var(--ease-lux) infinite;
+}
+
+/* Header condense (no hide-on-scroll: mega menu + focus stay visible) */
+.site-header {
+  transition: background 300ms ease, box-shadow 300ms ease;
+}
+
+/* Mega panel stagger */
+.mega-link {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition: opacity 350ms var(--ease-lux), transform 350ms var(--ease-lux);
+}
+[data-mega-open="1"] .mega-link {
+  opacity: 1;
+  transform: none;
+}
+
+/* Product card depth */
+.card-sheen {
+  position: relative;
+}
+.card-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.22) 48%, transparent 62%);
+  transform: translateX(-120%);
+  transition: transform 800ms var(--ease-lux);
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .card-sheen::after {
+    transform: translateX(120%);
+  }
+}
+@keyframes pop {
+  0% { transform: scale(0.6); }
+  55% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.pop {
+  animation: pop 380ms var(--ease-lux) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .marquee-lux,
+  .drift,
+  .drift-2,
+  .cue-line > span {
+    animation: none;
+  }
+  .hero-panel img {
+    animation: none;
+  }
   .animate-marquee,
   .skeleton {
     animation: none;

@@ -222,6 +222,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
     <nav
       ref={navRef}
       aria-label="Primary"
+      data-mega-open={openKey ? "1" : ""}
       className="relative hidden border-t border-[#172121]/10 lg:block"
       onMouseLeave={scheduleClose}
       onBlur={(e) => {
@@ -302,14 +303,15 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
         ))}
       </ul>
 
-      {/* Full-width panel */}
+      {/* Full-width panel — glass + editorial image preview */}
       <div
         className={cn(
-          "absolute inset-x-0 top-full z-40 border-y border-[#172121]/10 bg-[#FBF6F3] shadow-[0_24px_48px_rgba(23,33,33,0.12)] transition-all duration-200 motion-reduce:transition-none",
+          "absolute inset-x-0 top-full z-40 border-y border-[#172121]/10 bg-[#FBF6F3]/92 shadow-[0_32px_64px_rgba(23,33,33,0.16)] backdrop-blur-xl transition-all duration-300 motion-reduce:transition-none",
           openKey
             ? "visible opacity-100 [clip-path:inset(0_0_0_0)]"
             : "invisible opacity-0 [clip-path:inset(0_0_100%_0)]",
         )}
+        style={{ transitionTimingFunction: "cubic-bezier(0.22,1,0.36,1)" }}
         onMouseEnter={cancelClose}
         onMouseLeave={scheduleClose}
       >
@@ -317,15 +319,16 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
           <div
             key={s.key}
             hidden={openKey !== s.key}
-            className="mx-auto grid max-w-[1280px] grid-cols-[1fr_1fr_1fr_1fr_260px] gap-8 px-8 py-8"
+            className="mx-auto grid max-w-[1280px] grid-cols-[1fr_1fr_1fr_1fr_300px] gap-8 px-8 py-8"
           >
             {s.groups.map((g, gi) => (
               <div
                 key={g.heading + gi}
-                className="transition-all duration-200 motion-reduce:transition-none"
-                style={{ transitionDelay: `${gi * 40}ms` }}
+                className="mega-link"
+                style={{ transitionDelay: `${gi * 55}ms` }}
               >
-                <p className="mb-3 text-[12px] font-semibold tracking-[0.16em] text-[#172121] uppercase">
+                <p className="mb-3 flex items-center gap-2 text-[12px] font-semibold tracking-[0.18em] text-[#172121] uppercase">
+                  <span aria-hidden="true" className="h-px w-4 bg-[#D5573B]" />
                   {g.heading}
                 </p>
                 <ul className="space-y-2">
@@ -334,7 +337,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
                       <Link
                         href={l.href}
                         onClick={() => setOpenKey(null)}
-                        className="text-[14px] text-[#172121]/70 underline-offset-4 transition-colors hover:text-clay hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none"
+                        className="link-lux text-[14.5px] text-[#172121]/72 transition-colors hover:text-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none"
                       >
                         {l.label}
                       </Link>
@@ -344,29 +347,33 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
                 <Link
                   href={g.href ?? s.href}
                   onClick={() => setOpenKey(null)}
-                  className="mt-4 inline-block text-[12px] font-medium tracking-[0.14em] text-[#7D451B] uppercase underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                  className="mt-4 inline-block text-[12px] font-semibold tracking-[0.16em] text-[#7D451B] uppercase underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
                 >
                   {d.view_all} →
                 </Link>
               </div>
             ))}
-            <div className="border-l border-[#172121]/10 pl-8">
-              <p
-                className="text-[22px] leading-snug font-medium text-[#172121]"
-                style={{ fontFamily: "'Cormorant Garamond', serif" }}
-              >
-                {s.label}
-              </p>
-              <p className="mt-2 text-[13.5px] leading-relaxed text-[#172121]/70">
-                {s.blurb}
-              </p>
-              <Link
-                href={s.href}
-                onClick={() => setOpenKey(null)}
-                className="mt-4 inline-block bg-[#172121] px-5 py-2.5 text-[12px] font-medium tracking-[0.14em] text-[#FBF6F3] uppercase transition-colors hover:bg-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none"
-              >
-                {d.shop} {s.label}
-              </Link>
+            <div className="mega-link relative overflow-hidden border-l border-[#172121]/10 pl-0" style={{ transitionDelay: "220ms" }}>
+              <div className="relative ml-8 min-h-[240px] overflow-hidden bg-[#172121]">
+                <span aria-hidden="true" className="absolute inset-0" style={{ background: s.key === "men" ? "linear-gradient(150deg,#172121,#7D451B 60%,#D5573B)" : s.key === "women" ? "linear-gradient(150deg,#3d1c12,#D5573B 60%,#F2CCC3)" : "linear-gradient(150deg,#172121,#7E9181 65%,#F2CCC3)" }} />
+                <span aria-hidden="true" className="text-ghost absolute -right-1 -bottom-4 text-[84px] leading-none font-semibold">{s.key === "men" ? "01" : s.key === "women" ? "02" : "03"}</span>
+                <div className="relative flex h-full min-h-[240px] flex-col justify-end p-6">
+                  <p className="text-[11px] font-semibold tracking-[0.24em] text-[#F2CCC3] uppercase">Featured — {s.label}</p>
+                  <p className="mt-1 text-[24px] leading-tight font-medium text-white" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    {s.label} edit
+                  </p>
+                  <p className="mt-1 line-clamp-2 text-[13px] leading-relaxed text-white/75">
+                    {s.blurb}
+                  </p>
+                  <Link
+                    href={s.href}
+                    onClick={() => setOpenKey(null)}
+                    className="mt-4 inline-flex w-fit items-center gap-2 bg-[#FBF6F3] px-5 py-2.5 text-[12px] font-semibold tracking-[0.14em] text-[#172121] uppercase transition-colors hover:bg-clay hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                  >
+                    {d.shop} {s.label} →
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         ))}

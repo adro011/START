@@ -55,18 +55,23 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
   }
 
   return (
-    <footer className="bg-[#172121] text-[#FBF6F3]">
+    <footer className="relative overflow-hidden bg-[#101414] text-[#FBF6F3]">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-24 left-1/3 h-[300px] w-[520px] rounded-full bg-[#D5573B]/12 blur-[120px]" />
+        <span aria-hidden="true" className="text-ghost absolute -bottom-8 left-4 text-[18vw] leading-none font-semibold tracking-tight opacity-60 select-none">ABRAR</span>
+      </div>
       {/* Newsletter */}
-      <div className="border-b border-white/10">
-        <div className="mx-auto grid max-w-[1280px] gap-6 px-4 py-12 sm:px-6 md:grid-cols-2 md:items-center">
+      <div className="relative border-b border-white/10">
+        <div className="mx-auto grid max-w-[1280px] gap-6 px-4 py-14 sm:px-6 md:grid-cols-2 md:items-center">
           <div>
+            <p className="kicker text-blush">First dibs, every drop</p>
             <p
-              className="text-[30px] leading-tight font-medium"
+              className="mt-2 text-[34px] leading-tight font-medium sm:text-[40px]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
               {d.newsletter_title}
             </p>
-            <p className="mt-1 text-[14px] text-white/70">{d.newsletter_sub}</p>
+            <p className="mt-1 max-w-[44ch] text-[15px] text-white/70">{d.newsletter_sub}</p>
           </div>
           <form
             id="newsletter"
@@ -84,12 +89,12 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={d.newsletter_placeholder}
-              className="h-12 flex-1 border border-white/20 bg-transparent px-4 text-[15px] text-white placeholder:text-white/40 focus:border-[#D5573B] focus:outline-none"
+              className="glass-dark h-13 flex-1 px-4 py-3.5 text-[15px] text-white placeholder:text-white/40 focus:border-[#D5573B] focus:outline-none"
             />
             <button
               type="submit"
               disabled={state === "busy"}
-              className="h-12 bg-clay px-7 text-[13px] font-semibold tracking-[0.14em] uppercase transition-colors hover:bg-[#7D451B] disabled:opacity-60"
+              className="h-13 bg-clay px-7 py-3.5 text-[13px] font-semibold tracking-[0.16em] uppercase transition-all duration-300 hover:bg-[#7D451B] hover:shadow-[0_12px_32px_rgba(213,87,59,0.4)] disabled:opacity-60"
             >
               {state === "busy" ? "…" : d.newsletter_cta}
             </button>

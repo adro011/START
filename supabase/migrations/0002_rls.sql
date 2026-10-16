@@ -44,12 +44,15 @@ ALTER TABLE public.audit_log ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
 
 -- Public read-only catalog ------------------------------------------------------
+DROP POLICY IF EXISTS "categories public read" ON public.categories;
 CREATE POLICY "categories public read" ON public.categories
   FOR SELECT TO public USING (true);
 
+DROP POLICY IF EXISTS "products public read" ON public.products;
 CREATE POLICY "products public read" ON public.products
   FOR SELECT TO public USING (active = true AND deleted_at IS NULL);
 
+DROP POLICY IF EXISTS "variants public read" ON public.product_variants;
 CREATE POLICY "variants public read" ON public.product_variants
   FOR SELECT TO public USING (
     EXISTS (
@@ -59,6 +62,7 @@ CREATE POLICY "variants public read" ON public.product_variants
     )
   );
 
+DROP POLICY IF EXISTS "images public read" ON public.product_images;
 CREATE POLICY "images public read" ON public.product_images
   FOR SELECT TO public USING (
     EXISTS (
@@ -68,34 +72,42 @@ CREATE POLICY "images public read" ON public.product_images
     )
   );
 
+DROP POLICY IF EXISTS "reviews public read" ON public.reviews;
 CREATE POLICY "reviews public read" ON public.reviews
   FOR SELECT TO public USING (approved = true);
 
+DROP POLICY IF EXISTS "zones public read" ON public.shipping_zones;
 CREATE POLICY "zones public read" ON public.shipping_zones
   FOR SELECT TO public USING (true);
 
+DROP POLICY IF EXISTS "settings public read" ON public.site_settings;
 CREATE POLICY "settings public read" ON public.site_settings
   FOR SELECT TO public USING (true);
 
 -- Profiles: users read/update own; role changes admin-only (trigger below) -----
+DROP POLICY IF EXISTS "profiles select own" ON public.profiles;
 CREATE POLICY "profiles select own" ON public.profiles
   FOR SELECT TO authenticated USING (auth.uid() = id OR public.is_admin());
 
+DROP POLICY IF EXISTS "profiles insert own" ON public.profiles;
 CREATE POLICY "profiles insert own" ON public.profiles
   FOR INSERT TO authenticated WITH CHECK (auth.uid() = id);
 
+DROP POLICY IF EXISTS "profiles update own" ON public.profiles;
 CREATE POLICY "profiles update own" ON public.profiles
   FOR UPDATE TO authenticated
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 
+DROP POLICY IF EXISTS "profiles admin all" ON public.profiles;
 CREATE POLICY "profiles admin all" ON public.profiles
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
--- Clients can never escalate their own role: RLS permits the row update,
--- this trigger rejects role changes unless the caller is an admin.
+-- Clients can never escalate their own role: RLS permits the row write,
+-- this trigger rejects role assignment unless the caller is an admin.
+-- Covers INSERT (signup self-promotion) and UPDATE.
 CREATE OR REPLACE FUNCTION public.guard_profile_role()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -103,6 +115,12 @@ SECURITY DEFINER
 SET search_path = ''
 AS $$
 BEGIN
+  IF TG_OP = 'INSERT' THEN
+    IF NEW.role IS DISTINCT FROM 'customer' AND NOT public.is_admin() THEN
+      RAISE EXCEPTION 'Only admins can set roles';
+    END IF;
+    RETURN NEW;
+  END IF;
   IF NEW.role IS DISTINCT FROM OLD.role AND NOT public.is_admin() THEN
     RAISE EXCEPTION 'Only admins can change roles';
   END IF;
@@ -112,42 +130,50 @@ $$;
 
 DROP TRIGGER IF EXISTS trg_guard_profile_role ON public.profiles;
 CREATE TRIGGER trg_guard_profile_role
-  BEFORE UPDATE ON public.profiles
+  BEFORE INSERT OR UPDATE ON public.profiles
   FOR EACH ROW EXECUTE FUNCTION public.guard_profile_role();
 
 -- Customer-owned data ------------------------------------------------------------
+DROP POLICY IF EXISTS "addresses owner all" ON public.addresses;
 CREATE POLICY "addresses owner all" ON public.addresses
   FOR ALL TO authenticated
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "addresses admin all" ON public.addresses;
 CREATE POLICY "addresses admin all" ON public.addresses
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
+DROP POLICY IF EXISTS "wishlist owner all" ON public.wishlist;
 CREATE POLICY "wishlist owner all" ON public.wishlist
   FOR ALL TO authenticated
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "wishlist admin all" ON public.wishlist;
 CREATE POLICY "wishlist admin all" ON public.wishlist
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
 -- Orders: customers read own (writes go through the create_order RPC) -----------
+DROP POLICY IF EXISTS "orders owner read" ON public.orders;
 CREATE POLICY "orders owner read" ON public.orders
   FOR SELECT TO authenticated USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "orders staff read" ON public.orders;
 CREATE POLICY "orders staff read" ON public.orders
   FOR SELECT TO authenticated USING (public.is_staff_or_admin());
 
+DROP POLICY IF EXISTS "orders staff update" ON public.orders;
 CREATE POLICY "orders staff update" ON public.orders
   FOR UPDATE TO authenticated
   USING (public.is_staff_or_admin())
   WITH CHECK (public.is_staff_or_admin());
 
+DROP POLICY IF EXISTS "orders admin all" ON public.orders;
 CREATE POLICY "orders admin all" ON public.orders
   FOR ALL TO authenticated
   USING (public.is_admin())
@@ -182,6 +208,7 @@ CREATE TRIGGER trg_guard_order_update
   BEFORE UPDATE ON public.orders
   FOR EACH ROW EXECUTE FUNCTION public.guard_order_update();
 
+DROP POLICY IF EXISTS "items read via order" ON public.order_items;
 CREATE POLICY "items read via order" ON public.order_items
   FOR SELECT TO authenticated USING (
     EXISTS (
@@ -191,11 +218,13 @@ CREATE POLICY "items read via order" ON public.order_items
     )
   );
 
+DROP POLICY IF EXISTS "items admin all" ON public.order_items;
 CREATE POLICY "items admin all" ON public.order_items
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
+DROP POLICY IF EXISTS "events read via order" ON public.order_events;
 CREATE POLICY "events read via order" ON public.order_events
   FOR SELECT TO authenticated USING (
     EXISTS (
@@ -205,79 +234,96 @@ CREATE POLICY "events read via order" ON public.order_events
     )
   );
 
+DROP POLICY IF EXISTS "events admin all" ON public.order_events;
 CREATE POLICY "events admin all" ON public.order_events
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
 -- Reviews: anyone reads approved; signed-in users insert/update their own ------
+DROP POLICY IF EXISTS "reviews insert own" ON public.reviews;
 CREATE POLICY "reviews insert own" ON public.reviews
   FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "reviews update own" ON public.reviews;
 CREATE POLICY "reviews update own" ON public.reviews
   FOR UPDATE TO authenticated
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "reviews admin all" ON public.reviews;
 CREATE POLICY "reviews admin all" ON public.reviews
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
 -- Back-in-stock waitlist: anyone may subscribe; only staff read ---------------
+DROP POLICY IF EXISTS "alerts insert any" ON public.stock_alerts;
 CREATE POLICY "alerts insert any" ON public.stock_alerts
   FOR INSERT TO public WITH CHECK (true);
 
+DROP POLICY IF EXISTS "alerts staff read" ON public.stock_alerts;
 CREATE POLICY "alerts staff read" ON public.stock_alerts
   FOR SELECT TO authenticated USING (public.is_staff_or_admin());
 
+DROP POLICY IF EXISTS "alerts admin all" ON public.stock_alerts;
 CREATE POLICY "alerts admin all" ON public.stock_alerts
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
 -- Catalog / config writes: admin only ------------------------------------------
+DROP POLICY IF EXISTS "categories admin all" ON public.categories;
 CREATE POLICY "categories admin all" ON public.categories
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
+DROP POLICY IF EXISTS "products admin all" ON public.products;
 CREATE POLICY "products admin all" ON public.products
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
+DROP POLICY IF EXISTS "variants admin all" ON public.product_variants;
 CREATE POLICY "variants admin all" ON public.product_variants
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
+DROP POLICY IF EXISTS "images admin all" ON public.product_images;
 CREATE POLICY "images admin all" ON public.product_images
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
+DROP POLICY IF EXISTS "zones staff read" ON public.shipping_zones;
 CREATE POLICY "zones staff read" ON public.shipping_zones
   FOR SELECT TO authenticated USING (public.is_staff_or_admin());
 
+DROP POLICY IF EXISTS "zones admin all" ON public.shipping_zones;
 CREATE POLICY "zones admin all" ON public.shipping_zones
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
+DROP POLICY IF EXISTS "coupons staff read" ON public.coupons;
 CREATE POLICY "coupons staff read" ON public.coupons
   FOR SELECT TO authenticated USING (public.is_staff_or_admin());
 
+DROP POLICY IF EXISTS "coupons admin all" ON public.coupons;
 CREATE POLICY "coupons admin all" ON public.coupons
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
+DROP POLICY IF EXISTS "settings admin all" ON public.site_settings;
 CREATE POLICY "settings admin all" ON public.site_settings
   FOR ALL TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
+DROP POLICY IF EXISTS "audit admin read" ON public.audit_log;
 CREATE POLICY "audit admin read" ON public.audit_log
   FOR SELECT TO authenticated USING (public.is_admin());
 

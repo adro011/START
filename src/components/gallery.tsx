@@ -8,32 +8,33 @@ import { cn } from "@/lib/format";
 const RING =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]";
 
+/**
+ * Editorial gallery: 2-up grid (last tile spans full width when the count
+ * is odd). Every tile is a real button opening the fullscreen lightbox
+ * (Esc closes, arrows page, scroll locks, focus enters + returns).
+ */
 export default function Gallery({ images, name }: { images: ProductImage[]; name: string }) {
-  const [active, setActive] = useState(0);
-  const [zoom, setZoom] = useState(false);
-  const [lightbox, setLightbox] = useState(false);
-  const current = images[Math.min(active, images.length - 1)];
+  const [lightbox, setLightbox] = useState<number | null>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const prevFocus = useRef<HTMLElement | null>(null);
 
-  const prev = useCallback(
-    () => setActive((a) => (a - 1 + images.length) % images.length),
-    [images.length],
-  );
-  const next = useCallback(
-    () => setActive((a) => (a + 1) % images.length),
-    [images.length],
-  );
+  const prev = useCallback(() => {
+    setLightbox((cur) =>
+      cur === null ? cur : (cur - 1 + images.length) % images.length,
+    );
+  }, [images.length]);
+  const next = useCallback(() => {
+    setLightbox((cur) => (cur === null ? cur : (cur + 1) % images.length));
+  }, [images.length]);
 
-  // Lightbox: Esc closes, arrows page, scroll locks, focus enters + returns.
   useEffect(() => {
-    if (!lightbox) return;
+    if (lightbox === null) return;
     prevFocus.current = document.activeElement as HTMLElement | null;
     closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setLightbox(false);
+        setLightbox(null);
         return;
       }
       if (e.key === "ArrowLeft") {
@@ -46,7 +47,6 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
         next();
         return;
       }
-      // Traps-ish Tab cycle across close / prev / next.
       if (e.key === "Tab") {
         const root = dialogRef.current;
         if (!root) return;
@@ -73,62 +73,54 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
     };
   }, [lightbox, prev, next]);
 
+  const current = lightbox === null ? null : images[lightbox];
+  const oddLast = images.length % 2 === 1;
+
   return (
     <div>
-      {/* Main image is a real button so keyboard users can open the lightbox. */}
-      <button
-        type="button"
-        onClick={() => setLightbox(true)}
-        aria-label={`Open fullscreen view of ${name}`}
-        aria-haspopup="dialog"
-        data-cursor="Zoom"
-        className={cn(
-          "relative block aspect-[4/5] w-full cursor-zoom-in overflow-hidden rounded-xl bg-neutral-100",
-          RING,
-        )}
-        onMouseEnter={() => setZoom(true)}
-        onMouseLeave={() => setZoom(false)}
-        onFocus={() => setZoom(false)}
-      >
-        <Image
-          src={current.src}
-          alt={current.alt || name}
-          fill
-          priority
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className={cn("object-cover transition-transform duration-300 motion-reduce:transition-none", zoom && "scale-125 motion-reduce:scale-100")}
-        />
-      </button>
-
-      {/* Thumb rail — horizontal swipe on mobile via overflow-x */}
-      <div className="mt-2 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Product images">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
         {images.map((img, i) => (
           <button
             key={`${img.src}-${i}`}
             type="button"
-            role="tab"
-            aria-selected={i === active}
-            aria-label={`View image ${i + 1} of ${images.length}: ${img.alt || name}`}
-            onClick={() => setActive(i)}
+            onClick={() => setLightbox(i)}
+            aria-haspopup="dialog"
+            aria-label={`Open fullscreen view, image ${i + 1} of ${images.length}: ${img.alt || name}`}
+            data-cursor="Zoom"
             className={cn(
-              "relative h-20 w-16 shrink-0 overflow-hidden rounded-lg border bg-neutral-100",
+              "group relative block w-full cursor-zoom-in overflow-hidden bg-[#F2CCC3]/40",
               RING,
-              i === active && "ring-2 ring-neutral-900",
+              oddLast && i === images.length - 1
+                ? "col-span-2 aspect-[16/10]"
+                : "aspect-[3/4]",
             )}
           >
-            <Image src={img.src} alt={img.alt || `${name} view ${i + 1}`} fill sizes="64px" className="object-cover" />
+            <Image
+              src={img.src}
+              alt={img.alt || `${name} view ${i + 1}`}
+              fill
+              priority={i === 0}
+              sizes="(max-width: 768px) 50vw, 32vw"
+              className="object-cover transition-transform duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] motion-reduce:transition-none"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute bottom-3 left-3 bg-[#172121]/70 px-2 py-0.5 text-[11px] font-semibold tracking-[0.2em] text-[#FBF6F3] backdrop-blur-sm"
+            >
+              {String(i + 1).padStart(2, "0")}
+            </span>
           </button>
         ))}
       </div>
 
-      {lightbox && (
+      {current !== null && lightbox !== null && (
         <div
           ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label={`${name} fullscreen view`}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
-          onClick={() => setLightbox(false)}
+          onClick={() => setLightbox(null)}
         >
           <div
             className="relative aspect-[4/5] w-full max-w-2xl overflow-hidden rounded-xl bg-neutral-900"
@@ -136,12 +128,12 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
           >
             <Image src={current.src} alt={current.alt || name} fill sizes="100vw" className="object-contain" />
             <p aria-live="polite" className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs text-white">
-              {active + 1} of {images.length}
+              {lightbox + 1} of {images.length}
             </p>
             <button
               ref={closeRef}
               type="button"
-              onClick={() => setLightbox(false)}
+              onClick={() => setLightbox(null)}
               aria-label="Close fullscreen view"
               className={cn("absolute top-3 right-3 rounded-full bg-white px-3 py-1 text-sm font-medium", RING)}
             >

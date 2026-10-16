@@ -6,4 +6,10 @@ playwright-report/
 test-results/
 *.tsbuildinfo
 
+# Supabase CLI local state (linked project ref, versions) — never commit
+supabase/.temp/
+
+# Local source-image library (multi-MB originals; compressed outputs live in public/)
+library/
+
 .vercel

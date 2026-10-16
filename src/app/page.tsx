@@ -32,28 +32,29 @@ function SectionHeading({
   copy,
   href,
   cta,
+  dark = false,
 }: {
   kicker: string;
   title: string;
   copy?: string;
   href?: string;
   cta?: string;
+  dark?: boolean;
 }) {
   return (
     <Reveal>
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-[12px] font-semibold tracking-[0.2em] text-clay uppercase">
-            {kicker}
-          </p>
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+        <div className="max-w-[22rem] sm:max-w-none">
+          <p className="kicker text-clay">{kicker}</p>
           <h2
-            className="mt-1 text-[34px] leading-tight font-medium text-[#172121] sm:text-[42px]"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            className={`display-xl mt-3 ${dark ? "text-[#FBF6F3]" : "text-[#172121]"}`}
           >
             {title}
           </h2>
           {copy && (
-            <p className="mt-1 max-w-[52ch] text-[15px] text-[#172121]/65">
+            <p
+              className={`mt-3 max-w-[52ch] text-[16px] leading-relaxed ${dark ? "text-white/65" : "text-[#172121]/65"}`}
+            >
               {copy}
             </p>
           )}
@@ -62,9 +63,14 @@ function SectionHeading({
           <Magnetic>
             <Link
               href={href}
-              className="inline-block border border-[#172121] px-5 py-2.5 text-[12px] font-semibold tracking-[0.16em] uppercase transition-colors hover:bg-[#172121] hover:text-[#FBF6F3]"
+              className={`group inline-flex items-center gap-3 border px-6 py-3.5 text-[12px] font-semibold tracking-[0.18em] uppercase transition-all duration-300 ${
+                dark
+                  ? "border-white/25 text-white hover:bg-white hover:text-[#172121]"
+                  : "border-[#172121] text-[#172121] hover:bg-[#172121] hover:text-[#FBF6F3]"
+              }`}
             >
-              {cta ?? "View all →"}
+              {cta ?? "View all"}
+              <span aria-hidden="true" className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">→</span>
             </Link>
           </Magnetic>
         )}
@@ -76,35 +82,35 @@ function SectionHeading({
 const HERO = [
   {
     key: "men",
+    index: "01",
     title: "Men",
-    copy: "Panjabis with presence.",
     href: "/men",
-    img: "/hero/men.svg",
-    grad: "from-[#172121] via-[#7D451B] to-[#D5573B]",
+    img: "/hero/men.jpg",
+    bg: "linear-gradient(150deg,#000000 0%,#172121 45%,#3a2a1c 75%,#7D451B 100%)",
   },
   {
     key: "women",
+    index: "02",
     title: "Women",
-    copy: "Sharees that move with you.",
     href: "/women",
-    img: "/hero/women.svg",
-    grad: "from-[#7D451B] via-[#D5573B] to-[#F2CCC3]",
+    img: "/hero/women.jpg",
+    bg: "linear-gradient(150deg,#000000 0%,#3d1c12 45%,#7D451B 75%,#D5573B 100%)",
   },
   {
     key: "kids",
+    index: "03",
     title: "Kids",
-    copy: "Festive, play-proof, all smiles.",
     href: "/kids",
-    img: "/hero/kids.svg",
-    grad: "from-[#172121] via-[#7E9181] to-[#F2CCC3]",
+    img: "/hero/kids.jpg",
+    bg: "linear-gradient(150deg,#000000 0%,#172121 45%,#2e4238 75%,#7E9181 100%)",
   },
 ] as const;
 
 const OCCASIONS = [
-  { name: "Eid", copy: "Moonlit whites & golds", href: "/women?occasion=eid", grad: "from-[#7D451B] to-[#D5573B]" },
-  { name: "Wedding", copy: "Heirlooms in the making", href: "/women?occasion=wedding", grad: "from-[#172121] to-[#7D451B]" },
-  { name: "Everyday", copy: "Breathable, reworn often", href: "/men?occasion=everyday", grad: "from-[#7E9181] to-[#172121]" },
-  { name: "Winter", copy: "Layers with intention", href: "/men?occasion=winter", grad: "from-[#172121] to-[#7E9181]" },
+  { name: "Eid", copy: "Moonlit whites & golds", href: "/women?occasion=eid", bg: "linear-gradient(140deg,#3d2410,#D5573B)" },
+  { name: "Wedding", copy: "Heirlooms in the making", href: "/women?occasion=wedding", bg: "linear-gradient(140deg,#101a1a,#7D451B)" },
+  { name: "Everyday", copy: "Breathable, reworn often", href: "/men?occasion=everyday", bg: "linear-gradient(140deg,#2e4238,#172121)" },
+  { name: "Winter", copy: "Layers with intention", href: "/men?occasion=winter", bg: "linear-gradient(140deg,#172121,#7E9181)" },
 ] as const;
 
 const TESTIMONIALS = [
@@ -123,9 +129,9 @@ const TESTIMONIALS = [
 ] as const;
 
 /**
- * Home: 3-panel hero, new-arrivals rail, category tiles, occasion band,
- * sale band, craft story, testimonials, trust row, newsletter CTA.
- * Server component; catalog lib supplies products. Empty states stay quiet.
+ * Home: cinematic 100dvh hero, editorial rails, occasion journey,
+ * sale cinema, craft story, testimonials, trust, newsletter.
+ * Server component; catalog lib supplies products.
  */
 export default async function HomePage() {
   const [arrivals, sale, featured] = await Promise.all([
@@ -152,87 +158,130 @@ export default async function HomePage() {
   }
 
   return (
-    <div>
-      {/* ── Hero: 3 panels ─────────────────────────────── */}
-      <section aria-label="Shop by section" className="mx-auto max-w-[1440px] px-3 pt-3 sm:px-4">
-        <div className="flex min-h-[78vh] flex-col gap-3 md:flex-row">
-          {HERO.map((h, i) => (
-            <Link
-              key={h.key}
-              href={h.href}
-              style={{ animationDelay: `${120 + i * 110}ms` }}
-              className={`hero-enter group relative flex-1 overflow-hidden bg-gradient-to-br ${h.grad} transition-[flex-grow] duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] md:hover:flex-[1.7]`}
-            >
-              <Image
-                src={h.img}
-                alt={`${h.title} collection`}
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                priority={h.key === "women"}
-                className="object-cover opacity-90 transition-all duration-700 group-hover:scale-[1.05]"
-              />
-              <span className="absolute inset-0 bg-gradient-to-t from-[#172121]/80 via-[#172121]/10 to-transparent" aria-hidden="true" />
-              <span className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
-                <span
-                  className="hero-text-rise block text-[12px] font-semibold tracking-[0.22em] text-[#F2CCC3] uppercase"
-                  style={{ animationDelay: `${120 + i * 110}ms` }}
-                >
-                  Shop
-                </span>
-                <span
-                  className="hero-text-rise block text-[44px] leading-none font-medium text-white sm:text-[56px]"
-                  style={{ fontFamily: "'Cormorant Garamond', serif", animationDelay: `${200 + i * 110}ms` }}
-                >
-                  {h.title}
-                </span>
-                <span
-                  className="hero-text-rise mt-1 block text-[14.5px] text-white/80"
-                  style={{ animationDelay: `${280 + i * 110}ms` }}
-                >
-                  {h.copy}
-                </span>
-                <span className="mt-4 inline-block border border-white/70 px-5 py-2.5 text-[12px] font-semibold tracking-[0.16em] text-white uppercase transition-colors group-hover:bg-clay group-hover:border-[#D5573B]">
-                  Shop {h.title} →
-                </span>
-              </span>
-            </Link>
-          ))}
+    <div className="overflow-clip">
+      {/* ── Cinematic hero: 100dvh, split-type entrance, depth orbs ── */}
+      <section aria-label="Shop by section" className="relative bg-black text-[#FBF6F3]">
+        {/* ambient orbs */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="drift absolute -top-24 -left-24 h-[420px] w-[420px] rounded-full bg-[#D5573B]/20 blur-[120px]" />
+          <div className="drift-2 absolute top-1/3 -right-28 h-[480px] w-[480px] rounded-full bg-[#7E9181]/20 blur-[130px]" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black to-transparent" />
         </div>
-        <p className="mx-auto max-w-[1280px] overflow-hidden py-3 text-center text-[12px] font-medium tracking-[0.24em] text-[#172121]/75 uppercase">
-          Handcrafted · Made in Bangladesh · Free exchange
-        </p>
+
+        <div className="relative mx-auto max-w-[1440px] px-3 pt-3 sm:px-4">
+          {/* eyebrow */}
+          <div className="flex items-center justify-between px-1 pt-4 pb-3 sm:px-2">
+            <p className="text-[12px] font-semibold tracking-[0.12em] text-[#F2CCC3]/90 uppercase">Quality, beauty and elegance — Made in Bangladesh</p>
+            <p className="hidden text-[12px] tracking-[0.12em] text-white/45 uppercase sm:block">Est. Dhaka · Eid ’26 edit live</p>
+          </div>
+
+          <div className="hero-shell flex min-h-[86dvh] flex-col gap-3 pb-3 md:flex-row">
+            {HERO.map((h, i) => (
+              <Link
+                key={h.key}
+                href={h.href}
+                data-cursor="Explore"
+                style={{ animationDelay: `${120 + i * 110}ms`, background: h.bg }}
+                className="hero-enter hero-panel group relative flex-1 overflow-hidden transition-[flex-grow] duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] md:hover:flex-[1.75]"
+              >
+                <Image
+                  src={h.img}
+                  alt={`${h.title} collection`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  priority={h.key === "women"}
+                  className="object-cover opacity-90 transition-all duration-700 group-hover:scale-[1.06]"
+                />
+                <span className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/5" aria-hidden="true" />
+                {/* index */}
+                <span aria-hidden="true" className="text-ghost absolute top-5 right-6 font-semibold text-[40px] tracking-tight sm:text-[48px]" style={{ fontFamily: "'Cormorant Garamond','Playfair Display',serif" }}>
+                  {h.index}
+                </span>
+                <span className="absolute inset-x-0 bottom-0 p-6 sm:p-9">
+                  <span
+                    className="hero-text-rise block leading-[0.92] tracking-[0.01em]"
+                    style={{ animationDelay: `${200 + i * 110}ms` }}
+                  >
+                    <span className="block text-[clamp(3rem,7vw,6.5rem)] font-medium text-white uppercase" style={{ fontFamily: "'Cormorant Garamond','Playfair Display',Georgia,serif" }}>
+                      {h.title}
+                    </span>
+                  </span>
+                  <span className="mt-5 inline-flex items-center gap-3 bg-[#FFC000] px-7 py-3 text-[13px] font-semibold tracking-[0.12em] text-black uppercase transition-colors duration-300 group-hover:bg-[#917300] group-hover:text-white">
+                    Shop {h.title}
+                    <span aria-hidden="true" className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+                  </span>
+                </span>
+                {/* bottom progress hairline */}
+                <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-[#F2CCC3] transition-transform duration-700 group-hover:scale-x-100" />
+              </Link>
+            ))}
+          </div>
+
+          {/* scroll cue + marquee */}
+          <div className="flex items-center justify-between px-1 py-4 sm:px-2">
+            <div className="flex items-center gap-3 text-[11px] font-semibold tracking-[0.12em] text-white/55 uppercase">
+              <span className="cue-line block h-8 w-px bg-white/20"><span className="block h-full w-px bg-[#F2CCC3]" /></span>
+              Scroll to enter the house
+            </div>
+            <p className="hidden text-[11px] tracking-[0.12em] text-white/55 uppercase md:block">Hover a panel — it breathes</p>
+          </div>
+        </div>
+
+        <div className="relative overflow-hidden border-t border-white/10 bg-black/80 py-3 backdrop-blur">
+          <div className="marquee-lux flex w-max gap-10 pr-10 text-[12px] font-semibold tracking-[0.14em] text-[#F2CCC3]/90 uppercase">
+            {Array.from({ length: 2 }).map((_, k) => (
+              <span key={k} className="flex gap-10 whitespace-nowrap" aria-hidden={k === 1}>
+                <span>Handcrafted in Bangladesh</span><span aria-hidden="true" className="text-[#D5573B]">✦</span>
+                <span>Free 7-day exchange</span><span aria-hidden="true" className="text-[#D5573B]">✦</span>
+                <span>Cash on delivery nationwide</span><span aria-hidden="true" className="text-[#D5573B]">✦</span>
+                <span>Small batches — when it’s gone, it’s gone</span><span aria-hidden="true" className="text-[#D5573B]">✦</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Brand statement ─────────────────────────── */}
+      <section aria-label="House statement" className="mx-auto max-w-[1280px] px-4 pt-16 pb-4 sm:px-6">
+        <Reveal>
+          <p className="kicker text-clay">The house of Abrar</p>
+          <p className="display-xl mt-4 max-w-[16ch] text-[#172121]">
+            Quiet luxury, cut for real weather <em className="text-[#7D451B] not-italic underline decoration-[#D5573B]/40 decoration-2 underline-offset-8">and real bodies.</em>
+          </p>
+        </Reveal>
       </section>
 
       {/* ── New arrivals rail ────────────────────────── */}
-      <section aria-label="New arrivals" className="mx-auto max-w-[1280px] px-4 py-14 sm:px-6">
+      <section aria-label="New arrivals" className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6">
         <SectionHeading
-          kicker="Just landed"
+          kicker="Just landed — small batches"
           title="New arrivals"
-          copy="Small batches, honest fabrics. When it's gone, it's gone."
+          copy="Honest fabrics, limited runs. When it's gone, it's gone."
           href="/new-arrivals"
         />
         {arrivals.length > 0 ? (
-          <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:thin]">
+          <div className="rail -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6">
             {arrivals.slice(0, 10).map((p, i) => (
               <Reveal
                 key={p.slug}
                 delay={(i % 5) * 70}
-                className="w-[220px] shrink-0 snap-start sm:w-[260px]"
+                className="w-[228px] shrink-0 snap-start sm:w-[272px]"
               >
+                <span className="mb-2 block text-[11px] font-semibold tracking-[0.24em] text-[#172121]/40 uppercase">N° {String(i + 1).padStart(2, "0")}</span>
                 <ProductCard product={asCard(p)} />
               </Reveal>
             ))}
           </div>
         ) : (
-          <p className="border border-dashed border-[#172121]/20 px-6 py-10 text-center text-[14.5px] text-[#172121]/80">
+          <p className="border border-dashed border-[#172121]/20 px-6 py-10 text-center text-[15px] text-[#172121]/80">
             Fresh pieces are on the cutting table — check back very soon.
           </p>
         )}
       </section>
 
-      {/* ── Shop by category ─────────────────────────── */}
-      <section aria-label="Shop by category" className="bg-[#F2CCC3]/30">
-        <div className="mx-auto max-w-[1280px] px-4 py-14 sm:px-6">
+      {/* ── Shop by category: editorial brutalism ───── */}
+      <section aria-label="Shop by category" className="cv border-y border-[#172121]/10 bg-[#F2CCC3]/30">
+        <div className="mx-auto max-w-[1280px] px-4 py-16 sm:px-6">
           <SectionHeading
             kicker="Find your lane"
             title="Shop by category"
@@ -243,20 +292,21 @@ export default async function HomePage() {
               <Reveal
                 key={t.href + t.name}
                 delay={(i % 3) * 80}
-                className="group relative overflow-hidden bg-gradient-to-br from-[#7E9181] to-[#172121] px-6 py-10 transition-transform duration-300 hover:-translate-y-1 sm:py-14"
+                className="lift group relative overflow-hidden border border-[#172121]/10 bg-[#172121] px-6 py-10 sm:py-14"
               >
-                <Link href={t.href} className="block">
+                <Link href={t.href} className="block" data-cursor="Open">
+                  <span aria-hidden="true" className="text-ghost pointer-events-none absolute -right-2 -bottom-6 text-[96px] leading-none font-semibold">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="kicker text-[#F2CCC3]/70">0{i + 1} — Explore</span>
                   <span
-                    className="block text-[26px] font-medium text-white sm:text-[34px]"
+                    className="mt-2 block text-[28px] leading-tight font-medium text-white sm:text-[36px]"
                     style={{ fontFamily: "'Cormorant Garamond', serif" }}
                   >
                     {t.name}
                   </span>
-                  <span className="mt-2 inline-block text-[12px] font-semibold tracking-[0.18em] text-white/80 uppercase group-hover:text-white">
+                  <span className="link-lux mt-3 inline-block text-[12px] font-semibold tracking-[0.2em] text-white/85 uppercase">
                     Explore →
-                  </span>
-                  <span aria-hidden="true" className="absolute -right-2 -bottom-5 text-[88px] leading-none font-semibold text-white/10">
-                    {String(i + 1).padStart(2, "0")}
                   </span>
                 </Link>
               </Reveal>
@@ -265,31 +315,34 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Occasion band ────────────────────────────── */}
-      <section aria-label="Shop by occasion" className="mx-auto max-w-[1280px] px-4 py-14 sm:px-6">
+      {/* ── Occasion journey ─────────────────────────── */}
+      <section aria-label="Shop by occasion" className="cv mx-auto max-w-[1280px] px-4 py-16 sm:px-6">
         <SectionHeading
           kicker="Dress for the day"
           title="Shop by occasion"
           copy="Eid mornings, wedding evenings, and everything in between."
         />
-        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-4 md:overflow-visible">
+        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
           {OCCASIONS.map((o, i) => (
             <Reveal
               key={o.name}
               delay={i * 80}
-              className={`group relative min-h-[220px] flex-1 snap-start overflow-hidden bg-gradient-to-br px-6 py-8 ${o.grad} min-w-[240px] md:min-w-0`}
+              className="lift group relative min-h-[260px] overflow-hidden px-6 py-8"
             >
-              <Link href={o.href} className="block">
+              <span aria-hidden="true" className="absolute inset-0" style={{ background: o.bg }} />
+              <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+              <span aria-hidden="true" className="text-ghost absolute top-4 right-5 text-[40px] font-semibold">0{i + 1}</span>
+              <Link href={o.href} data-cursor="Shop" className="relative block h-full">
                 <span
-                  className="block text-[30px] font-medium text-white"
+                  className="block text-[34px] font-medium text-white"
                   style={{ fontFamily: "'Cormorant Garamond', serif" }}
                 >
                   {o.name}
                 </span>
-                <span className="mt-1 block text-[13.5px] text-white/75">
+                <span className="mt-1 block text-[14px] text-white/75">
                   {o.copy}
                 </span>
-                <span className="mt-4 inline-block text-[12px] font-semibold tracking-[0.18em] text-white uppercase underline-offset-4 group-hover:underline">
+                <span className="link-lux mt-5 inline-block text-[12px] font-semibold tracking-[0.2em] text-white uppercase">
                   Shop now →
                 </span>
               </Link>
@@ -298,42 +351,39 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Sale band ────────────────────────────────── */}
-      <section aria-label="Sale" className="bg-[#172121] text-[#FBF6F3]">
-        <div className="mx-auto max-w-[1280px] px-4 py-14 sm:px-6">
+      {/* ── Sale cinema ──────────────────────────────── */}
+      <section aria-label="Sale" className="cv relative overflow-hidden bg-[#101414] text-[#FBF6F3]">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+          <div className="absolute top-0 left-1/4 h-[360px] w-[520px] rounded-full bg-[#D5573B]/25 blur-[130px]" />
+          <div className="absolute right-0 bottom-0 h-[280px] w-[380px] rounded-full bg-[#7D451B]/30 blur-[110px]" />
+        </div>
+        <div className="relative mx-auto max-w-[1280px] px-4 py-16 sm:px-6">
           <Reveal>
-            <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
-                <p className="text-[12px] font-semibold tracking-[0.2em] text-blush uppercase">
-                  Up to honest markdowns
-                </p>
-                <h2
-                  className="mt-1 text-[34px] leading-tight font-medium sm:text-[42px]"
-                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                >
-                  The sale edit
-                </h2>
-                <p className="mt-1 text-[15px] text-white/65">
+                <p className="kicker text-blush">Up to honest markdowns</p>
+                <h2 className="display-xl mt-3">The sale edit</h2>
+                <p className="mt-3 max-w-[48ch] text-[16px] text-white/65">
                   Last pieces, best fabrics. {featured.length > 0 && "Loved by regulars."}
                 </p>
               </div>
               <Magnetic>
                 <Link
                   href="/sale"
-                  className="inline-block bg-clay px-6 py-3 text-[12px] font-semibold tracking-[0.16em] uppercase transition-colors hover:bg-[#7D451B]"
+                  className="inline-flex items-center gap-3 bg-clay px-7 py-4 text-[12px] font-semibold tracking-[0.2em] uppercase transition-colors duration-300 hover:bg-[#7D451B]"
                 >
-                  Shop sale →
+                  Shop sale <span aria-hidden="true">→</span>
                 </Link>
               </Magnetic>
             </div>
           </Reveal>
           {sale.length > 0 && (
-            <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
+            <div className="rail rail-dark mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2">
               {sale.slice(0, 8).map((p, i) => (
                 <Reveal
                   key={p.slug}
                   delay={(i % 4) * 70}
-                  className="w-[220px] shrink-0 snap-start sm:w-[250px] [&_a]:text-[#FBF6F3] [&_p]:text-white/70 [&_s]:text-white/70 [&_.text-clay]:text-blush"
+                  className="w-[228px] shrink-0 snap-start sm:w-[258px] [&_a]:text-[#FBF6F3] [&_p]:text-white/70 [&_s]:text-white/70 [&_.text-clay]:text-blush [&_.price]:text-blush"
                 >
                   <ProductCard product={asCard(p)} />
                 </Reveal>
@@ -343,25 +393,21 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Craft story (CSS parallax-ish) ───────────── */}
-      <section aria-label="Our craft" className="relative overflow-hidden">
+      {/* ── Craft story ──────────────────────────────── */}
+      <section aria-label="Our craft" className="cv relative overflow-hidden">
         <div
           aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-br from-[#F2CCC3] via-[#FBF6F3] to-[#7E9181]/40 bg-[length:200%_200%] md:bg-fixed"
         />
-        <div className="relative mx-auto grid max-w-[1280px] gap-8 px-4 py-20 sm:px-6 md:grid-cols-2 md:items-center">
+        <div className="relative mx-auto grid max-w-[1280px] gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1.2fr_1fr] md:items-center">
           <Reveal>
             <div>
-              <p className="text-[12px] font-semibold tracking-[0.2em] text-clay uppercase">
-                Woven, not rushed
-              </p>
-              <h2
-                className="mt-1 text-[34px] leading-tight font-medium sm:text-[46px]"
-                style={{ fontFamily: "'Cormorant Garamond', serif" }}
-              >
+              <p className="kicker text-clay">Woven, not rushed</p>
+              <h2 className="display-xl mt-3">
                 From loom to doorstep, with patience.
               </h2>
-              <p className="mt-3 max-w-[46ch] text-[15.5px] leading-relaxed text-[#172121]/70">
+              <div aria-hidden="true" className="mt-6 h-px w-24 bg-[#D5573B]" />
+              <p className="mt-5 max-w-[48ch] text-[16.5px] leading-relaxed text-[#172121]/70">
                 We work with weaving clusters across Bangladesh — muslin, endi,
                 silk — and cut every piece for real bodies and real weather.
                 No overproduction, no shouting discounts. Just clothes that earn
@@ -370,14 +416,14 @@ export default async function HomePage() {
               <Magnetic>
                 <Link
                   href="/craft"
-                  className="mt-6 inline-block border border-[#172121] px-6 py-3 text-[12px] font-semibold tracking-[0.16em] uppercase transition-colors hover:bg-[#172121] hover:text-[#FBF6F3]"
+                  className="group mt-7 inline-flex items-center gap-3 border border-[#172121] px-7 py-3.5 text-[12px] font-semibold tracking-[0.2em] uppercase transition-colors hover:bg-[#172121] hover:text-[#FBF6F3]"
                 >
-                  Read our story →
+                  Read our story <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
                 </Link>
               </Magnetic>
             </div>
           </Reveal>
-          <dl className="grid grid-cols-3 gap-4 text-center">
+          <dl className="grid grid-cols-3 gap-3 text-center md:grid-cols-1 lg:grid-cols-3">
             {[
               ["40+", "artisan clusters"],
               ["100%", "breathable fabrics"],
@@ -387,15 +433,15 @@ export default async function HomePage() {
                 key={l}
                 delay={i * 90}
                 variant="scale"
-                className="border border-[#172121]/15 bg-[#FBF6F3]/70 px-2 py-6 backdrop-blur"
+                className="glass px-2 py-8"
               >
                 <dt
-                  className="text-[32px] font-medium text-[#7D451B]"
+                  className="text-[38px] font-medium text-[#7D451B]"
                   style={{ fontFamily: "'Cormorant Garamond', serif" }}
                 >
                   {n}
                 </dt>
-                <dd className="mt-1 text-[12.5px] tracking-wide text-[#172121]/65 uppercase">
+                <dd className="mt-1 text-[12px] font-semibold tracking-[0.14em] text-[#172121]/65 uppercase">
                   {l}
                 </dd>
               </Reveal>
@@ -405,18 +451,19 @@ export default async function HomePage() {
       </section>
 
       {/* ── Testimonials ─────────────────────────────── */}
-      <section aria-label="Customer words" className="mx-auto max-w-[1280px] px-4 py-14 sm:px-6">
+      <section aria-label="Customer words" className="cv mx-auto max-w-[1280px] px-4 py-16 sm:px-6">
         <SectionHeading kicker="Worn & loved" title="Word on the street" />
         <div className="grid gap-4 md:grid-cols-3">
           {TESTIMONIALS.map((t, i) => (
             <Reveal key={t.name} delay={i * 90}>
-              <figure className="border border-[#172121]/12 bg-white/40 px-6 py-7">
-                <span aria-hidden="true" className="tracking-[0.2em] text-[#7D451B]">★★★★★</span>
-                <blockquote className="mt-3 text-[15px] leading-relaxed text-[#172121]/85">
+              <figure className="lift flex h-full flex-col border border-[#172121]/10 bg-white/60 px-7 py-8 backdrop-blur">
+                <span aria-hidden="true" className="text-[13px] tracking-[0.28em] text-[#7D451B]">★★★★★</span>
+                <blockquote className="mt-4 flex-1 text-[16px] leading-relaxed text-[#172121]/85" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "19px" }}>
                   “{t.quote}”
                 </blockquote>
-                <figcaption className="mt-3 text-[13px] font-medium tracking-wide text-[#172121]/80">
-                  — {t.name}
+                <figcaption className="mt-4 flex items-center gap-3 border-t border-[#172121]/10 pt-4 text-[13px] font-semibold tracking-[0.08em] text-[#172121]/80 uppercase">
+                  <span aria-hidden="true" className="flex h-8 w-8 items-center justify-center rounded-full bg-[#172121] text-[13px] text-[#FBF6F3]">{t.name.slice(0, 1)}</span>
+                  {t.name}
                 </figcaption>
               </figure>
             </Reveal>
@@ -425,17 +472,18 @@ export default async function HomePage() {
       </section>
 
       {/* ── Trust row ────────────────────────────────── */}
-      <section aria-label="Why shop with us" className="border-y border-[#172121]/10 bg-[#FBF6F3]">
-        <div className="mx-auto grid max-w-[1280px] gap-6 px-4 py-10 sm:grid-cols-3 sm:px-6">
+      <section aria-label="Why shop with us" className="cv border-y border-[#172121]/10 bg-[#FBF6F3]">
+        <div className="mx-auto grid max-w-[1280px] gap-8 px-4 py-12 sm:grid-cols-3 sm:px-6">
           {[
-            ["Cash on delivery", "Pay at your door, anywhere in Bangladesh."],
-            ["7-day exchange", "Wrong size? We swap it fast, no drama."],
-            ["WhatsApp support", "Real humans, Sat–Thu 10am–8pm."],
-          ].map(([t, c], i) => (
+            ["Cash on delivery", "Pay at your door, anywhere in Bangladesh.", "৳"],
+            ["7-day exchange", "Wrong size? We swap it fast, no drama.", "↺"],
+            ["WhatsApp support", "Real humans, Sat–Thu 10am–8pm.", "✦"],
+          ].map(([t, c, icon], i) => (
             <Reveal key={t} delay={i * 80}>
               <div className="flex flex-col items-center text-center">
-                <p className="text-[13px] font-semibold tracking-[0.18em] uppercase">{t}</p>
-                <p className="mt-1 max-w-[34ch] text-[14px] text-[#172121]/80">{c}</p>
+                <span aria-hidden="true" className="mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-[#172121]/15 text-[18px] text-[#7D451B]">{icon}</span>
+                <p className="text-[13px] font-semibold tracking-[0.22em] uppercase">{t}</p>
+                <p className="mt-2 max-w-[34ch] text-[15px] leading-relaxed text-[#172121]/70">{c}</p>
               </div>
             </Reveal>
           ))}
@@ -443,27 +491,30 @@ export default async function HomePage() {
       </section>
 
       {/* ── Newsletter CTA ───────────────────────────── */}
-      <section aria-label="Newsletter" className="mx-auto max-w-[1280px] px-4 py-16 text-center sm:px-6">
-        <Reveal variant="scale">
-          <p
-            className="text-[36px] leading-tight font-medium sm:text-[44px]"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
-            First dibs, every drop.
-          </p>
-          <p className="mx-auto mt-2 max-w-[48ch] text-[15px] text-[#172121]/65">
-            Join the letter for 10% off your first order over{" "}
-            {formatBDT(FREE_SHIP_THRESHOLD_PAISA)} — plus craft notes worth opening.
-          </p>
-          <Magnetic>
-            <a
-              href="#newsletter"
-              className="mt-6 inline-block bg-[#172121] px-8 py-3.5 text-[12px] font-semibold tracking-[0.16em] text-[#FBF6F3] uppercase transition-colors hover:bg-clay"
-            >
-              Subscribe below ↓
-            </a>
-          </Magnetic>
-        </Reveal>
+      <section aria-label="Newsletter" className="cv relative overflow-hidden bg-[#172121] text-center text-[#FBF6F3]">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#D5573B]/18 blur-[140px]" />
+        </div>
+        <div className="relative mx-auto max-w-[1280px] px-4 py-20 sm:px-6">
+          <Reveal variant="scale">
+            <p className="kicker text-blush">The letter — 10% off first order</p>
+            <p className="display-xl mx-auto mt-3 max-w-[14ch]">
+              First dibs, every drop.
+            </p>
+            <p className="mx-auto mt-4 max-w-[50ch] text-[16px] text-white/65">
+              Join for 10% off your first order over{" "}
+              {formatBDT(FREE_SHIP_THRESHOLD_PAISA)} — plus craft notes worth opening.
+            </p>
+            <Magnetic strength={12}>
+              <a
+                href="#newsletter"
+                className="mt-8 inline-flex items-center gap-3 bg-[#FBF6F3] px-9 py-4 text-[12px] font-semibold tracking-[0.2em] text-[#172121] uppercase transition-colors hover:bg-clay hover:text-white"
+              >
+                Subscribe below <span aria-hidden="true">↓</span>
+              </a>
+            </Magnetic>
+          </Reveal>
+        </div>
       </section>
     </div>
   );
