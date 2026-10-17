@@ -62,8 +62,8 @@ export async function GET(request: Request): Promise<Response> {
 
     const searchParams = new URL(request.url).searchParams;
     const parsed = ListQuerySchema.safeParse({
-      page: searchParams.get("page"),
-      limit: searchParams.get("limit"),
+      page: searchParams.get("page") ?? undefined,
+      limit: searchParams.get("limit") ?? undefined,
       section: searchParams.get("section") ?? undefined,
       active: searchParams.get("active") ?? undefined,
       search: searchParams.get("search") ?? undefined,

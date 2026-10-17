@@ -51,8 +51,8 @@ export async function GET(request: Request): Promise<Response> {
     const searchParams = new URL(request.url).searchParams;
     const parsed = ListQuerySchema.safeParse({
       product_id: searchParams.get("product_id"),
-      page: searchParams.get("page"),
-      limit: searchParams.get("limit"),
+      page: searchParams.get("page") ?? undefined,
+      limit: searchParams.get("limit") ?? undefined,
     });
     if (!parsed.success) {
       return json({ ok: false, error: parsed.error.issues[0]?.message ?? "Invalid query" }, 400);
