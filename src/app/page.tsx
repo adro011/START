@@ -79,7 +79,7 @@ function SectionHeading({
           </h2>
           {copy && (
             <p
-              className={`mt-3 max-w-[52ch] text-[16px] leading-relaxed ${dark ? "text-white/65" : "text-[#172121]/65"}`}
+              className={`mt-3 max-w-[52ch] text-[16px] leading-relaxed ${dark ? "text-white/65" : "text-steel"}`}
             >
               {copy}
             </p>
@@ -221,13 +221,13 @@ export default async function HomePage() {
             ABRAR
           </h1>
           <p className="hero-text-rise mt-5 text-[13px] font-medium tracking-[0.32em] text-white/75 uppercase" style={{ animationDelay: "450ms" }}>
-            Quality · Beauty · Elegance
+            Connecting Consumer through Digital media
           </p>
           <div className="hero-text-rise mt-9 flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: "600ms" }}>
             <Magnetic strength={10}>
               <Link
                 href="/new-arrivals"
-                className="inline-flex items-center gap-3 bg-[#FBF6F3] px-9 py-4 text-[12px] font-semibold tracking-[0.2em] text-[#172121] uppercase transition-colors duration-300 hover:bg-clay hover:text-white"
+                className="inline-flex items-center gap-3 bg-[#FFC000] px-9 py-4 text-[12px] font-semibold tracking-[0.2em] text-black uppercase transition-colors duration-300 hover:bg-[#917300] hover:text-white"
               >
                 Shop new arrivals <span aria-hidden="true">→</span>
               </Link>
@@ -267,7 +267,7 @@ export default async function HomePage() {
             <p className="hidden text-[12px] tracking-[0.12em] text-white/60 uppercase sm:block">Est. Dhaka · Eid ’26 edit live</p>
           </div>
 
-          <div className="hero-shell flex min-h-[86dvh] flex-col gap-3 pb-3 md:flex-row">
+          <div className="hero-shell flex min-h-[86dvh] flex-col gap-0 pb-0 md:flex-row">
             {HERO.map((h, i) => (
               <Link
                 key={h.key}
@@ -282,9 +282,9 @@ export default async function HomePage() {
                   fill
                   loading="lazy"
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover opacity-90 transition-all duration-700 group-hover:scale-[1.06]"
+                  className="object-cover object-center opacity-100 transition-all duration-700 group-hover:scale-[1.03]"
                 />
-                <span className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/5" aria-hidden="true" />
+                <span className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/40 to-black/10" aria-hidden="true" />
                 {/* index */}
                 <span aria-hidden="true" className="text-ghost absolute top-5 right-6 font-semibold text-[40px] tracking-tight sm:text-[48px]" style={{ fontFamily: "'Cormorant Garamond','Playfair Display',serif" }}>
                   {h.index}
@@ -294,7 +294,7 @@ export default async function HomePage() {
                     className="hero-text-rise block leading-[0.92] tracking-[0.01em]"
                     style={{ animationDelay: `${200 + i * 110}ms` }}
                   >
-                    <span className="block text-[clamp(3rem,7vw,6.5rem)] font-medium text-white uppercase" style={{ fontFamily: "'Cormorant Garamond','Playfair Display',Georgia,serif" }}>
+                    <span className="block text-[clamp(2.75rem,6vw,6rem)] font-medium text-white uppercase" style={{ fontFamily: "'Cormorant Garamond','Playfair Display',Georgia,serif" }}>
                       {h.title}
                     </span>
                   </span>
