@@ -275,6 +275,21 @@ export type Database = {
           },
         ]
       }
+      order_transitions: {
+        Row: {
+          from_status: string
+          to_status: string
+        }
+        Insert: {
+          from_status: string
+          to_status: string
+        }
+        Update: {
+          from_status?: string
+          to_status?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           address: Json | null
@@ -342,6 +357,56 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount_paisa: number
+          created_at: string
+          currency: string
+          gateway: string
+          id: string
+          order_id: string
+          raw: Json | null
+          status: string
+          tran_id: string
+          updated_at: string
+          val_id: string | null
+        }
+        Insert: {
+          amount_paisa: number
+          created_at?: string
+          currency?: string
+          gateway?: string
+          id?: string
+          order_id: string
+          raw?: Json | null
+          status?: string
+          tran_id: string
+          updated_at?: string
+          val_id?: string | null
+        }
+        Update: {
+          amount_paisa?: number
+          created_at?: string
+          currency?: string
+          gateway?: string
+          id?: string
+          order_id?: string
+          raw?: Json | null
+          status?: string
+          tran_id?: string
+          updated_at?: string
+          val_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
             referencedColumns: ["id"]
           },
         ]

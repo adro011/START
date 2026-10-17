@@ -579,6 +579,140 @@ html.lenis body {
   border: none;
 }
 
+/* ── Language switch (বাংলা / ENG) ──
+   The single rounded object in the system: a glass pill whose sliding knob
+   reforges the Uiverse chrome gradient into Lamborghini gold. Knob left =
+   বাংলা, knob right = ENG; the active label sits beneath the knob, the
+   inactive one stays visible in Ash. Geometry is variable-driven so one
+   media query rescales the whole control. */
+.lang-toggle {
+  --lang-h: 60px;
+  --lang-w: 160px;
+  --lang-knob: 40px;
+  --lang-left: 10px;
+  --lang-right: 106px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lang-code {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.96px;
+  text-transform: uppercase;
+  color: var(--color-ash);
+  transition: color 300ms ease;
+}
+
+.lang-toggle[data-lang="bn"] .lang-code-bn,
+.lang-toggle[data-lang="en"] .lang-code-en {
+  color: var(--color-gold-text);
+}
+
+.lang-pill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: var(--lang-w);
+  height: var(--lang-h);
+  border-radius: calc(var(--lang-h) / 2);
+  background-color: #ffffff;
+  box-shadow:
+    inset 0 0 5px 4px rgba(255, 255, 255, 1),
+    inset 0 0 20px 1px rgba(0, 0, 0, 0.488),
+    10px 20px 30px rgba(0, 0, 0, 0.096),
+    inset 0 0 0 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.4s;
+}
+
+.lang-pill:hover {
+  transform: perspective(100px) rotateX(5deg) rotateY(-5deg);
+}
+
+/* Mirrored tilt once the knob has travelled to ENG */
+.lang-toggle[data-lang="en"] .lang-pill:hover {
+  transform: perspective(100px) rotateX(-5deg) rotateY(5deg);
+}
+
+.lang-knob {
+  position: absolute;
+  top: 50%;
+  left: var(--lang-left);
+  width: var(--lang-knob);
+  height: var(--lang-knob);
+  margin-top: calc(var(--lang-knob) / -2);
+  border-radius: 50%;
+  background-color: var(--color-gold-dark);
+  background-image: linear-gradient(
+    315deg,
+    #917300 0%,
+    #ffc000 70%
+  );
+  box-shadow: 0 2px 1px rgba(0, 0, 0, 0.3), 10px 10px 10px rgba(0, 0, 0, 0.3);
+  transition: left 0.4s, background-color 0.4s, background-image 0.4s;
+  pointer-events: none;
+}
+
+.lang-toggle[data-lang="en"] .lang-knob {
+  left: var(--lang-right);
+  background-image: linear-gradient(130deg, #ffc000 10%, #ffce3e 11%, #917300 62%);
+}
+
+.lang-pill-txt {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--lang-knob);
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.225px;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-graphite);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.lang-pill-txt-bn {
+  left: var(--lang-left);
+  font-family: "LamboType", "Noto Sans Bengali", Vrinda, "Bangla MN",
+    "Hind Siliguri", var(--font-display);
+  font-size: 12px;
+}
+
+.lang-pill-txt-en {
+  left: var(--lang-right);
+}
+
+/* Keyboard focus ring (the input is sr-only, so the pill stands in for it) */
+.lang-input:focus-visible ~ .lang-pill {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .lang-toggle {
+    --lang-h: 48px;
+    --lang-w: 132px;
+    --lang-knob: 32px;
+    --lang-left: 8px;
+    --lang-right: 92px;
+  }
+  .lang-toggle .lang-code {
+    display: none;
+  }
+  .lang-pill-txt-bn {
+    font-size: 10px;
+  }
+}
+
 /* Hexagonal motif (pause button, icons) */
 .hexagon {
   position: relative;

@@ -9,6 +9,7 @@ import { getDict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/dictionary";
 import { MegaMenu } from "./mega-menu";
 import { MobileNav } from "./mobile-nav";
+import { LanguageSwitch } from "./language-switch";
 
 function readLocale(): Locale {
   if (typeof window === "undefined") return "en";
@@ -68,12 +69,6 @@ export function SiteHeader() {
   const openSearch = () =>
     window.dispatchEvent(new CustomEvent("open-search"));
 
-  const switchLocale = (next: Locale) => {
-    if (next === locale) return;
-    document.cookie = `locale=${next}; path=/; max-age=31536000`;
-    window.location.reload();
-  };
-
   const d = getDict(locale);
 
   return (
@@ -101,38 +96,7 @@ export function SiteHeader() {
           </Link>
 
           <div className="flex items-center justify-end gap-0.5 sm:gap-1">
-            <button
-              type="button"
-              role="switch"
-              aria-checked={locale === "bn"}
-              aria-label={d.language}
-              onClick={() => switchLocale(locale === "en" ? "bn" : "en")}
-              className="relative mr-1 inline-flex h-7 shrink-0 items-center rounded-full border border-white/20 bg-[#181818] p-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
-            >
-              <span
-                aria-hidden="true"
-                className={
-                  "absolute inset-y-0.5 left-0.5 w-9 rounded-full bg-gold shadow-[0_2px_10px_rgba(255,192,0,0.35)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none " +
-                  (locale === "bn" ? "translate-x-9" : "translate-x-0")
-                }
-              />
-              <span
-                className={
-                  "relative z-10 w-9 text-center text-[11px] font-semibold tracking-[0.1em] transition-colors duration-300 " +
-                  (locale === "en" ? "text-black" : "text-steel")
-                }
-              >
-                EN
-              </span>
-              <span
-                className={
-                  "relative z-10 w-9 text-center text-[11px] font-semibold tracking-[0.1em] transition-colors duration-300 " +
-                  (locale === "bn" ? "text-black" : "text-steel")
-                }
-              >
-                বাং
-              </span>
-            </button>
+            <LanguageSwitch locale={locale} />
             <HeaderIcon label={d.search} onClick={openSearch}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="h-[21px] w-[21px]" aria-hidden="true">
                 <circle cx="11" cy="11" r="6" />

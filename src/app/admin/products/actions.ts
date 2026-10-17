@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
 
 export interface SaveProductInput {
@@ -30,6 +31,8 @@ function buildSku(slug: string, size: string, color: string): string {
 }
 
 export async function saveProduct(input: SaveProductInput): Promise<SaveProductResult> {
+  // Server actions are public POST endpoints — catalog writes are admin-only.
+  await requireAdmin();
   const supabase = createServiceRoleClient();
   if (!supabase) return { ok: false, error: "Supabase not configured" };
 

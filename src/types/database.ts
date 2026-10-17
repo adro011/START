@@ -14,6 +14,7 @@ export type OrderStatus =
 export type PaymentMethod = 'cod' | 'sslcommerz';
 export type PaymentStatus = 'unpaid' | 'paid' | 'failed' | 'refunded';
 export type CouponType = 'percent' | 'fixed' | 'free_shipping';
+export type PaymentRecordStatus = 'approved' | 'failed';
 
 export type Json =
   | string
@@ -198,6 +199,24 @@ export type OrderEventInsert = Pick<OrderEventRow, 'order_id' | 'status'> &
   Partial<Omit<OrderEventRow, 'id' | 'order_id' | 'status' | 'created_at'>>;
 export type OrderEventUpdate = Partial<Omit<OrderEventRow, 'id' | 'order_id' | 'created_at'>>;
 
+export interface PaymentRow {
+  id: string;
+  order_id: string;
+  tran_id: string;
+  val_id: string | null;
+  gateway: 'sslcommerz';
+  amount_paisa: number;
+  currency: string;
+  status: PaymentRecordStatus;
+  raw: Json | null;
+  created_at: string;
+  updated_at: string;
+}
+export type PaymentInsert = Pick<PaymentRow, 'order_id' | 'tran_id' | 'amount_paisa'> &
+  Partial<
+    Omit<PaymentRow, 'id' | 'order_id' | 'tran_id' | 'amount_paisa' | 'created_at' | 'updated_at'>
+  >;
+
 export interface CouponRow {
   code: string;
   type: CouponType;
@@ -350,6 +369,11 @@ export interface Database {
     Row: CouponRow;
     Insert: CouponInsert;
     Update: CouponUpdate;
+  };
+  payments: {
+    Row: PaymentRow;
+    Insert: PaymentInsert;
+    Update: Partial<Omit<PaymentRow, 'id' | 'tran_id' | 'created_at' | 'updated_at'>>;
   };
   wishlist: {
     Row: WishlistRow;
