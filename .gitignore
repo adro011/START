@@ -1,6 +1,8 @@
 node_modules/
 .next/
 .env*
+# ...but the committed template of required variables must be tracked.
+!.env.example
 coverage/
 playwright-report/
 test-results/
