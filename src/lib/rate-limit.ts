@@ -1,5 +1,3 @@
-"use server";
-
 /**
  * Simple in-memory fixed-window rate limiter for server actions / route handlers.
  * Keyed by an arbitrary string (IP, email, tran_id, etc.).

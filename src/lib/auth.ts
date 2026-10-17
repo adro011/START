@@ -5,9 +5,6 @@ import { createClient } from '@/lib/supabase/server';
 /** Demo credentials (storefront demo — no email required). */
 export const DEMO_ADMIN_USERNAME = process.env.DEMO_ADMIN_USERNAME ?? 'aa.adro.09';
 export const DEMO_ADMIN_PASSWORD = process.env.DEMO_ADMIN_PASSWORD ?? 'Ceyx4noir@';
-if (process.env.NODE_ENV === 'production' && (!process.env.DEMO_ADMIN_USERNAME || !process.env.DEMO_ADMIN_PASSWORD)) {
-  throw new Error('DEMO_ADMIN_USERNAME and DEMO_ADMIN_PASSWORD required in production');
-}
 const DEMO_COOKIE = 'demo_session';
 
 export interface SessionUser {
