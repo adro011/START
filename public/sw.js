@@ -7,7 +7,7 @@
  * module"). The SW is registered in production only (see sw-register.tsx). */
 const VERSION = 'v2';
 const STATIC_CACHE = `static-${VERSION}`;
-const PRECACHE = ['/offline', '/hero/icons/icon.svg', '/hero/icons/maskable.svg'];
+const PRECACHE = ['/offline', '/hero/icons/icon-192.png', '/hero/icons/maskable-192.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
