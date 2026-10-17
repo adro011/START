@@ -286,7 +286,7 @@ export default async function HomePage() {
                 style={{ animationDelay: `${120 + i * 110}ms`, background: h.bg }}
                 className="hero-enter hero-panel group relative flex-1 overflow-hidden transition-[flex-grow] duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] md:hover:flex-[1.75]"
               >
-                <Image
+                    <Image
                   src={h.img}
                   alt={`${h.title} collection`}
                   fill
@@ -401,6 +401,8 @@ export default async function HomePage() {
                     <Image
                       src={t.img}
                       alt={`${t.name} collection`}
+                      width={400}
+                      height={242}
                       className="mb-3 block h-48 w-full object-cover object-center opacity-90 transition-all duration-700 group-hover:opacity-100"
                       loading="lazy"
                       sizes="(max-width: 768px) 100vw, 33vw"
