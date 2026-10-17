@@ -1,7 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { getProduct } from "@/lib/catalog";
+import { getProduct, type Product } from "@/lib/catalog";
+import { getLiveProducts } from "@/lib/storefront";
 import { validateCoupon } from "@/lib/coupons";
 import { FREE_SHIP_THRESHOLD_PAISA } from "@/config/site";
 import { createClient } from "@/lib/supabase/server";
@@ -41,6 +42,24 @@ function isDhakaZone(district: string): boolean {
   return d === "dhaka" || d === "gazipur" || d === "narayanganj";
 }
 
+async function verifyTurnstile(token: string): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) return false;
+
+  try {
+    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ secret, response: token }),
+    });
+    if (!res.ok) return false;
+    const data = (await res.json()) as { success?: boolean };
+    return data.success === true;
+  } catch {
+    return false;
+  }
+}
+
 export async function placeOrder(raw: CheckoutInput): Promise<CheckoutResult> {
   const parsed = checkoutSchema.safeParse(raw);
   if (!parsed.success) {
@@ -53,22 +72,41 @@ export async function placeOrder(raw: CheckoutInput): Promise<CheckoutResult> {
     return { ok: false, error: "Something went wrong. Please try again." };
   }
 
+  // Turnstile: verify only when the client actually supplied a token. The
+  // widget ships as a placeholder until NEXT_PUBLIC_TURNSTILE_SITE_KEY and the
+  // client script are both wired, so a missing token must not block orders.
+  if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && input.turnstileToken) {
+    const verified = await verifyTurnstile(input.turnstileToken);
+    if (!verified) {
+      return { ok: false, error: "Verification failed. Please refresh the page and try again." };
+    }
+  }
+
   if (input.payment === "sslcommerz" && process.env.PAYMENT_SSLCOMMERZ_ENABLED !== "true") {
     return { ok: false, error: "Online payment is not enabled right now. Please choose Cash on Delivery." };
   }
 
   // Live path: Supabase RPC `create_order` (transactional stock decrement,
   // DB repricing, coupon + zone logic, order + items + event persistence).
-  // Falls back to the local demo repricer when env is missing OR when the
-  // cart holds TS-catalog items with no DB variant yet (catalog unification
-  // is a follow-up; the RPC activates automatically once slugs match).
+  // Active since migration 0007 unified DB + TS catalogs (24/24 slugs,
+  // 192/192 SKUs). Falls back to the local demo repricer only when env is
+  // missing or a cart line has no DB variant (e.g. future products).
   const live = await tryLiveOrder(input);
   if (live) return live;
 
-  // Demo path: recalculate everything from the catalog — never trust client totals.
+  // Demo path: recalculate everything — never trust client totals.
+  // Live-first (Supabase products) with local fallback, so carts built from
+  // live slugs/SKUs reprice correctly when the RPC path is unavailable.
+  let liveList = undefined as Product[] | undefined;
+  try {
+    const { products } = await getLiveProducts();
+    if (products.length > 0) liveList = products;
+  } catch {
+    /* local fallback */
+  }
   let subtotal = 0;
   for (const item of input.items) {
-    const product = getProduct(item.slug);
+    const product = getProduct(item.slug, liveList);
     if (!product) return { ok: false, error: `Unknown product: ${item.slug}` };
     const variant = product.variants.find((v) => v.sku === item.sku);
     if (!variant) return { ok: false, error: `Unknown variant ${item.sku} for ${product.name}` };
@@ -121,21 +159,28 @@ async function tryLiveOrder(
     if (!anon || !admin) return null;
 
     // Resolve TS cart lines (slug/sku) to DB variant uuids.
+    // Batch lookup with .in("sku", skus) — one query instead of N per cart item.
+    const skus = input.items.map((i) => i.sku);
+    const { data: variants, error: verror } = await admin
+      .from("product_variants")
+      .select("id, sku, products!inner(slug, active, deleted_at)")
+      .in("sku", skus);
+    if (verror) return null;
+    const variantBySku = new Map(
+      (variants ?? []).map((v: unknown) => [String((v as { sku: string }).sku), v]),
+    );
+
     const cart: { variant_id: string; qty: number }[] = [];
     for (const item of input.items) {
-      const { data, error } = await admin
-        .from("product_variants")
-        .select("id, products!inner(slug, active, deleted_at)")
-        .eq("sku", item.sku)
-        .single();
-      if (error || !data) return null; // no DB variant yet → demo fallback
-      const prod = data.products as unknown as {
+      const v = variantBySku.get(item.sku);
+      if (!v) return null; // no DB variant yet → demo fallback
+      const prod = (v as { products: unknown }).products as unknown as {
         slug: string;
         active: boolean;
         deleted_at: string | null;
       };
       if (!prod || prod.active !== true || prod.deleted_at !== null) return null;
-      cart.push({ variant_id: data.id as string, qty: item.qty });
+      cart.push({ variant_id: String((v as { id: unknown }).id), qty: item.qty });
     }
     if (cart.length === 0) return null;
 

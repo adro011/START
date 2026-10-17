@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getDemoOrder } from '@/lib/admin-data';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 // SSLCommerz IPN/webhook stub.
 // LIVE NOTES (wire before going live):
@@ -10,8 +11,9 @@ import { getDemoOrder } from '@/lib/admin-data';
 // 2. Check `status === 'VALID'` (or 'VALIDATED') AND amount matches the order total
 //    AND currency matches — recalculated from DB, never from the client.
 // 3. Idempotency: orders/payment callbacks must be unique on tran_id (DB unique
-//    constraint + ON CONFLICT DO NOTHING). The in-memory Set below is DEMO ONLY
-//    and resets on every deploy — replace with DB.
+//    constraint + ON CONFLICT DO NOTHING). The in-memory Set below is a fast-path
+//    within a single deploy; the DB check against orders provides cross-deploy
+//    idempotency once a payments/tran_id column exists (see migration note).
 
 const PayloadSchema = z.object({
   orderNo: z.string().min(1),
@@ -20,7 +22,8 @@ const PayloadSchema = z.object({
   tranId: z.string().min(1),
 });
 
-// Demo-only idempotency. NOTE → DB: unique index on payments(tran_id).
+// Demo-only idempotency fast-path (resets on deploy). Production: unique index on
+// payments(tran_id) + ON CONFLICT DO NOTHING. See comments above.
 const seenTranIds = new Set<string>();
 
 export async function POST(request: Request): Promise<Response> {
@@ -36,8 +39,28 @@ export async function POST(request: Request): Promise<Response> {
   }
   const { orderNo, amount, status, tranId } = parsed.data;
 
+  // Fast-path: same tran_id seen in this deploy → duplicate.
   if (seenTranIds.has(tranId)) {
     return Response.json({ result: 'DUPLICATE', orderNo, tranId });
+  }
+
+  // Cross-deploy idempotency: if this order is already paid, skip re-processing.
+  const admin = createServiceRoleClient();
+  if (admin) {
+    try {
+      const { data: existing, error: e } = await admin
+        .from('orders')
+        .select('id, payment_status, order_no')
+        .eq('order_no', orderNo)
+        .eq('payment_status', 'paid')
+        .maybeSingle();
+      if (!e && existing) {
+        seenTranIds.add(tranId);
+        return Response.json({ result: 'DUPLICATE', orderNo, tranId, existingOrderNo: existing.order_no });
+      }
+    } catch {
+      // Fall through to normal processing; DB may be unavailable.
+    }
   }
 
   const order = getDemoOrder(orderNo);
