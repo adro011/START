@@ -13,16 +13,16 @@ export const SITE = {
   tagline: "Connecting Consumer through Digital media",
   description:
     "ABRAR — Connecting Consumer through Digital media. A modern Bangladeshi heritage label — panjabis, sharees, kurtas and kids' wear in breathable fabrics, cut for real life and made to be reworn.",
-  phone: "+8801XXXXXXXXX",
-  whatsapp: "+8801XXXXXXXXX",
+  phone: "+8801712216576",
+  whatsapp: "+8801712216576",
   /** Digits-only WhatsApp for wa.me links (derived, keeps placeholder in one place). */
-  whatsappDigits: "8801XXXXXXXX",
-  whatsappDisplay: "01XXXXXXXXX",
-  email: "hello@example.com",
+  whatsappDigits: "8801712216576",
+  whatsappDisplay: "01712216576",
+  email: "ziahoque@1980@gmail.com",
   currency: "৳" as const,
   locale: "en-BD" as const,
   socials: {
-    facebook: "https://facebook.com/abrarexclusive.bd",
+    facebook: "https://www.facebook.com/profile.php?id=61560882538280",
     instagram: "https://instagram.com/abrarexclusive.bd",
     youtube: "https://youtube.com/@abrarexclusive.bd",
     tiktok: "https://tiktok.com/@abrarexclusive.bd",

@@ -44,6 +44,16 @@ body {
   }
 }
 
+/*
+ * The site default is uppercase (see `body` above). Email addresses must keep
+ * their typed casing, otherwise TLDs/handles read as `ZIAHOQUE@1980@GMAIL.COM`.
+ * Deliberately unlayered: it has to beat both the unlayered `body` rule and the
+ * layered `uppercase` utility.
+ */
+a[href^="mailto:"] {
+  text-transform: none;
+}
+
 /* Hero panel entrance (above-fold: CSS-only so it plays on first paint) */
 @keyframes hero-enter {
   from {
