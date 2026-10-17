@@ -73,7 +73,7 @@ function SectionHeading({
         <div className="max-w-[22rem] sm:max-w-none">
           <p className="kicker text-clay">{kicker}</p>
           <h2
-            className={`display-xl mt-3 ${dark ? "text-[#FBF6F3]" : "text-[#172121]"}`}
+            className={`display-xl mt-3 ${dark ? "text-[#FBF6F3]" : "text-[#F5F5F5]"}`}
           >
             {title}
           </h2>
@@ -92,7 +92,7 @@ function SectionHeading({
               className={`group inline-flex items-center gap-3 border px-6 py-3.5 text-[12px] font-semibold tracking-[0.18em] uppercase transition-all duration-300 ${
                 dark
                   ? "border-white/25 text-white hover:bg-white hover:text-[#172121]"
-                  : "border-[#172121] text-[#172121] hover:bg-[#172121] hover:text-[#FBF6F3]"
+                  : "border-[#172121] text-[#F5F5F5] hover:bg-[#172121] hover:text-[#FBF6F3]"
               }`}
             >
               {cta ?? "View all"}
@@ -263,7 +263,7 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-[1440px] px-3 pt-3 sm:px-4">
           {/* eyebrow */}
           <div className="flex items-center justify-between px-1 pt-4 pb-3 sm:px-2">
-            <p className="text-[12px] font-semibold tracking-[0.12em] text-[#F2CCC3]/90 uppercase">Quality, beauty and elegance — Made in Bangladesh</p>
+            <p className="text-[12px] font-semibold tracking-[0.12em] text-[#F2CCC3]/90 uppercase">Connecting Consumer through Digital media</p>
             <p className="hidden text-[12px] tracking-[0.12em] text-white/60 uppercase sm:block">Est. Dhaka · Eid ’26 edit live</p>
           </div>
 
@@ -337,8 +337,8 @@ export default async function HomePage() {
       <section aria-label="House statement" className="mx-auto max-w-[1280px] px-4 pt-16 pb-4 sm:px-6">
         <Reveal>
           <p className="kicker text-clay">The house of Abrar</p>
-          <p className="display-xl mt-4 max-w-[16ch] text-[#172121]">
-            Quiet luxury, cut for real weather <em className="text-[#7D451B] not-italic underline decoration-[#D5573B]/40 decoration-2 underline-offset-8">and real bodies.</em>
+          <p className="display-xl mt-4 max-w-[16ch] text-[#F5F5F5]">
+            Quiet luxury, cut for real weather <em className="text-gold not-italic underline decoration-[#D5573B]/40 decoration-2 underline-offset-8">and real bodies.</em>
           </p>
         </Reveal>
       </section>
@@ -359,13 +359,13 @@ export default async function HomePage() {
                 delay={(i % 5) * 70}
                 className="w-[228px] shrink-0 snap-start sm:w-[272px]"
               >
-                <span className="mb-2 block text-[11px] font-semibold tracking-[0.24em] text-[#172121]/40 uppercase">N° {String(i + 1).padStart(2, "0")}</span>
+                <span className="mb-2 block text-[11px] font-semibold tracking-[0.24em] text-ash uppercase">N° {String(i + 1).padStart(2, "0")}</span>
                 <ProductCard product={asCard(p)} />
               </Reveal>
             ))}
           </div>
         ) : (
-          <p className="border border-dashed border-[#172121]/20 px-6 py-10 text-center text-[15px] text-[#172121]/80">
+          <p className="border border-dashed border-[#172121]/20 px-6 py-10 text-center text-[15px] text-steel">
             Fresh pieces are on the cutting table — check back very soon.
           </p>
         )}

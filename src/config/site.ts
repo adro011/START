@@ -10,9 +10,9 @@ export const BRAND_NAME = "ABRAR";
 
 export const SITE = {
   name: BRAND_NAME,
-  tagline: "Quality, beauty and elegance",
+  tagline: "Connecting Consumer through Digital media",
   description:
-    "ABRAR is a modern Bangladeshi heritage label — panjabis, sharees, kurtas and kids' wear in breathable fabrics, cut for real life and made to be reworn.",
+    "ABRAR — Connecting Consumer through Digital media. A modern Bangladeshi heritage label — panjabis, sharees, kurtas and kids' wear in breathable fabrics, cut for real life and made to be reworn.",
   phone: "+8801XXXXXXXXX",
   whatsapp: "+8801XXXXXXXXX",
   /** Digits-only WhatsApp for wa.me links (derived, keeps placeholder in one place). */
