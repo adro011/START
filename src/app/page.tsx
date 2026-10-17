@@ -195,12 +195,12 @@ export default async function HomePage() {
   }
   // Reorder category tiles per brand: 01 PANJABI, 02 PANJABI PAJAMA SETS, 03 COATY, 04 SHIRT, 05 COAT, 06 JACKETS
   if (tiles.length >= 6) {
-    tiles[0] = { name: "PANJABI", href: "/men/panjabi", img: "/hero/men.jpg" };
-    tiles[1] = { name: "PANJABI PAJAMA SETS", href: "/men/panjabi-pajama-sets", img: "/hero/men.jpg" };
-    tiles[2] = { name: "COATY", href: "/men/coaty", img: "/hero/men.jpg" };
-    tiles[3] = { name: "SHIRT", href: "/men/shirts", img: "/hero/men.jpg" };
-    tiles[4] = { name: "COAT", href: "/men/coaty", img: "/hero/men.jpg" };
-    tiles[5] = { name: "JACKETS", href: "/men/jackets", img: "/hero/men.jpg" };
+    tiles[0] = { name: "PANJABI", href: "/men/panjabi", img: "/library/male/PANJABI.jpg" };
+    tiles[1] = { name: "PANJABI PAJAMA SETS", href: "/men/panjabi-pajama-sets", img: "/library/male/PANJABI-PAjAMA SET.jpg" };
+    tiles[2] = { name: "COATY", href: "/men/coaty", img: "/library/male/Coaty.webp" };
+    tiles[3] = { name: "SHIRT", href: "/men/shirts", img: "/library/male/Shirt.jpg" };
+    tiles[4] = { name: "COAT", href: "/men/coaty", img: "/library/male/COAT.jpg" };
+    tiles[5] = { name: "JACKETS", href: "/men/jackets", img: "/library/male/JAcket.webp" };
   }
 
   return (
