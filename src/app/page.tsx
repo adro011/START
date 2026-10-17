@@ -133,10 +133,10 @@ const HERO = [
 ] as const;
 
 const OCCASIONS = [
-  { name: "Eid", copy: "Moonlit whites & golds", href: "/women?occasion=eid", bg: "linear-gradient(140deg,#3d2410,#D5573B)" },
-  { name: "Wedding", copy: "Heirlooms in the making", href: "/women?occasion=wedding", bg: "linear-gradient(140deg,#101a1a,#7D451B)" },
-  { name: "Everyday", copy: "Breathable, reworn often", href: "/men?occasion=everyday", bg: "linear-gradient(140deg,#2e4238,#172121)" },
-  { name: "Winter", copy: "Layers with intention", href: "/men?occasion=winter", bg: "linear-gradient(140deg,#172121,#7E9181)" },
+  { name: "Eid", copy: "Moonlit whites & golds", href: "/women?occasion=eid", img: "/library/photo-album/EID.jpg" },
+  { name: "Wedding", copy: "Heirlooms in the making", href: "/women?occasion=wedding", img: "/library/photo-album/WEDDING.jpg" },
+  { name: "Everyday", copy: "Breathable, reworn often", href: "/men?occasion=everyday", img: "/library/photo-album/Everyday.jpg" },
+  { name: "Winter", copy: "Layers with intention", href: "/men?occasion=winter", img: "/library/photo-album/WINTER.jpg" },
 ] as const;
 
 const TESTIMONIALS = [
@@ -421,7 +421,14 @@ export default async function HomePage() {
               delay={i * 80}
               className="lift group relative min-h-[260px] overflow-hidden px-6 py-8"
             >
-              <span aria-hidden="true" className="absolute inset-0" style={{ background: o.bg }} />
+              <Image
+                src={o.img}
+                alt={`${o.name} occasion`}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover object-center opacity-100 transition-all duration-700 group-hover:scale-[1.03]"
+                priority={i === 0}
+              />
               <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
               <span aria-hidden="true" className="text-ghost absolute top-4 right-5 text-[40px] font-semibold">0{i + 1}</span>
               <Link href={o.href} data-cursor="Shop" className="relative block h-full">
