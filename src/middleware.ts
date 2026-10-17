@@ -11,8 +11,9 @@ import { REGISTRY_SESSION_COOKIE, verifyRegistrySession } from '@/lib/registry/s
 // stay as the second layer.
 //
 // Rules:
-// - `/registry/login` and `/registry/logout` are public (the sign-in form and
-//   the cookie-clearing route must be reachable while signed out).
+// - `/registry/login` is public (the sign-in form must be reachable while
+//   signed out). Sign-out is a POST server action, never a GET link: a GET
+//   route would be executed by Next.js link prefetch and log staff out.
 // - Signed registry session (`registry_session`, HMAC-SHA256 over a JSON
 //   payload — see lib/registry/session.ts): role=admin reaches /admin and
 //   /registry, role=staff reaches /registry only.
@@ -24,7 +25,7 @@ import { REGISTRY_SESSION_COOKIE, verifyRegistrySession } from '@/lib/registry/s
 // /account/* is intentionally untouched (guest flows: tracking, guest
 // checkout, demo wishlist).
 
-const PUBLIC_REGISTRY_PATHS = new Set(['/registry/login', '/registry/logout']);
+const PUBLIC_REGISTRY_PATHS = new Set(['/registry/login']);
 
 function readDemoRole(request: NextRequest): string | null {
   try {
