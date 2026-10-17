@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
+import {
+  REGISTRY_API_UNAUTHORIZED,
+  getRegistryApiSession,
+} from "@/lib/registry/api-auth";
 
 const MAX_LIMIT = 100;
 const DEFAULT_LIMIT = 20;
@@ -53,13 +57,16 @@ export async function OPTIONS(): Promise<Response> {
 
 export async function GET(request: Request): Promise<Response> {
   try {
+    const session = await getRegistryApiSession();
+    if (!session) return json(REGISTRY_API_UNAUTHORIZED, 401);
+
     const searchParams = new URL(request.url).searchParams;
     const parsed = ListQuerySchema.safeParse({
       page: searchParams.get("page"),
       limit: searchParams.get("limit"),
-      section: searchParams.get("section"),
-      active: searchParams.get("active"),
-      search: searchParams.get("search"),
+      section: searchParams.get("section") ?? undefined,
+      active: searchParams.get("active") ?? undefined,
+      search: searchParams.get("search") ?? undefined,
     });
     if (!parsed.success) {
       return json({ ok: false, error: parsed.error.issues[0]?.message ?? "Invalid query" }, 400);
@@ -101,6 +108,9 @@ export async function GET(request: Request): Promise<Response> {
 
 export async function POST(request: Request): Promise<Response> {
   try {
+    const session = await getRegistryApiSession();
+    if (!session) return json(REGISTRY_API_UNAUTHORIZED, 401);
+
     const ip = (request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "anon")
       .split(",")[0]
       ?.trim() ?? "anon";

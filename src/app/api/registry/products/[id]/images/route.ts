@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
+import {
+  REGISTRY_API_UNAUTHORIZED,
+  getRegistryApiSession,
+} from "@/lib/registry/api-auth";
 
 const MAX_IMAGES = 5;
 const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"];
@@ -46,6 +50,9 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
   try {
+    const session = await getRegistryApiSession();
+    if (!session) return json(REGISTRY_API_UNAUTHORIZED, 401);
+
     const { id } = await params;
     const ip = (request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "anon")
       .split(",")[0]
@@ -139,6 +146,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
   try {
+    const session = await getRegistryApiSession();
+    if (!session) return json(REGISTRY_API_UNAUTHORIZED, 401);
+
     const { id } = await params;
     let body: unknown;
     try {

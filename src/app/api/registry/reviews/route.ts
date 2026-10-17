@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
+import {
+  REGISTRY_API_UNAUTHORIZED,
+  getRegistryApiSession,
+} from "@/lib/registry/api-auth";
 
 const MAX_LIMIT = 100;
 const DEFAULT_LIMIT = 20;
@@ -41,6 +45,9 @@ export async function OPTIONS(): Promise<Response> {
 
 export async function GET(request: Request): Promise<Response> {
   try {
+    const session = await getRegistryApiSession();
+    if (!session) return json(REGISTRY_API_UNAUTHORIZED, 401);
+
     const searchParams = new URL(request.url).searchParams;
     const parsed = ListQuerySchema.safeParse({
       product_id: searchParams.get("product_id"),
@@ -86,6 +93,9 @@ export async function GET(request: Request): Promise<Response> {
 
 export async function POST(request: Request): Promise<Response> {
   try {
+    const session = await getRegistryApiSession();
+    if (!session) return json(REGISTRY_API_UNAUTHORIZED, 401);
+
     const ip = (request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "anon")
       .split(",")[0]
       ?.trim() ?? "anon";
