@@ -9,6 +9,9 @@ test-results/
 # Supabase CLI local state (linked project ref, versions) — never commit
 supabase/.temp/
 
+# Build / dev temp artifacts (generated, never commit)
+.temp/
+
 # Local source-image library (multi-MB originals; compressed outputs live in public/)
 library/
 
