@@ -10,6 +10,7 @@ import {
 } from "@/app/registry/actions";
 import { requireStaff } from "@/lib/auth";
 import { formatBDT, cn } from "@/lib/format";
+import ConfirmForm from "@/app/registry/confirm-form";
 
 const STATUS_BADGE: Record<string, string> = {
   active: "border-gold/30 bg-gold/5 text-gold",
@@ -92,7 +93,11 @@ export default async function RegistryProductPage({
                 </button>
               </form>
             ) : (
-              <form action={softDeleteProduct as unknown as RegistryFormAction} onSubmit={() => window.confirm(`Soft delete “${product.name}"?`)} className="flex-1">
+              <ConfirmForm
+                action={softDeleteProduct}
+                message={`Soft delete “${product.name}"?`}
+                className="flex-1"
+              >
                 <input name="id" value={product.id} hidden />
                 <button
                   type="submit"
@@ -100,7 +105,7 @@ export default async function RegistryProductPage({
                 >
                   Soft delete
                 </button>
-              </form>
+              </ConfirmForm>
             )}
           </div>
         </div>

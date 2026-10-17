@@ -3,12 +3,12 @@ import Image from "next/image";
 import {
   getRegistryProducts,
   softDeleteProduct,
-  type RegistryFormAction,
   type RegistryProduct,
   type RegistryStatus,
 } from "./actions";
 import { requireStaff } from "@/lib/auth";
 import { formatBDT, cn } from "@/lib/format";
+import ConfirmForm from "./confirm-form";
 
 const STATUS_LABEL: Record<RegistryStatus, string> = {
   active: "Active",
@@ -141,7 +141,7 @@ export default async function RegistryPage({
 
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {products.map((p) => (
-            <RegistryCard key={p.id} product={p} deleteAction={softDeleteProduct as unknown as RegistryFormAction} />
+            <RegistryCard key={p.id} product={p} deleteAction={softDeleteProduct} />
           ))}
           {products.length === 0 && (
             <div className="col-span-full rounded-lg border border-white/15 bg-[#111111] px-6 py-12 text-center">
@@ -183,7 +183,7 @@ function RegistryCard({
   deleteAction,
 }: {
   product: RegistryProduct;
-  deleteAction: RegistryFormAction;
+  deleteAction: (formData: FormData) => unknown;
 }) {
   const label = STATUS_LABEL[product.status];
   const badge = STATUS_BADGE[product.status];
@@ -232,7 +232,11 @@ function RegistryCard({
         >
           Edit
         </Link>
-        <form action={deleteAction as RegistryFormAction} onSubmit={() => window.confirm(`Soft delete “${product.name}"?`)} className="flex-1">
+        <ConfirmForm
+          action={deleteAction}
+          message={`Soft delete “${product.name}"?`}
+          className="flex-1"
+        >
           <input name="id" value={product.id} hidden />
           <button
             type="submit"
@@ -240,7 +244,7 @@ function RegistryCard({
           >
             Delete
           </button>
-        </form>
+        </ConfirmForm>
       </div>
     </article>
   );
