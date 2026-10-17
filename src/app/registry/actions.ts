@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireStaff } from "@/lib/auth";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
 
@@ -131,7 +132,8 @@ export async function getRegistryProducts(f: {
     products = products.filter((p) => p.name.toLowerCase().includes(q) || p.slug.toLowerCase().includes(q));
   }
   if (f.type) products = products.filter((p) => p.type === f.type);
-  if (f.size) products = products.filter((p) => p.sizes.includes(f.size));
+  const size = f.size;
+  if (size) products = products.filter((p) => p.sizes.includes(size));
   if (f.status) products = products.filter((p) => p.status === f.status);
 
   const hasNextPage = products.length > limit;
@@ -156,6 +158,10 @@ export async function getRegistryProduct(id: string): Promise<RegistryProduct | 
 }
 
 type SoftDeleteResult = { ok: true } | { ok: false; error: string };
+
+/** Next.js <form action> typing only allows void returns; server actions may
+ *  return values at runtime, so call sites cast through this type. */
+export type RegistryFormAction = (formData: FormData) => void | Promise<void>;
 
 export async function softDeleteProduct(formData: FormData): Promise<SoftDeleteResult> {
   "use server";
@@ -201,7 +207,7 @@ export async function updateRegistryProduct(formData: FormData): Promise<{ ok: t
   await requireStaff();
   const id = String(formData.get("id") ?? "");
   const name = String(formData.get("name") ?? "").trim();
-  const section = formData.get("section");
+  const section = String(formData.get("section") ?? "");
   const price_paisa = Number(formData.get("price_paisa"));
   const active = formData.get("active") === "on";
   if (!id) return { ok: false, error: "Missing product id" };
@@ -220,6 +226,5 @@ export async function updateRegistryProduct(formData: FormData): Promise<{ ok: t
     .eq("id", id);
   if (error) return { ok: false, error: error.message };
   revalidatePath("/registry");
-  revalidatePath(`/registry/products/${id}`);
-  return { ok: true };
+  redirect(`/registry/products/${id}?saved=1`);
 }

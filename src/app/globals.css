@@ -85,6 +85,28 @@ a[href^="mailto:"] {
   animation: hero-text-rise 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* ── Header brand mark: breathing white glow (one technique, idle loop).
+   Halo breathes between a whisper and a soft lit edge — glyph geometry is
+   never touched (text-shadow only), on the black permanent header. ── */
+@keyframes logo-glow-breathe {
+  from {
+    text-shadow:
+      0 0 6px rgb(255 255 255 / 0.32),
+      0 0 18px rgb(255 255 255 / 0.16);
+  }
+  to {
+    text-shadow:
+      0 0 10px rgb(255 255 255 / 0.78),
+      0 0 30px rgb(255 255 255 / 0.4),
+      0 0 56px rgb(255 255 255 / 0.16);
+  }
+}
+
+.logo-glow {
+  animation: logo-glow-breathe 4.2s ease-in-out infinite alternate;
+  will-change: text-shadow;
+}
+
 /* ── Gucci-style full-viewport cover: fade in, settle 1.14→1.02,
    then an 18s perceptual slow-drift (transform/opacity only) ── */
 @keyframes cover-fade {
@@ -881,6 +903,9 @@ a:active,
   }
   .animate-marquee,
   .skeleton {
+    animation: none;
+  }
+  .logo-glow {
     animation: none;
   }
 

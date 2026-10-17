@@ -74,28 +74,27 @@ export function SiteHeader() {
   return (
     <>
       <header className="site-header sticky top-0 z-50 border-b border-white/15 bg-black">
-        <div className="mx-auto grid max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-4 sm:px-6">
-          <div className="flex items-center">
-            <a
-              href={`https://wa.me/${SITE.whatsappDigits}`}
-              target="_blank"
-              rel="noreferrer"
-              className="hidden text-[12.5px] font-medium tracking-[0.08em] text-steel uppercase underline-offset-4 hover:text-gold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] lg:block"
-            >
-              WhatsApp {SITE.whatsappDisplay}
-            </a>
-          </div>
-
+        <div className="mx-auto grid max-w-[1280px] grid-cols-[auto_1fr] items-center gap-2 px-4 py-4 sm:px-6">
           <Link
             href="/"
             aria-label={`${SITE.name} — home`}
-            className="text-center text-[22px] font-semibold tracking-[0.06em] whitespace-nowrap text-[#F5F5F5] uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] sm:text-[25px]"
+            className="logo-glow text-[22px] font-semibold tracking-[0.06em] whitespace-nowrap text-[#F5F5F5] uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] sm:text-[25px]"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             {SITE.name}
           </Link>
 
           <div className="flex items-center justify-end gap-0.5 sm:gap-1">
+            <span className="hidden lg:block">
+              <a
+                href={`https://wa.me/${SITE.whatsappDigits}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[12.5px] font-medium tracking-[0.08em] text-steel uppercase underline-offset-4 hover:text-gold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+              >
+                WhatsApp {SITE.whatsappDisplay}
+              </a>
+            </span>
             <LanguageSwitch locale={locale} />
             <HeaderIcon label={d.search} onClick={openSearch}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="h-[21px] w-[21px]" aria-hidden="true">

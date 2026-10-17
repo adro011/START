@@ -42,19 +42,30 @@ function hasSupabaseSession(request: NextRequest): boolean {
 export function middleware(request: NextRequest): NextResponse {
   const { pathname, search } = request.nextUrl;
 
-  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+  const isAdmin = pathname === '/admin' || pathname.startsWith('/admin/');
+  const isRegistry = pathname === '/registry' || pathname.startsWith('/registry/');
+
+  if (isAdmin || isRegistry) {
     // Unsigned demo cookie is honored only where demo login is allowed
     // (mirrors demoLoginAllowed() in lib/auth.ts — keep the two in sync).
     const demoAllowed =
       process.env.ALLOW_DEMO_LOGIN === 'true' ||
       (process.env.ALLOW_DEMO_LOGIN !== 'false' && process.env.NODE_ENV !== 'production');
     const role = demoAllowed ? readDemoRole(request) : null;
-    if (role !== 'admin' && !hasSupabaseSession(request)) {
+    // Registry admits staff too (see login "Shop registry · Staff only").
+    const allowed =
+      isAdmin
+        ? role === 'admin' || hasSupabaseSession(request)
+        : (role === 'admin' || role === 'staff') || hasSupabaseSession(request);
+    if (!allowed) {
       const login = request.nextUrl.clone();
       login.pathname = '/login';
       const back = pathname + search;
-      login.search = role
-        ? `?mode=admin&error=${encodeURIComponent('Shop registry is for staff — sign in with registry credentials.')}&next=${encodeURIComponent(back)}`
+      const error = role
+        ? 'Shop registry is for staff — sign in with registry credentials.'
+        : undefined;
+      login.search = error
+        ? `?mode=admin&error=${encodeURIComponent(error)}&next=${encodeURIComponent(back)}`
         : `?next=${encodeURIComponent(back)}`;
       return NextResponse.redirect(login);
     }
@@ -66,5 +77,5 @@ export function middleware(request: NextRequest): NextResponse {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/account/:path*'],
+  matcher: ['/admin/:path*', '/registry/:path*', '/account/:path*'],
 };

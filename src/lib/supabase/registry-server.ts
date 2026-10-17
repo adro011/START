@@ -27,7 +27,7 @@ function requireRegistryEnv(names: string[]): void {
 /** Privileged admin client (service role). Throws if SUPABASE_SERVICE_ROLE_KEY missing. */
 export function createRegistryAdminClient() {
   requireRegistryEnv(["NEXT_PUBLIC_SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"]);
-  return createClient(REGISTRY_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
+  return createClient(REGISTRY_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     auth: { persistSession: false },
   });
 }
@@ -36,7 +36,7 @@ export function createRegistryAdminClient() {
 export async function createRegistryClient() {
   requireRegistryEnv(["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"]);
   const cookieStore = await cookies();
-  return createServerClient(REGISTRY_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
+  return createServerClient(REGISTRY_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
