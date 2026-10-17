@@ -76,7 +76,22 @@ export default async function AccountPage() {
   const orders = session ? await getLiveOrders(session.user.id) : null;
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-6">
+    <main className="relative mx-auto max-w-3xl px-4 py-6">
+      {/* ── Bottom-left small registry icon ── */}
+      <div className="fixed bottom-4 left-4 z-50">
+        <Link
+          href="/registry/login"
+          aria-label="Shop registry"
+          className="flex items-center justify-center h-8 w-8 rounded border border-gold/40 text-gold/70 hover:text-gold hover:border-gold transition-colors duration-200"
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 9h18M9 21V9" />
+          </svg>
+        </Link>
+      </div>
+
       <h1 className="text-2xl font-semibold">Account</h1>
 
       {!session ? (

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useCart } from "@/store/cart";
 import { SITE } from "@/config/site";
 import { getDict } from "@/lib/dictionary";
@@ -78,23 +79,25 @@ export function SiteHeader() {
           <Link
             href="/"
             aria-label={`${SITE.name} — home`}
-            className="logo-glow text-[22px] font-semibold tracking-[0.06em] whitespace-nowrap text-[#F5F5F5] uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] sm:text-[25px]"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            className="flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
           >
-            {SITE.name}
+            <Image
+              src="/hero/icons/icon.svg"
+              alt={`${SITE.name} logo`}
+              width={36}
+              height={36}
+              className="h-9 w-9 object-contain"
+              priority
+            />
+            <span
+              className="text-[22px] font-semibold tracking-[0.06em] whitespace-nowrap text-[#F5F5F5] uppercase sm:text-[25px]"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            >
+              {SITE.name}
+            </span>
           </Link>
 
           <div className="flex items-center justify-end gap-0.5 sm:gap-1">
-            <span className="hidden lg:block">
-              <a
-                href={`https://wa.me/${SITE.whatsappDigits}`}
-                target="_blank"
-                rel="noreferrer"
-                className="text-[12.5px] font-medium tracking-[0.08em] text-steel uppercase underline-offset-4 hover:text-gold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
-              >
-                WhatsApp {SITE.whatsappDisplay}
-              </a>
-            </span>
             <LanguageSwitch locale={locale} />
             <HeaderIcon label={d.search} onClick={openSearch}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="h-[21px] w-[21px]" aria-hidden="true">
@@ -111,20 +114,22 @@ export function SiteHeader() {
               </HeaderIcon>
             </span>
             <span className="hidden sm:block">
-              <HeaderIcon label={d.wishlist} href="/account/wishlist">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinejoin="round" className="h-[21px] w-[21px]" aria-hidden="true">
-                  <path d="M12 20.5C7 16.5 3.5 13.3 3.5 9.6 3.5 7 5.5 5 8 5c1.6 0 3.1.8 4 2.1C12.9 5.8 14.4 5 16 5c2.5 0 4.5 2 4.5 4.6 0 3.7-3.5 6.9-8.5 10.9Z" />
-                </svg>
-              </HeaderIcon>
+            <HeaderIcon label={d.wishlist} href="/account/wishlist">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinejoin="round" className="h-[21px] w-[21px]" aria-hidden="true">
+                <path d="M12 20.5C7 16.5 3.5 13.3 3.5 9.6 3.5 7 5.5 5 8 5c1.6 0 3.1.8 4 2.1C12.9 5.8 14.4 5 16 5c2.5 0 4.5 2 4.5 4.6 0 3.7-3.5 6.9-8.5 10.9Z" />
+              </svg>
+            </HeaderIcon>
             </span>
-            <Link
-              href="/registry/login"
-              aria-label="Shop registry"
-              className="flex items-center gap-1.5 rounded-xl border border-gold border-l-4 border-cyan-pulse px-3 py-2 text-[12px] font-semibold tracking-wide text-gold uppercase transition-all duration-300 hover:bg-gold hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-              style={{ fontFamily: "'Cormorant Garamond', serif" }}
-            >
-              Shop registry
-            </Link>
+            <span className="hidden lg:block">
+              <a
+                href={`https://wa.me/${SITE.whatsappDigits}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[12.5px] font-medium tracking-[0.08em] text-steel uppercase underline-offset-4 hover:text-gold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+              >
+                WhatsApp {SITE.whatsappDisplay}
+              </a>
+            </span>
             <HeaderIcon
               label={`${d.cart} (${count})`}
               badge={count}

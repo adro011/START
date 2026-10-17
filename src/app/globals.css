@@ -618,11 +618,11 @@ html.lenis body {
    inactive one stays visible in Ash. Geometry is variable-driven so one
    media query rescales the whole control. */
 .lang-toggle {
-  --lang-h: 44px;
-  --lang-w: 116px;
-  --lang-knob: 30px;
-  --lang-left: 6px;
-  --lang-right: 80px;
+  --lang-h: 22px;
+  --lang-w: 58px;
+  --lang-knob: 15px;
+  --lang-left: 3px;
+  --lang-right: 40px;
   display: inline-flex;
   align-items: center;
 }
@@ -684,7 +684,7 @@ html.lenis body {
   transform: translateY(-50%);
   width: var(--lang-knob);
   font-family: var(--font-display);
-  font-size: 9px;
+  font-size: 7px;
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0.225px;
@@ -699,7 +699,7 @@ html.lenis body {
   left: var(--lang-left);
   font-family: "LamboType", "Noto Sans Bengali", Vrinda, "Bangla MN",
     "Hind Siliguri", var(--font-display);
-  font-size: 10px;
+  font-size: 8px;
 }
 
 .lang-pill-txt-en {
@@ -714,17 +714,17 @@ html.lenis body {
 
 @media (max-width: 640px) {
   .lang-toggle {
-    --lang-h: 38px;
-    --lang-w: 96px;
-    --lang-knob: 26px;
-    --lang-left: 5px;
-    --lang-right: 65px;
+    --lang-h: 19px;
+    --lang-w: 48px;
+    --lang-knob: 13px;
+    --lang-left: 2.5px;
+    --lang-right: 33px;
   }
   .lang-pill-txt {
-    font-size: 8px;
+    font-size: 6px;
   }
   .lang-pill-txt-bn {
-    font-size: 9px;
+    font-size: 7px;
   }
 }
 
