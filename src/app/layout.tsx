@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { cookies } from "next/headers";
 import "./globals.css";
 import { SITE } from "@/config/site";
 import { Providers } from "../components/providers";
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#172121",
+  themeColor: "#000000",
 };
 
 /**
@@ -37,10 +38,13 @@ export const viewport: Viewport = {
  * SearchPalette is NOT imported here — the header dispatches `open-search`
  * and the catalog-owned palette listens for it.
  */
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  // Locale cookie drives <html lang> + footer dictionary (header reads it client-side).
+  const locale = (await cookies()).get("locale")?.value === "bn" ? "bn" : "en";
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
+        <link rel="manifest" href="/manifest.webmanifest" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -49,14 +53,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         {/* eslint-disable-next-line @next/next/no-page-custom-font -- deliberate: <link> fonts keep builds offline-safe (see DECISIONS.md) */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&family=Hind+Siliguri:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
       <body
-        className="bg-[#FBF6F3] font-sans text-[#172121] antialiased"
+        className="bg-[#000000] text-[#F5F5F5] antialiased"
         style={{
-          fontFamily: "'Jost', 'Hind Siliguri', system-ui, sans-serif",
+          fontFamily: "'LamboType', 'Roboto', 'Helvetica Neue', Arial, ui-sans-serif, system-ui, sans-serif",
+          textTransform: "uppercase",
+          letterSpacing: "0.02em",
         }}
       >
         <a
@@ -71,8 +77,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main id="main" className="min-h-[60vh]">
             {children}
           </main>
-          <SiteFooter />
-          <CartDrawer />
+          <SiteFooter locale={locale} />
+          <CartDrawer locale={locale} />
           <SearchPalette />
           <SwRegister />
         </Providers>

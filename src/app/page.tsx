@@ -112,7 +112,7 @@ const HERO = [
     title: "MAN",
     href: "/men",
     img: "/library/men.png",
-    bg: "linear-gradient(150deg,#000000 0%,#172121 45%,#3a2a1c 75%,#7D451B 100%)",
+    bg: "linear-gradient(150deg,#000000 0%,#000000 40%,#1a1a1a 75%,#FFC000 100%)",
   },
   {
     key: "women",
@@ -120,7 +120,7 @@ const HERO = [
     title: "WOMEN",
     href: "/women",
     img: "/library/women.png",
-    bg: "linear-gradient(150deg,#000000 0%,#3d1c12 45%,#7D451B 75%,#D5573B 100%)",
+    bg: "linear-gradient(150deg,#000000 0%,#000000 40%,#1a1a1a 75%,#FFC000 100%)",
   },
   {
     key: "kids",
@@ -128,7 +128,7 @@ const HERO = [
     title: "CHILDREN",
     href: "/kids",
     img: "/library/children.png",
-    bg: "linear-gradient(150deg,#000000 0%,#172121 45%,#2e4238 75%,#7E9181 100%)",
+    bg: "linear-gradient(150deg,#000000 0%,#000000 40%,#1a1a1a 75%,#FFC000 100%)",
   },
 ] as const;
 
