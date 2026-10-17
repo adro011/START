@@ -49,7 +49,7 @@ export default async function RegistryProductPage({
           <div className="ml-auto flex items-center gap-2 text-xs text-ash">
             <span>{session.user.email}{session.isDev ? " · dev" : ""}</span>
             <Link
-              href="/login"
+              href="/registry/logout"
               className="rounded border border-white/15 px-2.5 py-1 hover:bg-white/10"
             >
               Sign out

@@ -125,7 +125,7 @@ export default function RegistryLoginClient({
               <input type="hidden" name="next" value={next} />
               <label className="block">
                 <span className="text-sm font-medium">Registry username</span>
-                <input name="username" required autoComplete="username" placeholder="Registry username"
+                <input name="username" required autoComplete="username" placeholder="Email or full name"
                   className="mt-1.5 w-full rounded-xl border border-white/15 bg-[#181818]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash focus:border-gold focus:ring-2 focus:ring-gold/25" />
               </label>
               <label className="block">
@@ -138,7 +138,7 @@ export default function RegistryLoginClient({
                 style={{ transitionTimingFunction: EASE }}>
                 Open registry →
               </button>
-              <p className="text-center text-xs text-ash">Demo only · authorised staff · dev credentials accepted</p>
+              <p className="text-center text-xs text-ash">Staff accounts are issued by the store owner</p>
             </form>
             <Link href="/login"
               className="link-lux mt-4 block text-center text-[13px] font-medium text-steel hover:text-gold underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-[#FFC000]"
@@ -147,9 +147,6 @@ export default function RegistryLoginClient({
             </Link>
           </div>
         </div>
-        <p className="absolute right-5 bottom-4 hidden text-[11px] tracking-wide text-ash sm:block">
-          Demo build — registry credentials never leave this browser
-        </p>
       </section>
 
       {/* ── Smooth curtain transition ── */}

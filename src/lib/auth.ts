@@ -1,6 +1,10 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
+import {
+  REGISTRY_SESSION_COOKIE,
+  verifyRegistrySession,
+} from '@/lib/registry/session';
 
 /** Demo credentials (storefront demo — no email required). */
 export const DEMO_ADMIN_USERNAME = process.env.DEMO_ADMIN_USERNAME ?? 'aa.adro.09';
@@ -84,8 +88,29 @@ function demoLoginAllowed(): boolean {
   return process.env.NODE_ENV !== 'production';
 }
 
+/** Real staff auth: the HMAC-signed `registry_session` cookie issued by
+ *  registry/login/actions.ts and verified by the edge middleware. */
+async function readRegistrySessionFromStore(): Promise<Session | null> {
+  try {
+    const store = await cookies();
+    const payload = await verifyRegistrySession(store.get(REGISTRY_SESSION_COOKIE)?.value);
+    if (!payload) return null;
+    return {
+      user: { id: payload.sub, email: payload.email },
+      role: payload.role,
+      isDev: false,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function getSession(): Promise<Session | null> {
-  // 0. Demo cookie session (dev only unless ALLOW_DEMO_LOGIN=true —
+  // 0. Signed registry session first, so a real login always outranks the
+  //    dev-only demo cookie below.
+  const registry = await readRegistrySessionFromStore();
+  if (registry) return registry;
+  // 1. Demo cookie session (dev only unless ALLOW_DEMO_LOGIN=true —
   //    unsigned cookie, never trust it in production by default).
   if (demoLoginAllowed()) {
     const demo = await readDemoSessionFromStore();
