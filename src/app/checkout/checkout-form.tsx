@@ -106,12 +106,12 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
       <div className="space-y-4">
         <fieldset className="space-y-2 rounded-xl border p-4">
           <legend className="px-1 text-sm font-semibold">Contact</legend>
-          <input value={name} onChange={(e) => setName(e.target.value)} required minLength={2} placeholder="Full name" className="w-full rounded border px-3 py-2 text-sm" />
+          <input value={name} onChange={(e) => setName(e.target.value)} required minLength={2} placeholder="Full name" className="w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
           <div className="grid gap-2 sm:grid-cols-2">
-            <input value={phone} onChange={(e) => setPhone(e.target.value)} required inputMode="numeric" placeholder="01XXXXXXXXX" aria-describedby="phone-hint" className="rounded border px-3 py-2 text-sm" />
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email (receipt, optional)" className="rounded border px-3 py-2 text-sm" />
+            <input value={phone} onChange={(e) => setPhone(e.target.value)} required inputMode="numeric" placeholder="01XXXXXXXXX" aria-describedby="phone-hint" className="rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
+            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email (receipt, optional)" className="rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
           </div>
-          <p id="phone-hint" className="text-xs text-neutral-600">BD mobile format: ^01[3-9]\d{8}$ — guest checkout allowed, or sign in later.</p>
+          <p id="phone-hint" className="text-xs text-ash">BD mobile format: ^01[3-9]\d{8}$ — guest checkout allowed, or sign in later.</p>
         </fieldset>
 
         <fieldset className="space-y-2 rounded-xl border p-4">
@@ -119,7 +119,7 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
           <div className="grid gap-2 sm:grid-cols-2">
             <label className="text-sm">
               Division
-              <select value={division} onChange={(e) => { setDivision(e.target.value); setDistrict(DIVISIONS.find((d) => d.name === e.target.value)?.districts[0] ?? ""); }} className="mt-1 w-full rounded border px-3 py-2">
+              <select value={division} onChange={(e) => { setDivision(e.target.value); setDistrict(DIVISIONS.find((d) => d.name === e.target.value)?.districts[0] ?? ""); }} className="mt-1 w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-[#F5F5F5]">
                 {DIVISIONS.map((d) => (
                   <option key={d.name} value={d.name}>{d.name}</option>
                 ))}
@@ -127,16 +127,16 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
             </label>
             <label className="text-sm">
               District
-              <select value={district} onChange={(e) => setDistrict(e.target.value)} className="mt-1 w-full rounded border px-3 py-2">
+              <select value={district} onChange={(e) => setDistrict(e.target.value)} className="mt-1 w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-[#F5F5F5]">
                 {districts.map((d) => (
                   <option key={d} value={d}>{d}</option>
                 ))}
               </select>
             </label>
           </div>
-          <input value={area} onChange={(e) => setArea(e.target.value)} required placeholder="Area (e.g. Mirpur 10)" className="w-full rounded border px-3 py-2 text-sm" />
-          <input value={line1} onChange={(e) => setLine1(e.target.value)} required minLength={4} placeholder="House / road / landmark" className="w-full rounded border px-3 py-2 text-sm" />
-          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Delivery notes (optional)" rows={2} className="w-full rounded border px-3 py-2 text-sm" />
+          <input value={area} onChange={(e) => setArea(e.target.value)} required placeholder="Area (e.g. Mirpur 10)" className="w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
+          <input value={line1} onChange={(e) => setLine1(e.target.value)} required minLength={4} placeholder="House / road / landmark" className="w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
+          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Delivery notes (optional)" rows={2} className="w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
         </fieldset>
 
         <fieldset className="space-y-2 rounded-xl border p-4">
@@ -152,7 +152,7 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
         </fieldset>
 
         {/* Turnstile placeholder + honeypot */}
-        <div className="rounded-xl border border-dashed p-3 text-xs text-neutral-600" aria-label="Bot protection">
+        <div className="rounded-xl border border-dashed p-3 text-xs text-ash" aria-label="Bot protection">
           Turnstile widget placeholder — wire `NEXT_PUBLIC_TURNSTILE_SITE_KEY` here in production.
         </div>
         <input value={company} onChange={(e) => setCompany(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden className="hidden" placeholder="Company" />
@@ -170,13 +170,13 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
             </li>
           ))}
         </ul>
-        <input value={coupon} onChange={(e) => setCoupon(e.target.value)} placeholder="Coupon (optional)" aria-label="Coupon" className="w-full rounded border px-3 py-2 text-sm uppercase" />
+        <input value={coupon} onChange={(e) => setCoupon(e.target.value)} placeholder="Coupon (optional)" aria-label="Coupon" className="w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm uppercase text-[#F5F5F5] placeholder:text-ash" />
         <div className="flex justify-between text-sm font-semibold">
           <span>Subtotal</span>
           <span>{formatBDT(subtotal)}</span>
         </div>
-        <p className="text-xs text-neutral-600">Shipping + discounts recalculated securely on the server.</p>
-        <button type="submit" disabled={loading || items.length === 0} className="w-full rounded-full bg-neutral-900 py-3 text-sm font-semibold text-white disabled:opacity-50">
+        <p className="text-xs text-ash">Shipping + discounts recalculated securely on the server.</p>
+        <button type="submit" disabled={loading || items.length === 0} className="w-full rounded-full bg-gold py-3 text-sm font-semibold text-black hover:bg-gold-dark disabled:opacity-50">
           {loading ? "Placing order…" : "Place order"}
         </button>
       </aside>

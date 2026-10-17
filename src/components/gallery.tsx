@@ -6,7 +6,7 @@ import type { ProductImage } from "@/lib/catalog";
 import { cn } from "@/lib/format";
 
 const RING =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]";
 
 /**
  * Editorial gallery: 2-up grid (last tile spans full width when the count
@@ -123,7 +123,7 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
           onClick={() => setLightbox(null)}
         >
           <div
-            className="relative aspect-[4/5] w-full max-w-2xl overflow-hidden rounded-xl bg-neutral-900"
+            className="relative aspect-[4/5] w-full max-w-2xl overflow-hidden rounded-xl bg-[#181818]"
             onClick={(e) => e.stopPropagation()}
           >
             <Image src={current.src} alt={current.alt || name} fill sizes="100vw" className="object-contain" />
@@ -135,7 +135,7 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
               type="button"
               onClick={() => setLightbox(null)}
               aria-label="Close fullscreen view"
-              className={cn("absolute top-3 right-3 rounded-full bg-white px-3 py-1 text-sm font-medium", RING)}
+              className={cn("absolute top-3 right-3 rounded-full bg-white/10 px-3 py-1 text-sm font-medium", RING)}
             >
               ✕ Close
             </button>
@@ -145,7 +145,7 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
                   type="button"
                   onClick={prev}
                   aria-label="Previous image"
-                  className={cn("absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-white px-3 py-2 text-sm font-medium", RING)}
+                  className={cn("absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-white/10 px-3 py-2 text-sm font-medium", RING)}
                 >
                   ←
                 </button>
@@ -153,7 +153,7 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
                   type="button"
                   onClick={next}
                   aria-label="Next image"
-                  className={cn("absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-white px-3 py-2 text-sm font-medium", RING)}
+                  className={cn("absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-white/10 px-3 py-2 text-sm font-medium", RING)}
                 >
                   →
                 </button>

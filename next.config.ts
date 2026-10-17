@@ -4,18 +4,26 @@ import { fileURLToPath } from "node:url";
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
+// Dev needs 'unsafe-eval' (and ws/wss) for React Refresh / HMR; production
+// keeps a strict script-src. upgrade-insecure-requests is prod-only so it
+// never forces localhost http:// assets up to https.
+const isDev = process.env.NODE_ENV !== "production";
+
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https:",
+  isDev
+    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:"
+    : "script-src 'self' 'unsafe-inline' https:",
   "style-src 'self' 'unsafe-inline' https:",
   "font-src 'self' https: data:",
   "img-src 'self' data: blob: https:",
-  "connect-src 'self' https:",
+  isDev ? "connect-src 'self' https: ws: wss:" : "connect-src 'self' https: wss:",
+  "frame-src 'self' https://challenges.cloudflare.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'self'",
-  "upgrade-insecure-requests",
+  ...(isDev ? [] : ["upgrade-insecure-requests"]),
 ].join("; ");
 
 const nextConfig: NextConfig = {

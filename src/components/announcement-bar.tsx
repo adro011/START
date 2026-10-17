@@ -18,7 +18,7 @@ export async function AnnouncementBar() {
     <div
       role="region"
       aria-label="Announcements"
-      className="bg-[#172121] text-[#FBF6F3]"
+      className="bg-black text-[#F5F5F5]"
     >
       <p className="mx-auto hidden max-w-[1280px] truncate px-4 py-2 text-center text-[12.5px] font-medium tracking-[0.08em] uppercase md:block">
         {messages[0]}

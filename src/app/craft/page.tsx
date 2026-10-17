@@ -15,25 +15,25 @@ const STEPS = [
 
 export default function CraftPage() {
   return (
-    <main className="bg-[#FBF6F3] text-[#172121]">
+    <main className="bg-black text-[#F5F5F5]">
       <section className="mx-auto w-full max-w-5xl px-5 pb-4 pt-14 sm:pt-20">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7D451B]">Our craft</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Our craft</p>
         <h1 className="mt-3 font-serif text-4xl leading-tight sm:text-6xl">
           Slow cloth, sharp cutting.
         </h1>
-        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-[#172121]/80">
+        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-steel">
           {SITE.name} works with weaving families and small factories across
           Bangladesh. We design for heat, humidity, rickshaw rides and wedding
           halls — breathable fabric, modest cuts, colours that survive the wash.
         </p>
       </section>
       <section className="mx-auto w-full max-w-5xl px-5 py-10">
-        <ol className="divide-y divide-[#172121]/10 border-y border-[#172121]/10">
+        <ol className="divide-y divide-white/10 border-y border-white/15">
           {STEPS.map((s) => (
             <li key={s.n} className="grid gap-2 py-8 sm:grid-cols-[80px_220px_1fr] sm:gap-6">
-              <span className="font-serif text-4xl text-clay">{s.n}</span>
+              <span className="font-serif text-4xl text-gold">{s.n}</span>
               <h2 className="font-serif text-2xl">{s.title}</h2>
-              <p className="leading-relaxed text-[#172121]/80">{s.body}</p>
+              <p className="leading-relaxed text-steel">{s.body}</p>
             </li>
           ))}
         </ol>
@@ -50,10 +50,10 @@ export default function CraftPage() {
           ))}
         </div>
         <div className="mt-10 flex flex-wrap gap-3">
-          <Link href="/size-guides" className="bg-[#172121] px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-[#FBF6F3] hover:bg-clay">
+          <Link href="/size-guides" className="bg-gold px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-black hover:bg-gold-dark">
             Find your size →
           </Link>
-          <Link href="/shipping-returns" className="border border-[#172121]/25 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-[#D5573B] hover:text-clay">
+          <Link href="/shipping-returns" className="border border-white/15 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-gold hover:text-gold">
             Shipping & returns
           </Link>
         </div>

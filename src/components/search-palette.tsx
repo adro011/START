@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CATEGORIES, SEARCH_INDEX } from "@/lib/catalog";
+import { CATEGORIES, SEARCH_INDEX, type SearchIndexEntry } from "@/lib/catalog";
+import { useProductIndex } from "@/lib/live-lookup";
 import { cn } from "@/lib/format";
 
 const RECENT_KEY = "brand-search-recent";
 
 const RING =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]";
 
 function subsequenceMatch(needle: string, haystack: string): boolean {
   const n = needle.toLowerCase().replace(/\s+/g, "");
@@ -30,6 +31,8 @@ export default function SearchPalette() {
   const panelRef = useRef<HTMLDivElement>(null);
   const prevFocus = useRef<HTMLElement | null>(null);
   const router = useRouter();
+  // Live product index (empty until the /api/products feed resolves).
+  const liveIndex = useProductIndex();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -76,10 +79,23 @@ export default function SearchPalette() {
 
   const results = useMemo(() => {
     if (!debounced) return [];
-    return SEARCH_INDEX.filter((e) =>
+    // Live-first: Supabase-backed index when the feed resolved, bundled
+    // mirror otherwise. Union by slug so new DB products appear instantly.
+    const live = liveIndex.size > 0
+      ? [...liveIndex.values()].map((e) => ({
+          slug: e.slug,
+          name: e.name,
+          section: e.section,
+          category: e.category,
+          categoryName: e.categoryName,
+        }) as SearchIndexEntry)
+      : [];
+    const seen = new Set(live.map((e) => e.slug));
+    const merged = [...live, ...SEARCH_INDEX.filter((e) => !seen.has(e.slug))];
+    return merged.filter((e) =>
       subsequenceMatch(debounced, `${e.name} ${e.categoryName} ${e.section}`),
     ).slice(0, 8);
-  }, [debounced]);
+  }, [debounced, liveIndex]);
 
   // Arrow target resets whenever the result set changes.
   useEffect(() => {
@@ -184,7 +200,7 @@ export default function SearchPalette() {
     >
       <div
         ref={panelRef}
-        className="mt-16 w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-2xl"
+        className="mt-16 w-full max-w-lg overflow-hidden rounded-xl bg-[#181818] text-[#F5F5F5] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <form
@@ -211,7 +227,7 @@ export default function SearchPalette() {
         <div className="max-h-80 overflow-y-auto p-2">
           {debounced === "" && recent.length > 0 && (
             <div className="px-2 py-1">
-              <p className="px-2 text-xs font-semibold uppercase tracking-wider text-neutral-600">
+              <p className="px-2 text-xs font-semibold uppercase tracking-wider text-ash">
                 Recent
               </p>
               {recent.map((r) => (
@@ -219,7 +235,7 @@ export default function SearchPalette() {
                   key={r}
                   type="button"
                   onClick={() => commitSearch(r)}
-                  className={cn("block w-full rounded px-2 py-1.5 text-left text-sm hover:bg-neutral-100", RING)}
+                  className={cn("block w-full rounded px-2 py-1.5 text-left text-sm hover:bg-white/10", RING)}
                 >
                   {r}
                 </button>
@@ -228,7 +244,7 @@ export default function SearchPalette() {
           )}
           {catSuggestions.length > 0 && (
             <div className="px-2 py-1">
-              <p className="px-2 text-xs font-semibold uppercase tracking-wider text-neutral-600">
+              <p className="px-2 text-xs font-semibold uppercase tracking-wider text-ash">
                 Categories
               </p>
               <div className="flex flex-wrap gap-1 px-2 py-1">
@@ -237,7 +253,7 @@ export default function SearchPalette() {
                     key={c.slug}
                     href={`/${c.section}?category=${c.slug}`}
                     onClick={() => setOpen(false)}
-                    className={cn("rounded-full border px-2.5 py-1 text-xs hover:bg-neutral-100", RING)}
+                    className={cn("rounded-full border px-2.5 py-1 text-xs hover:bg-white/10", RING)}
                   >
                     {c.name} · {c.section}
                   </Link>
@@ -258,20 +274,20 @@ export default function SearchPalette() {
                 }}
                 onMouseEnter={() => setActiveIndex(i)}
                 className={cn(
-                  "block rounded px-3 py-2 text-sm hover:bg-neutral-100",
+                  "block rounded px-3 py-2 text-sm hover:bg-white/10",
                   RING,
-                  i === activeIndex && "bg-neutral-100",
+                  i === activeIndex && "bg-white/10",
                 )}
               >
                 <span className="font-medium">{r.name}</span>
-                <span className="ml-2 text-xs text-neutral-600">
+                <span className="ml-2 text-xs text-ash">
                   {r.categoryName} · {r.section}
                 </span>
               </Link>
             ))}
           </div>
           {debounced !== "" && results.length === 0 && (
-            <div className="px-3 py-6 text-center text-sm text-neutral-600">
+            <div className="px-3 py-6 text-center text-sm text-ash">
               No matches for “{debounced}”. Try “panjabi”, “sharee” or “kabli”.
               <div>
                 <button

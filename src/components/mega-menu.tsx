@@ -223,7 +223,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
       ref={navRef}
       aria-label="Primary"
       data-mega-open={openKey ? "1" : ""}
-      className="relative hidden border-t border-[#172121]/10 lg:block"
+      className="relative hidden border-t border-white/15 lg:block"
       onMouseLeave={scheduleClose}
       onBlur={(e) => {
         // Keyboard users tabbing out of the whole nav should close the panel.
@@ -255,17 +255,17 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
                 if (e.key === "Escape") setOpenKey(null);
               }}
               className={cn(
-                "relative block px-5 py-3 text-[13px] font-medium tracking-[0.14em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none",
-                openKey === s.key
-                  ? "text-clay"
-                  : "text-[#172121] hover:text-clay",
+                "relative block px-5 py-3 text-[13px] font-medium tracking-[0.14em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] motion-reduce:transition-none",
+                openKey === s.key || s.key === "kids"
+                  ? "text-gold"
+                  : "text-[#F5F5F5] hover:text-gold",
               )}
             >
               {s.label}
               <span
                 aria-hidden="true"
                 className={cn(
-                  "absolute inset-x-5 -bottom-px h-0.5 origin-left bg-[#D5573B] transition-transform duration-200 motion-reduce:transition-none",
+                  "absolute inset-x-5 -bottom-px h-0.5 origin-left bg-gold transition-transform duration-200 motion-reduce:transition-none",
                   openKey === s.key
                     ? "scale-x-100"
                     : "scale-x-0 group-hover:scale-x-100 group-focus-within:scale-x-100",
@@ -291,10 +291,10 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
             <Link
               href={l.href}
               className={cn(
-                "block px-5 py-3 text-[13px] font-medium tracking-[0.14em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none",
+                "block px-5 py-3 text-[13px] font-medium tracking-[0.14em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] motion-reduce:transition-none",
                 "hot" in l && l.hot
-                  ? "text-clay hover:text-[#7D451B]"
-                  : "text-[#172121] hover:text-clay",
+                  ? "text-gold hover:text-gold-dark"
+                  : "text-[#F5F5F5] hover:text-gold",
               )}
             >
               {l.label}
@@ -306,7 +306,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
       {/* Full-width panel — glass + editorial image preview */}
       <div
         className={cn(
-          "absolute inset-x-0 top-full z-40 border-y border-[#172121]/10 bg-[#FBF6F3]/92 shadow-[0_32px_64px_rgba(23,33,33,0.16)] backdrop-blur-xl transition-all duration-300 motion-reduce:transition-none",
+          "absolute inset-x-0 top-full z-50 border-y border-white/15 bg-black shadow-[0_32px_64px_rgba(23,33,33,0.16)] transition-all duration-300 motion-reduce:transition-none",
           openKey
             ? "visible opacity-100 [clip-path:inset(0_0_0_0)]"
             : "invisible opacity-0 [clip-path:inset(0_0_100%_0)]",
@@ -327,8 +327,8 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
                 className="mega-link"
                 style={{ transitionDelay: `${gi * 55}ms` }}
               >
-                <p className="mb-3 flex items-center gap-2 text-[12px] font-semibold tracking-[0.18em] text-[#172121] uppercase">
-                  <span aria-hidden="true" className="h-px w-4 bg-[#D5573B]" />
+                <p className="mb-3 flex items-center gap-2 text-[12px] font-semibold tracking-[0.18em] text-[#F5F5F5] uppercase">
+                  <span aria-hidden="true" className="h-px w-4 bg-gold" />
                   {g.heading}
                 </p>
                 <ul className="space-y-2">
@@ -337,7 +337,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
                       <Link
                         href={l.href}
                         onClick={() => setOpenKey(null)}
-                        className="link-lux text-[14.5px] text-[#172121]/72 transition-colors hover:text-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none"
+                        className="link-lux text-[14.5px] text-steel transition-colors hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] motion-reduce:transition-none"
                       >
                         {l.label}
                       </Link>
@@ -347,13 +347,13 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
                 <Link
                   href={g.href ?? s.href}
                   onClick={() => setOpenKey(null)}
-                  className="mt-4 inline-block text-[12px] font-semibold tracking-[0.16em] text-[#7D451B] uppercase underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                  className="mt-4 inline-block text-[12px] font-semibold tracking-[0.16em] text-gold uppercase underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                 >
                   {d.view_all} →
                 </Link>
               </div>
             ))}
-            <div className="mega-link relative overflow-hidden border-l border-[#172121]/10 pl-0" style={{ transitionDelay: "220ms" }}>
+            <div className="mega-link relative overflow-hidden border-l border-white/15 pl-0" style={{ transitionDelay: "220ms" }}>
               <div className="relative ml-8 min-h-[240px] overflow-hidden bg-[#172121]">
                 <span aria-hidden="true" className="absolute inset-0" style={{ background: s.key === "men" ? "linear-gradient(150deg,#172121,#7D451B 60%,#D5573B)" : s.key === "women" ? "linear-gradient(150deg,#3d1c12,#D5573B 60%,#F2CCC3)" : "linear-gradient(150deg,#172121,#7E9181 65%,#F2CCC3)" }} />
                 <span aria-hidden="true" className="text-ghost absolute -right-1 -bottom-4 text-[84px] leading-none font-semibold">{s.key === "men" ? "01" : s.key === "women" ? "02" : "03"}</span>

@@ -5,6 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/store/cart";
 import { FREE_SHIP_THRESHOLD_PAISA } from "@/config/site";
+import { getDict } from "@/lib/dictionary";
+import type { Locale } from "@/lib/dictionary";
 import { cn, formatBDT } from "../lib/format";
 
 /**
@@ -12,7 +14,8 @@ import { cn, formatBDT } from "../lib/format";
  * Free-shipping progress vs FREE_SHIP_THRESHOLD_PAISA, qty steppers,
  * remove, subtotal, checkout link.
  */
-export function CartDrawer() {
+export function CartDrawer({ locale }: { locale: Locale }) {
+  const d = getDict(locale);
   const { items, subtotal, open, setOpen, setQty, remove } = useCart();
   const close = () => setOpen(false);
   const drawerRef = useRef<HTMLElement>(null);
@@ -71,7 +74,7 @@ export function CartDrawer() {
     >
       <div
         className={cn(
-          "absolute inset-0 bg-[#172121]/50 transition-opacity duration-300 motion-reduce:transition-none",
+          "absolute inset-0 bg-black/40 transition-opacity duration-300 motion-reduce:transition-none",
           open ? "opacity-100" : "opacity-0",
         )}
         onClick={close}
@@ -79,52 +82,52 @@ export function CartDrawer() {
       <aside
         ref={drawerRef}
         role="dialog"
+        data-testid="cart-drawer"
         aria-modal="true"
-        aria-label="Shopping cart"
+        aria-label={d.cart_dialog_label}
         className={cn(
-          "absolute top-0 right-0 flex h-full w-[92vw] max-w-[420px] flex-col bg-[#FBF6F3] shadow-2xl transition-transform duration-300 motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
+          "absolute top-0 right-0 flex h-full w-[92vw] max-w-[420px] flex-col border border-white/15 bg-[#181818] shadow-2xl transition-transform duration-300 motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
-        <div className="flex items-center justify-between border-b border-[#172121]/10 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-white/15 px-5 py-4">
           <p className="font-display text-[24px] font-medium">
-            Your bag {items.length > 0 && `(${items.length})`}
+            {d.cart_bag} {items.length > 0 && `(${items.length})`}
           </p>
           <button
             ref={closeRef}
             type="button"
             onClick={close}
-            aria-label="Close cart"
+            aria-label={d.cart_close}
             tabIndex={open ? 0 : -1}
-            className="p-2 text-[#172121]/80 hover:text-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+            className="p-2 text-steel hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
           >
             ✕
           </button>
         </div>
 
         {/* Free-shipping progress */}
-        <div className="border-b border-[#172121]/10 px-5 py-3">
+        <div className="border-b border-white/15 px-5 py-3">
           {remaining > 0 ? (
-            <p className="text-[13px] text-[#172121]/75">
-              <span className="font-semibold text-[#7D451B]">
-                {formatBDT(remaining)}
-              </span>{" "}
-              away from free delivery
+            <p className="text-[13px] text-steel">
+              <span className="font-semibold text-gold">
+                {d.cart_away_from_free.replace("{amount}", formatBDT(remaining))}
+              </span>
             </p>
           ) : (
             <p className="text-[13px] font-medium text-[#7E9181]">
-              Free delivery unlocked — nicely done.
+              {d.cart_free_unlocked}
             </p>
           )}
           <div
-            className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#172121]/10"
+            className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10"
             role="progressbar"
             aria-valuenow={Math.round(progress)}
             aria-valuemin={0}
             aria-valuemax={100}
           >
             <div
-              className="h-full rounded-full bg-[#D5573B] transition-[width] duration-500 motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]"
+              className="h-full rounded-full bg-gold transition-[width] duration-500 motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -134,19 +137,19 @@ export function CartDrawer() {
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {items.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
-              <p className="font-display text-[28px] text-[#172121]">
-                Your bag is empty
+              <p className="font-display text-[28px] text-[#F5F5F5]">
+                {d.cart_empty_title}
               </p>
-              <p className="max-w-[28ch] text-[14px] text-[#172121]/80">
-                Beautiful things take a moment. Start with what just landed.
+              <p className="max-w-[28ch] text-[14px] text-steel">
+                {d.cart_empty_sub}
               </p>
               <Link
                 href="/new-arrivals"
                 onClick={close}
                 tabIndex={open ? 0 : -1}
-                className="mt-2 bg-[#172121] px-6 py-3 text-[12px] font-semibold tracking-[0.14em] text-[#FBF6F3] uppercase hover:bg-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                className="mt-2 bg-gold px-6 py-3 text-[12px] font-semibold tracking-[0.14em] text-black uppercase hover:bg-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
               >
-                Shop new arrivals
+                {d.cart_shop_new}
               </Link>
             </div>
           ) : (
@@ -175,7 +178,7 @@ export function CartDrawer() {
                     <div className="flex items-start justify-between gap-2">
                       <p className="text-[14px] leading-snug font-medium">
                         {l.name}
-                        <span className="text-[#172121]/55">
+                        <span className="text-ash">
                           {" "}
                           · {l.size}
                           {l.color ? ` · ${l.color}` : ""}
@@ -184,21 +187,21 @@ export function CartDrawer() {
                       <button
                         type="button"
                         onClick={() => remove(l.sku)}
-                        aria-label={`Remove ${l.name} (${l.size}) from cart`}
+                        aria-label={d.cart_remove.replace("{name}", l.name).replace("{size}", l.size)}
                         tabIndex={open ? 0 : -1}
-                        className="p-1 text-[16px] text-[#172121]/70 hover:text-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                        className="p-1 text-[16px] text-steel hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                       >
                         ×
                       </button>
                     </div>
                     <div className="mt-auto flex items-center justify-between pt-2">
-                      <div className="flex items-center border border-[#172121]/15">
+                      <div className="flex items-center border border-white/15">
                         <button
                           type="button"
                           onClick={() => setQty(l.sku, l.qty - 1)}
-                          aria-label={`Decrease quantity of ${l.name} (${l.size})`}
+                          aria-label={d.cart_decrease.replace("{name}", l.name).replace("{size}", l.size)}
                           tabIndex={open ? 0 : -1}
-                          className="px-2.5 py-1 text-[15px] hover:bg-[#F2CCC3]/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                          className="px-2.5 py-1 text-[15px] hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                         >
                           −
                         </button>
@@ -208,14 +211,14 @@ export function CartDrawer() {
                         <button
                           type="button"
                           onClick={() => setQty(l.sku, l.qty + 1)}
-                          aria-label={`Increase quantity of ${l.name} (${l.size})`}
+                          aria-label={d.cart_increase.replace("{name}", l.name).replace("{size}", l.size)}
                           tabIndex={open ? 0 : -1}
-                          className="px-2.5 py-1 text-[15px] hover:bg-[#F2CCC3]/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                          className="px-2.5 py-1 text-[15px] hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                         >
                           +
                         </button>
                       </div>
-                      <p className="text-[14px] font-semibold text-[#7D451B]">
+                      <p className="text-[14px] font-semibold text-gold">
                         {formatBDT(l.pricePaisa * l.qty)}
                       </p>
                     </div>
@@ -228,31 +231,31 @@ export function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="border-t border-[#172121]/10 px-5 py-4">
+          <div className="border-t border-white/15 px-5 py-4">
             <div className="flex items-center justify-between text-[15px]">
-              <span className="text-[#172121]/70">Subtotal</span>
-              <span className="font-semibold text-[#7D451B]">
+              <span className="text-steel">{d.cart_subtotal}</span>
+              <span className="font-semibold text-gold">
                 {formatBDT(subtotal)}
               </span>
             </div>
-            <p className="mt-1 text-[12.5px] text-[#172121]/55">
-              Delivery & discounts calculated at checkout.
+            <p className="mt-1 text-[12.5px] text-ash">
+              {d.cart_delivery_note}
             </p>
             <Link
               href="/checkout"
               onClick={close}
               tabIndex={open ? 0 : -1}
-              className="mt-3 block bg-clay py-3.5 text-center text-[13px] font-semibold tracking-[0.16em] text-white uppercase transition-colors hover:bg-[#7D451B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none"
+              className="mt-3 block bg-gold py-3.5 text-center text-[13px] font-semibold tracking-[0.16em] text-black uppercase transition-colors hover:bg-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] motion-reduce:transition-none"
             >
-              Checkout →
+              {d.cart_checkout}
             </Link>
             <button
               type="button"
               onClick={close}
               tabIndex={open ? 0 : -1}
-              className="mt-2 w-full py-2 text-center text-[13px] font-medium tracking-[0.1em] text-[#172121]/70 uppercase underline-offset-4 hover:text-[#172121] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+              className="mt-2 w-full py-2 text-center text-[13px] font-medium tracking-[0.1em] text-steel uppercase underline-offset-4 hover:text-[#F5F5F5] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
             >
-              Keep browsing
+              {d.cart_keep_browsing}
             </button>
           </div>
         )}

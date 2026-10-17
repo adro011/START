@@ -23,6 +23,7 @@ Useful: `npm run build` + `npm run start` · `npm run lint` · `npm run typechec
 `npm run test` (Vitest) · `npm run test:e2e` (Playwright chromium) ·
 `npx @lhci/cli autorun` after build+start (config `lighthouserc.json`).
 Without Supabase env vars the app runs on the local demo catalog with a dev-admin fallback for `/admin`.
+With env vars, listings/product/search/checkout read live Supabase data first (`src/lib/storefront.ts`, local fallback) and COD orders persist via the `create_order` RPC.
 
 ## 3. URLs
 
@@ -85,7 +86,7 @@ See `README.md` § Env vars (full table) — source of truth is `.env.example`:
 
 ## 9. Known limitations (all verified in-repo)
 
-1. **Demo checkout RPC wiring is TODO:** `src/actions/checkout.ts::placeOrder` reprices against the local TS catalog and returns a random `BR-` number; the comment marks the call to Supabase RPC `create_order` (stock decrement, persistence, emails) as not yet wired.
+1. **Demo checkout RPC is wired with local fallback:** `src/actions/checkout.ts::placeOrder` tries live `create_order` first (`tryLiveOrder` resolves cart SKUs to DB variant uuids — fires automatically for storefront carts carrying DB SKUs) and falls back to the local demo repricer (random `BR-` number) only when env is missing or SKUs have no DB match.
 2. **No live Supabase yet:** no `.env.local` values and no linked project in-repo; DB-backed paths (auth roles, orders, RLS) are unexercised until §7 item 1 is done.
 3. **Motion is CSS-only:** `motion`/`lenis`/`gsap` are not in `package.json`; hero/parallax/scroll-rail effects from plan §5 are not implemented as specified.
 4. **Service worker unregistered:** `public/sw.js` exists (static cache + `/offline` fallback) but a repo-wide search finds no `serviceWorker.register` call in `src` — PWA install/offline works only after registration lands.
@@ -115,7 +116,7 @@ See `README.md` § Env vars (full table) — source of truth is `.env.example`:
 - **Brand:** ABRAR-EXCLUSIVE, "Quality, beauty and elegance" (single source `src/config/site.ts`; zero stale strings in `src`+`public`).
 - **Product page:** rebuilt per reference — 2-up gallery grid + lightbox, sticky buy column (qty stepper, live free-ship meter,
   WhatsApp secondary, dark trust panel, pairs-well-with card).
-- Remaining TODOs unchanged: catalog-slug unification (so live RPC fires for storefront carts), Turnstile/Resend/Upstash
+- Remaining TODOs unchanged: Turnstile/Resend/Upstash
   end-to-end verification, real product data + photography, deploy + domain.
 
 ## 11. Prioritized next steps

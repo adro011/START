@@ -55,12 +55,12 @@ export default function BackInStock({ sku }: { sku: string | null }) {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+          className="rounded-full bg-gold px-4 py-2 text-sm font-medium text-black hover:bg-gold-dark disabled:opacity-50"
         >
           {loading ? "…" : "Notify me"}
         </button>
       </div>
-      {msg && <p className="mt-1 text-xs text-neutral-600">{msg}</p>}
+      {msg && <p className="mt-1 text-xs text-ash">{msg}</p>}
     </form>
   );
 }

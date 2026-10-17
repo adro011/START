@@ -5,11 +5,21 @@ import { Suspense } from "react";
 import Filters, { LoadMore } from "@/components/filters";
 import SortSelect from "@/components/sort-select";
 import { ProductCard } from "@/components/product-card";
-import { CATEGORIES, asCatalogProduct, getBySection, getCategory, isValidSection } from "@/lib/catalog";
+import { CATEGORIES, asCatalogProduct, getBySection, getCategory, isValidSection, priceBounds } from "@/lib/catalog";
+import { getLiveCategories, getLiveProducts } from "@/lib/storefront";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  // Live-first so new Supabase categories get static pages; local fallback
+  // keeps offline builds green.
+  let cats = CATEGORIES;
+  try {
+    const live = await getLiveCategories();
+    if (live.categories.length > 0) cats = live.categories;
+  } catch {
+    /* local fallback */
+  }
   const out: { section: string; category: string }[] = [];
-  for (const c of CATEGORIES) {
+  for (const c of cats) {
     out.push({ section: c.section, category: c.slug });
     for (const k of c.children ?? []) out.push({ section: c.section, category: k.slug });
   }
@@ -22,11 +32,24 @@ export async function generateMetadata({
   params: Promise<{ section: string; category: string }>;
 }): Promise<Metadata> {
   const { section, category } = await params;
-  const cat = getCategory(category);
+  const cat = await resolveCategory(category);
   return {
     title: cat ? `${cat.name} — ${section}` : "Category",
     description: cat ? `Shop ${cat.name} (${section}) with COD across Bangladesh.` : undefined,
   };
+}
+
+async function resolveCategory(slug: string) {
+  try {
+    const { categories } = await getLiveCategories();
+    if (categories.length > 0) {
+      const hit = getCategory(slug, categories);
+      if (hit) return hit;
+    }
+  } catch {
+    /* local fallback below */
+  }
+  return getCategory(slug);
 }
 
 const PAGE_SIZE = 12;
@@ -40,24 +63,31 @@ export default async function CategoryPage({
 }) {
   const { section, category } = await params;
   if (!isValidSection(section) || section === "new-arrivals" || section === "sale") notFound();
-  const cat = getCategory(category);
-  if (!cat || (cat.section !== section && !CATEGORIES.find((c) => c.section === section && c.children?.some((k) => k.slug === category)))) {
+  // Live-first (Supabase) with local fallback; helpers take the source list.
+  const [{ products: liveProducts }, { categories: liveCategories }] = await Promise.all([
+    getLiveProducts(),
+    getLiveCategories(),
+  ]);
+  const allProducts = liveProducts.length > 0 ? liveProducts : undefined;
+  const allCategories = liveCategories.length > 0 ? liveCategories : CATEGORIES;
+  const cat = getCategory(category, allCategories);
+  if (!cat || (cat.section !== section && !allCategories.find((c) => c.section === section && c.children?.some((k) => k.slug === category)))) {
     // Allow child slugs belonging to this section
-    const belongs = CATEGORIES.some((c) => c.section === section && (c.slug === category || c.children?.some((k) => k.slug === category)));
+    const belongs = allCategories.some((c) => c.section === section && (c.slug === category || c.children?.some((k) => k.slug === category)));
     if (!belongs) notFound();
   }
   const raw = await searchParams;
   const first = (v: string | string[] | undefined): string | undefined => (Array.isArray(v) ? v[0] : v);
   const sp = { sort: first(raw.sort), maxPrice: first(raw.maxPrice), sizes: first(raw.sizes), inStock: first(raw.inStock), page: first(raw.page) };
 
-  const cats = CATEGORIES.filter((c) => c.section === section).map((c) => ({ slug: c.slug, name: c.name }));
+  const cats = allCategories.filter((c) => c.section === section).map((c) => ({ slug: c.slug, name: c.name }));
   const filtered = getBySection(section, {
     category,
     sort: sp.sort as "newest" | "price-asc" | "price-desc" | "rating" | "popular" | undefined,
     maxPrice: sp.maxPrice ? Number(sp.maxPrice) : undefined,
     sizes: sp.sizes ? sp.sizes.split(",").filter(Boolean) : undefined,
     inStock: sp.inStock === "1",
-  });
+  }, allProducts);
 
   const page = Math.max(1, Number(sp.page ?? 1) || 1);
   const visible = filtered.slice(0, page * PAGE_SIZE);
@@ -76,23 +106,23 @@ export default async function CategoryPage({
   return (
     <main className="mx-auto max-w-6xl px-4 py-6">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <nav className="text-xs text-neutral-600" aria-label="Breadcrumb">
+      <nav className="text-xs text-ash" aria-label="Breadcrumb">
         <Link href="/" className="underline">Home</Link> /{" "}
         <Link href={`/${section}`} className="capitalize underline">{section}</Link> /{" "}
-        <span className="text-neutral-800">{name}</span>
+        <span className="text-[#F5F5F5]">{name}</span>
       </nav>
       <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold md:text-3xl">{name}</h1>
-          <p className="text-sm text-neutral-600">{filtered.length} result{filtered.length === 1 ? "" : "s"}</p>
+          <p className="text-sm text-ash">{filtered.length} result{filtered.length === 1 ? "" : "s"}</p>
         </div>
         <Suspense>
           <SortSelect />
         </Suspense>
       </div>
       <div className="mt-4 grid gap-6 lg:grid-cols-[240px_1fr]">
-        <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-neutral-100" />}>
-          <Filters categories={cats} sizes={["S", "M", "L", "XL"]} />
+        <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-white/10" />}>
+          <Filters categories={cats} sizes={["S", "M", "L", "XL"]} bounds={priceBounds(allProducts)} />
         </Suspense>
         <div>
           {visible.length === 0 ? (

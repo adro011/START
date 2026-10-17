@@ -1,22 +1,36 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useWishlist } from "@/store/wishlist";
-import { getProduct, type Product } from "@/lib/catalog";
+import { lookupProduct, type LookupEntry } from "@/lib/live-lookup";
 import { formatBDT } from "@/lib/format";
 
 export default function WishlistPage() {
   const { slugs, toggle } = useWishlist();
-  const products = slugs.map(getProduct).filter((p): p is Product => p !== undefined);
+  // Slugs may be live Supabase slugs (demo-*) — resolve via the live feed
+  // first, local mirror second. Missing entries are dropped from view.
+  const [products, setProducts] = useState<LookupEntry[]>([]);
+  useEffect(() => {
+    let alive = true;
+    Promise.all(slugs.map((s) => lookupProduct(s))).then((rows) => {
+      if (alive) setProducts(rows.filter((r): r is LookupEntry => r !== undefined));
+    }).catch(() => {
+      /* keep previous */
+    });
+    return () => {
+      alive = false;
+    };
+  }, [slugs]);
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-6">
-      <nav className="text-xs text-neutral-600" aria-label="Breadcrumb">
-        <Link href="/account" className="underline">Account</Link> / <span className="text-neutral-800">Wishlist</span>
+      <nav className="text-xs text-ash" aria-label="Breadcrumb">
+        <Link href="/account" className="underline">Account</Link> / <span className="text-[#F5F5F5]">Wishlist</span>
       </nav>
       <h1 className="mt-2 text-2xl font-semibold">Wishlist ({slugs.length})</h1>
       {products.length === 0 ? (
-        <p className="mt-4 text-sm text-neutral-600">
+        <p className="mt-4 text-sm text-ash">
           Nothing saved yet — tap the ♡ on any product. Stored on this device (persisted); syncs to Supabase wishlist after sign-in.
         </p>
       ) : (

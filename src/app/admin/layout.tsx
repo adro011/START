@@ -15,15 +15,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const session = await requireAdmin('/admin');
 
   return (
-    <div className="min-h-screen bg-stone-100 text-stone-900">
-      <header className="sticky top-0 z-20 border-b border-stone-200 bg-stone-950 text-white md:hidden">
+    <div className="min-h-screen bg-[#181818] text-[#F5F5F5]">
+      <header className="sticky top-0 z-20 border-b border-white/15 bg-black text-white md:hidden">
         <div className="flex items-center justify-between px-4 py-3">
           <Link href="/admin" className="text-sm font-semibold tracking-wide">ADMIN</Link>
-          <span className="truncate text-xs text-stone-300">{session.user.email}</span>
+          <span className="truncate text-xs text-steel">{session.user.email}</span>
         </div>
         <nav aria-label="Admin" className="flex gap-1 overflow-x-auto px-3 pb-3">
           {NAV.map((n) => (
-            <Link key={n.href} href={n.href} className="whitespace-nowrap rounded-full bg-stone-800 px-3 py-1.5 text-xs font-medium hover:bg-stone-700">
+            <Link key={n.href} href={n.href} className="whitespace-nowrap rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium hover:bg-white/15">
               {n.label}
             </Link>
           ))}
@@ -31,20 +31,20 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </header>
 
       <div className="mx-auto flex w-full max-w-7xl gap-0 md:gap-6 md:px-6 md:py-6">
-        <aside className="sticky top-6 hidden h-fit w-56 shrink-0 rounded-lg border border-stone-200 bg-white p-3 md:block">
-          <p className="px-2 text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Admin</p>
-          <p className="truncate px-2 pb-2 text-xs text-stone-500">{session.user.email}{session.isDev ? ' · dev' : ''}</p>
+        <aside className="sticky top-6 hidden h-fit w-56 shrink-0 rounded-lg border border-white/15 bg-[#181818] p-3 md:block">
+          <p className="px-2 text-xs font-semibold uppercase tracking-[0.18em] text-ash">Admin</p>
+          <p className="truncate px-2 pb-2 text-xs text-ash">{session.user.email}{session.isDev ? ' · dev' : ''}</p>
           <nav aria-label="Admin" className="flex flex-col gap-1">
             {NAV.map((n) => (
-              <Link key={n.href} href={n.href} className="rounded px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-100 hover:text-stone-950">
+              <Link key={n.href} href={n.href} className="rounded px-3 py-2 text-sm font-medium text-steel hover:bg-white/10 hover:text-[#F5F5F5]">
                 {n.label}
               </Link>
             ))}
           </nav>
-          <Link href="/" className="mt-3 block rounded px-3 py-2 text-xs text-stone-500 hover:bg-stone-100">← View store</Link>
+          <Link href="/" className="mt-3 block rounded px-3 py-2 text-xs text-ash hover:bg-white/10">← View store</Link>
         </aside>
 
-        <main className="min-w-0 flex-1 bg-white p-4 sm:p-6 md:rounded-lg md:border md:border-stone-200">{children}</main>
+        <main className="min-w-0 flex-1 bg-[#181818] p-4 sm:p-6 md:rounded-lg md:border md:border-white/15">{children}</main>
       </div>
     </div>
   );

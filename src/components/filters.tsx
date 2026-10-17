@@ -26,13 +26,13 @@ export function LoadMore({ total, pageSize = 12 }: { total: number; pageSize?: n
   if (shown >= total) return null;
   return (
     <div className="mt-8 text-center">
-      <p className="text-sm text-neutral-600">
+      <p className="text-sm text-ash">
         Showing {shown} of {total}
       </p>
       <button
         type="button"
         onClick={() => router.replace(`${pathname}?${setParam(params, "page", String(page + 1))}`, { scroll: false })}
-        className="mt-2 rounded-full border px-6 py-2 text-sm font-medium hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+        className="mt-2 rounded-full border px-6 py-2 text-sm font-medium hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
       >
         Load more
       </button>
@@ -43,14 +43,17 @@ export function LoadMore({ total, pageSize = 12 }: { total: number; pageSize?: n
 export default function Filters({
   categories,
   sizes,
+  bounds,
 }: {
   categories: { slug: string; name: string }[];
   sizes: string[];
+  /** Live price range; defaults to the local catalog bounds. */
+  bounds?: { min: number; max: number };
 }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
-  const bounds = priceBounds();
+  const liveBounds = bounds ?? priceBounds();
 
   const update = useCallback(
     (key: string, value: string | null) => {
@@ -80,7 +83,7 @@ export default function Filters({
             type="button"
             onClick={() => update("category", null)}
             aria-pressed={activeCat === ""}
-            className={`rounded-full border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] ${activeCat === "" ? "bg-neutral-900 text-white" : "hover:bg-neutral-100"}`}
+            className={`rounded-full border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] ${activeCat === "" ? "bg-gold text-black" : "hover:bg-white/10"}`}
           >
             All
           </button>
@@ -90,7 +93,7 @@ export default function Filters({
               type="button"
               onClick={() => update("category", activeCat === c.slug ? null : c.slug)}
               aria-pressed={activeCat === c.slug}
-              className={`rounded-full border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] ${activeCat === c.slug ? "bg-neutral-900 text-white" : "hover:bg-neutral-100"}`}
+              className={`rounded-full border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] ${activeCat === c.slug ? "bg-gold text-black" : "hover:bg-white/10"}`}
             >
               {c.name}
             </button>
@@ -105,16 +108,16 @@ export default function Filters({
         <input
           id="maxprice"
           type="range"
-          min={bounds.min}
-          max={bounds.max}
+          min={liveBounds.min}
+          max={liveBounds.max}
           step={10000}
-          value={maxPrice ? Number(maxPrice) : bounds.max}
+          value={maxPrice ? Number(maxPrice) : liveBounds.max}
           onChange={(e) => update("maxPrice", e.target.value)}
-          className="w-full accent-[#D5573B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+          className="w-full accent-[#FFC000] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
         />
-        <div className="flex justify-between text-xs text-neutral-600">
-          <span>{formatBDT(bounds.min)}</span>
-          <span>{formatBDT(bounds.max)}</span>
+        <div className="flex justify-between text-xs text-ash">
+          <span>{formatBDT(liveBounds.min)}</span>
+          <span>{formatBDT(liveBounds.max)}</span>
         </div>
       </div>
 
@@ -127,7 +130,7 @@ export default function Filters({
               type="button"
               onClick={() => toggleSize(s)}
               aria-pressed={activeSizes.includes(s)}
-              className={`rounded border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] ${activeSizes.includes(s) ? "bg-neutral-900 text-white" : "hover:bg-neutral-100"}`}
+              className={`rounded border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] ${activeSizes.includes(s) ? "bg-gold text-black" : "hover:bg-white/10"}`}
             >
               {s}
             </button>
@@ -140,7 +143,7 @@ export default function Filters({
           type="checkbox"
           checked={inStock}
           onChange={(e) => update("inStock", e.target.checked ? "1" : null)}
-          className="accent-[#D5573B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+          className="accent-[#FFC000] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
         />
         In stock only
       </label>
@@ -149,7 +152,7 @@ export default function Filters({
         <button
           type="button"
           onClick={() => router.replace(pathname, { scroll: false })}
-          className="text-xs underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+          className="text-xs underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
         >
           Clear all filters
         </button>

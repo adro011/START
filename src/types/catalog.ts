@@ -39,6 +39,10 @@ export interface CatalogProduct {
   reviewCount: number;
   fabricCare: string;
   fitNotes: string;
+  /** Full variant list (present when built via asCatalogProduct). Lets client
+      quick-add resolve real SKUs without a second lookup — works for both
+      local and Supabase-backed products. */
+  variants?: Variant[];
 }
 
 export interface Category {

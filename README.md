@@ -46,7 +46,9 @@ npm run start
 
 > Without Supabase env vars the storefront runs on the local TypeScript demo catalog
 > (`src/lib/catalog.ts`) and `/admin` uses a dev fallback session (see Admin guide).
-> With Supabase env vars, auth/roles come from Supabase Auth + `profiles`.
+> With Supabase env vars, auth/roles come from Supabase Auth + `profiles`, and the
+> catalog is live-first: listings, product pages, search, checkout and the registry
+> read Supabase via `src/lib/storefront.ts` (local mirror as fallback).
 
 ## Scripts
 
@@ -86,7 +88,8 @@ src/
                           # back-in-stock, whatsapp-order, site-footer, legal-layout, providers
   config/site.ts          # BRAND_NAME="ABRAR-EXCLUSIVE", tagline, socials, placeholder phone/email,
                           # DISTRICTS (10), FREE_SHIP_THRESHOLD_PAISA = 250_000 (৳2,500)
-  lib/                    # catalog.ts (24 demo products), coupons.ts, format.ts, auth.ts,
+  lib/                    # catalog.ts (24 demo products, local fallback mirror), storefront.ts
+                          # (live Supabase mapper), coupons.ts, format.ts, auth.ts,
                           # admin-data.ts, dictionary.ts, supabase/
   store/                  # cart.ts, wishlist.ts (Zustand)
   locales/ middleware.ts types/
@@ -128,11 +131,11 @@ Money = integer paisa. `uuid` PKs, `created_at/updated_at` triggers, soft delete
 
 **RPCs** (`SECURITY DEFINER`, `search_path = ''`): `create_order(cart, address, coupon, payment)` — reprices from DB, validates stock + coupon, picks zone, decrements stock, writes order/items/event in one transaction; `search_products` (full-text + trigram fallback); `adjust_stock` (staff only + audit); `cancel_order` (restores stock, valid transitions only, decrements coupon usage).
 
-**Demo data** (`0004_seed.sql` + mirrored TS catalog in `src/lib/catalog.ts`):
+**Demo data** (`0004_seed.sql` + `0006_demo_topup.sql` + `0007_unify_catalog.sql` + `0008_color_fix.sql`; TS catalog in `src/lib/catalog.ts` is the offline fallback mirror):
 - Category tree per plan §6 (Men 18 L2 + L3 leaves, Women 10 L2 + L3 leaves, Kids Boys/Girls + leaves).
-- **24 demo products, 8 per section** (DB slugs `demo-*`; TS catalog has its own 24 marketing entries with `DEMO-` SKUs).
-- 2 variants per DB demo product (`DEMO-…` SKUs, stock 25/15), 2 placeholder images each (`/hero/<section>.svg`).
-- Coupons: `WELCOME10` (percent 10, min 100000 paisa = ৳1,000, limit 5000, 2025–2030), `FREESHIP` (free_shipping, min 150000 paisa = ৳1,500).
+- **24 demo products, 8 per section** — DB rows mirror the TS catalog exactly since `0007` (same 24 slugs, names, paisa prices; 24/24 slug + 192/192 SKU overlap, so live RPC checkout fires for storefront carts; no `demo-*` rows remain).
+- 8 variants per product (exact TS SKUs, formula stock), 2–3 hero images each (`/hero/<section>.jpg`), 12 approved demo reviews (kept from `0006`).
+- Coupons: `WELCOME10` (percent 10, min 100000 paisa = ৳1,000, **capped at 50000**, limit 5000, 2025–2030), `FREESHIP` (free_shipping, min 50000 paisa = ৳500).
 - Zones: `Dhaka city` (Dhaka/Gazipur/Narayanganj/Munshiganj/Narsingdi/Manikganj; fee 6000 = ৳60; free over 200000 = ৳2,000; 2–3 days), `Outside Dhaka` (12 districts; fee 12000 = ৳120; free over 300000 = ৳3,000; 3–5 days).
 - `site_settings`: announcements, hero_copy, shipping_config.
 

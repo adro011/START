@@ -123,7 +123,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
       <nav
         aria-label="Mobile"
         inert={open}
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-[#172121]/10 bg-[#FBF6F3]/95 backdrop-blur lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/15 bg-black lg:hidden"
       >
         <ul className="grid grid-cols-5">
           {tabs.map((t) => (
@@ -131,7 +131,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
               {"href" in t && t.href ? (
                 <Link
                   href={t.href}
-                   className="flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] active:text-clay"
+                   className="flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] active:text-gold"
                 >
                   <Icon d={t.icon} label={t.label} />
                   {t.label}
@@ -140,7 +140,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                 <button
                   type="button"
                   onClick={"action" in t && t.action ? t.action : undefined}
-                  className="flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] active:text-clay"
+                  className="flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] active:text-gold"
                   aria-label={t.label}
                   aria-expanded={"key" in t && t.key === "shop" ? open : undefined}
                   aria-controls={"key" in t && t.key === "shop" ? "mobile-nav-drawer" : undefined}
@@ -155,7 +155,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
             <button
               type="button"
               onClick={() => setCartOpen(true)}
-              className="relative flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-[#172121]/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] active:text-clay"
+              className="relative flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] active:text-gold"
               aria-label={`${d.cart} (${count})`}
             >
               <span className="relative">
@@ -164,7 +164,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                   label={d.cart}
                 />
                 {count > 0 && (
-                  <span className="absolute -top-1.5 -right-2 min-w-[18px] rounded-full bg-clay px-1 text-center text-[10px] leading-[18px] font-semibold text-white">
+                  <span className="absolute -top-1.5 -right-2 min-w-[18px] rounded-full bg-gold px-1 text-center text-[10px] leading-[18px] font-semibold text-black">
                     {count > 99 ? "99+" : count}
                   </span>
                 )}
@@ -186,7 +186,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
       >
         <div
           className={cn(
-            "absolute inset-0 bg-[#172121]/50 transition-opacity duration-300 motion-reduce:transition-none",
+            "absolute inset-0 bg-black/40 transition-opacity duration-300 motion-reduce:transition-none",
             open ? "opacity-100" : "opacity-0",
           )}
           onClick={() => setOpen(false)}
@@ -198,11 +198,11 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
           aria-modal="true"
           aria-label={d.menu}
           className={cn(
-            "absolute top-0 left-0 flex h-full w-[86vw] max-w-[340px] flex-col bg-[#FBF6F3] transition-transform duration-300 motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
+            "absolute top-0 left-0 flex h-full w-[86vw] max-w-[340px] flex-col bg-black transition-transform duration-300 motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
             open ? "translate-x-0" : "-translate-x-full",
           )}
         >
-          <div className="flex items-center justify-between border-b border-[#172121]/10 px-5 py-4">
+          <div className="flex items-center justify-between border-b border-white/15 px-5 py-4">
             <span
               className="text-[22px] font-semibold tracking-wide"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
@@ -214,7 +214,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
               type="button"
               onClick={() => setOpen(false)}
               aria-label={d.close}
-              className="p-2 text-[#172121]/70 hover:text-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+              className="p-2 text-steel hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
             >
               ✕
             </button>
@@ -223,13 +223,13 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
             {sections.map((s) => (
               <div
                 key={s.key}
-                className="border-b border-[#172121]/10 last:border-0"
+                className="border-b border-white/15 last:border-0"
               >
                 <div className="flex items-center">
                   <Link
                     href={s.href}
                     onClick={() => setOpen(false)}
-                    className="flex-1 py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                    className="flex-1 py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                   >
                     {s.label}
                   </Link>
@@ -241,7 +241,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                     onClick={() =>
                       setExpanded(expanded === s.key ? null : s.key)
                     }
-                    className="p-2 text-[#172121]/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                    className="p-2 text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                   >
                     <span
                       className={cn(
@@ -268,7 +268,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                         <Link
                           href={s.href}
                           onClick={() => setOpen(false)}
-                          className="block py-1.5 text-[14px] text-clay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                          className="block py-1.5 text-[14px] text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                         >
                           {d.view_all} →
                         </Link>
@@ -277,7 +277,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                         <Link
                           href="/new-arrivals"
                           onClick={() => setOpen(false)}
-                          className="block py-1.5 text-[14px] text-[#172121]/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                          className="block py-1.5 text-[14px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                         >
                           {d.nav_new}
                         </Link>
@@ -286,7 +286,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                         <Link
                           href="/sale"
                           onClick={() => setOpen(false)}
-                          className="block py-1.5 text-[14px] text-[#172121]/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+                          className="block py-1.5 text-[14px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                         >
                           {d.nav_sale}
                         </Link>
@@ -299,19 +299,19 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
             <Link
               href="/stories"
               onClick={() => setOpen(false)}
-              className="block py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+              className="block py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
             >
               {d.nav_stories}
             </Link>
             <Link
               href="/account"
               onClick={() => setOpen(false)}
-              className="block py-3.5 text-[15px] font-medium tracking-wide text-[#172121]/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+              className="block py-3.5 text-[15px] font-medium tracking-wide text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
             >
               {d.account}
             </Link>
           </div>
-          <div className="border-t border-[#172121]/10 px-5 py-4 text-[13px] text-[#172121]/80">
+          <div className="border-t border-white/15 px-5 py-4 text-[13px] text-steel">
             Cash on delivery · 7-day exchange
           </div>
         </aside>

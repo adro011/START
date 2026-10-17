@@ -30,7 +30,7 @@ export default function SortSelect() {
           next.delete("page");
           router.replace(`${pathname}?${next.toString()}`, { scroll: false });
         }}
-        className="rounded-lg border px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+        className="rounded-lg border px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
       >
         {OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>

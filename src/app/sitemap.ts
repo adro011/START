@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { DEMO_CATEGORIES } from '@/lib/admin-data';
-import { PRODUCTS } from '@/lib/catalog';
+import { PRODUCTS, type Product } from '@/lib/catalog';
+import { getLiveProducts } from '@/lib/storefront';
 
 const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
@@ -13,7 +14,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: p === '' ? 1 : 0.7,
   }));
 
-  const products = (PRODUCTS as unknown as { slug: string; updatedAt?: string }[]).map((p) => ({
+  // Live-first (Supabase) with local fallback — never throws (build-safe).
+  let list: Product[] = PRODUCTS;
+  try {
+    const { products } = await getLiveProducts();
+    if (products.length > 0) list = products;
+  } catch {
+    /* local fallback */
+  }
+  const products = (list as unknown as { slug: string; updatedAt?: string }[]).map((p) => ({
     url: `${baseUrl}/product/${p.slug}`,
     lastModified: p.updatedAt ? new Date(p.updatedAt) : now,
     changeFrequency: 'weekly' as const,

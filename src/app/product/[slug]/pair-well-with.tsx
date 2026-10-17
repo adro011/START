@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/catalog";
-import { getProduct } from "@/lib/catalog";
 import { formatBDT, cn } from "@/lib/format";
 import { useCart } from "@/store/cart";
 
@@ -17,7 +16,9 @@ export default function PairWellWith({ product }: { product: Product }) {
   const [added, setAdded] = useState(false);
 
   function quickAdd() {
-    const full = getProduct(product.slug);
+    // Variants ride on the product prop (server passes the full product), so
+    // this resolves real SKUs for live Supabase products with no lookup.
+    const full = product;
     const firstSize = product.sizes[0];
     const variant =
       full?.variants.find((v) => v.size === firstSize && v.stock > 0) ??
@@ -41,15 +42,15 @@ export default function PairWellWith({ product }: { product: Product }) {
   const img = product.images[0];
 
   return (
-    <section aria-label="Pairs well with" className="border border-[#172121]/12 bg-white/50 p-3">
-      <p className="px-1 text-[12px] font-semibold tracking-[0.18em] text-[#172121]/60 uppercase">
+    <section aria-label="Pairs well with" className="border border-white/15 bg-[#181818]/50 p-3">
+      <p className="px-1 text-[12px] font-semibold tracking-[0.18em] text-ash uppercase">
         Pairs well with
       </p>
       <div className="mt-2 flex items-center gap-3">
         <Link
           href={`/product/${product.slug}`}
           aria-label={`View ${product.name}`}
-          className="relative block h-20 w-16 shrink-0 overflow-hidden bg-[#F2CCC3]/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+          className="relative block h-20 w-16 shrink-0 overflow-hidden bg-[#F2CCC3]/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
         >
           {img && (
             <Image src={img.src} alt={img.alt || product.name} fill sizes="64px" className="object-cover" />
@@ -58,19 +59,19 @@ export default function PairWellWith({ product }: { product: Product }) {
         <div className="min-w-0 flex-1">
           <Link
             href={`/product/${product.slug}`}
-            className="link-lux block truncate text-[14px] font-medium hover:text-[#7D451B]"
+            className="link-lux block truncate text-[14px] font-medium hover:text-gold"
           >
             {product.name}
           </Link>
-          <p className="mt-0.5 text-[14px] font-semibold text-[#7D451B]">
+          <p className="mt-0.5 text-[14px] font-semibold text-gold">
             {formatBDT(product.pricePaisa)}
           </p>
           <button
             type="button"
             onClick={quickAdd}
             className={cn(
-              "mt-1.5 px-4 py-1.5 text-[12px] font-semibold tracking-[0.1em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]",
-              added ? "bg-[#7E9181] text-white" : "bg-[#172121] text-[#FBF6F3] hover:bg-clay",
+              "mt-1.5 px-4 py-1.5 text-[12px] font-semibold tracking-[0.1em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]",
+              added ? "bg-[#7E9181] text-white" : "bg-gold text-black hover:bg-gold-dark",
             )}
           >
             {added ? "✓ Added" : "Add to bag"}

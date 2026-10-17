@@ -6,7 +6,8 @@ import Filters, { LoadMore } from "@/components/filters";
 import SortSelect from "@/components/sort-select";
 import { ProductCard } from "@/components/product-card";
 import Reveal from "@/components/reveal";
-import { CATEGORIES, asCatalogProduct, getBySection, isValidSection } from "@/lib/catalog";
+import { CATEGORIES, asCatalogProduct, getBySection, isValidSection, priceBounds } from "@/lib/catalog";
+import { getLiveCategories, getLiveProducts } from "@/lib/storefront";
 
 export function generateStaticParams() {
   return [{ section: "men" }, { section: "women" }, { section: "kids" }, { section: "new-arrivals" }, { section: "sale" }];
@@ -15,7 +16,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ section: string }> }): Promise<Metadata> {
   const { section } = await params;
   const title = section === "new-arrivals" ? "New Arrivals" : section === "sale" ? "Sale" : section[0].toUpperCase() + section.slice(1);
-  return { title: `${title} — Shop`, description: `Shop ${title.toLowerCase()} fashion in Bangladesh. COD, easy exchange.` };
+  return { title: `${title} — Shop`, description: `Shop ${title.toLowerCase()} fashion in Bangladesh. COD, easy exchange.`, alternates: { canonical: `/${section}` } };
 }
 
 type RawSP = Record<string, string | string[] | undefined>;
@@ -46,7 +47,14 @@ export default async function SectionPage({
   };
 
   const realSection = section === "new-arrivals" || section === "sale" ? section : (section as "men" | "women" | "kids");
-  const cats = CATEGORIES.filter((c) => section === "new-arrivals" || section === "sale" ? true : c.section === realSection)
+  // Live-first (Supabase) with local fallback; helpers take the source list.
+  const [{ products: liveProducts }, { categories: liveCategories }] = await Promise.all([
+    getLiveProducts(),
+    getLiveCategories(),
+  ]);
+  const allProducts = liveProducts.length > 0 ? liveProducts : undefined;
+  const allCategories = liveCategories.length > 0 ? liveCategories : CATEGORIES;
+  const cats = allCategories.filter((c) => section === "new-arrivals" || section === "sale" ? true : c.section === realSection)
     .map((c) => ({ slug: c.slug, name: c.name }));
 
   const sizes = ["S", "M", "L", "XL"];
@@ -58,7 +66,7 @@ export default async function SectionPage({
     maxPrice: sp.maxPrice ? Number(sp.maxPrice) : undefined,
     sizes: sp.sizes ? sp.sizes.split(",").filter(Boolean) : undefined,
     inStock: sp.inStock === "1",
-  });
+  }, allProducts);
 
   const page = Math.max(1, Number(sp.page ?? 1) || 1);
   const visible = filtered.slice(0, page * PAGE_SIZE);
@@ -67,13 +75,13 @@ export default async function SectionPage({
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-6">
-      <nav className="text-xs text-neutral-600" aria-label="Breadcrumb">
-        <Link href="/" className="underline">Home</Link> / <span className="capitalize text-neutral-800">{title}</span>
+      <nav className="text-xs text-ash" aria-label="Breadcrumb">
+        <Link href="/" className="underline">Home</Link> / <span className="capitalize text-[#F5F5F5]">{title}</span>
       </nav>
       <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold capitalize md:text-3xl">{title}</h1>
-          <p className="text-sm text-neutral-600">{filtered.length} result{filtered.length === 1 ? "" : "s"}</p>
+          <p className="text-sm text-ash">{filtered.length} result{filtered.length === 1 ? "" : "s"}</p>
         </div>
         <Suspense>
           <SortSelect />
@@ -82,22 +90,22 @@ export default async function SectionPage({
 
       {/* Section chips */}
       <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1">
-        <Link href="/men" className={`shrink-0 rounded-full border px-3 py-1 text-xs ${section === "men" ? "bg-neutral-900 text-white" : ""}`}>Men</Link>
-        <Link href="/women" className={`shrink-0 rounded-full border px-3 py-1 text-xs ${section === "women" ? "bg-neutral-900 text-white" : ""}`}>Women</Link>
-        <Link href="/kids" className={`shrink-0 rounded-full border px-3 py-1 text-xs ${section === "kids" ? "bg-neutral-900 text-white" : ""}`}>Kids</Link>
-        <Link href="/new-arrivals" className={`shrink-0 rounded-full border px-3 py-1 text-xs ${section === "new-arrivals" ? "bg-neutral-900 text-white" : ""}`}>New Arrivals</Link>
-        <Link href="/sale" className={`shrink-0 rounded-full border px-3 py-1 text-xs ${section === "sale" ? "bg-red-700 text-white" : "text-red-700"}`}>Sale</Link>
+        <Link href="/men" className={`shrink-0 rounded-full border px-3 py-1 text-xs ${section === "men" ? "bg-gold text-black" : ""}`}>Men</Link>
+        <Link href="/women" className={`shrink-0 rounded-full border px-3 py-1 text-xs ${section === "women" ? "bg-gold text-black" : ""}`}>Women</Link>
+        <Link href="/kids" className={`shrink-0 rounded-full border px-3 py-1 text-xs ${section === "kids" ? "bg-gold text-black" : ""}`}>Kids</Link>
+        <Link href="/new-arrivals" className={`shrink-0 rounded-full border px-3 py-1 text-xs ${section === "new-arrivals" ? "bg-gold text-black" : ""}`}>New Arrivals</Link>
+        <Link href="/sale" className={`shrink-0 rounded-full border px-3 py-1 text-xs ${section === "sale" ? "bg-gold text-black" : "text-gold"}`}>Sale</Link>
       </div>
 
       <div className="mt-4 grid gap-6 lg:grid-cols-[240px_1fr]">
-        <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-neutral-100" />}>
-          <Filters categories={cats.slice(0, 18)} sizes={sizes} />
+        <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-white/10" />}>
+          <Filters categories={cats.slice(0, 18)} sizes={sizes} bounds={priceBounds(allProducts)} />
         </Suspense>
         <div>
           {visible.length === 0 ? (
             <div className="rounded-xl border p-10 text-center">
               <p className="font-medium">No products match those filters.</p>
-              <p className="mt-1 text-sm text-neutral-600">Try clearing the price cap or trying “Panjabi”, “Sharee”, “Kabli”.</p>
+              <p className="mt-1 text-sm text-ash">Try clearing the price cap or trying “Panjabi”, “Sharee”, “Kabli”.</p>
               <Link href={`/${section}`} className="mt-3 inline-block underline text-sm">Clear filters</Link>
             </div>
           ) : (

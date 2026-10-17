@@ -7,7 +7,6 @@ import { useCart } from "@/store/cart";
 import { SITE } from "@/config/site";
 import { getDict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/dictionary";
-import { cn } from "../lib/format";
 import { MegaMenu } from "./mega-menu";
 import { MobileNav } from "./mobile-nav";
 
@@ -31,12 +30,12 @@ function HeaderIcon({
   children: ReactNode;
 }) {
   const cls =
-    "relative rounded-full p-2.5 text-[#172121] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#F2CCC3]/60 hover:text-clay hover:shadow-[0_8px_20px_rgba(213,87,59,0.18)] focus-visible:outline-2 focus-visible:outline-[#D5573B]";
+    "relative rounded-full p-2.5 text-[#F5F5F5] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:text-gold hover:shadow-[0_8px_20px_rgba(213,87,59,0.18)] focus-visible:outline-2 focus-visible:outline-[#FFC000]";
   const inner = (
     <>
       {children}
       {typeof badge === "number" && badge > 0 && (
-        <span className="absolute top-0.5 right-0.5 min-w-[18px] rounded-full bg-clay px-1 text-center text-[10px] leading-[18px] font-semibold text-white">
+        <span className="absolute top-0.5 right-0.5 min-w-[18px] rounded-full bg-gold px-1 text-center text-[10px] leading-[18px] font-semibold text-black">
           {badge > 99 ? "99+" : badge}
         </span>
       )}
@@ -54,31 +53,16 @@ function HeaderIcon({
 }
 
 /**
- * Sticky header: condenses on scroll, logo centered, search button dispatches
- * `open-search` (the catalog-owned SearchPalette listens for it).
- * MegaMenu + MobileNav are mounted here so layout stays a thin shell.
+ * Sticky header: solid black at every scroll position, logo centered, search
+ * button dispatches `open-search` (the catalog-owned SearchPalette listens for
+ * it). MegaMenu + MobileNav are mounted here so layout stays a thin shell.
  */
 export function SiteHeader() {
-  const [scrolled, setScrolled] = useState(false);
   const [locale, setLocale] = useState<Locale>("en");
   const { count, setOpen } = useCart();
 
   useEffect(() => {
     setLocale(readLocale());
-    // Condense-on-scroll only (no hide-on-scroll: it would strand the open
-    // mega menu and drop keyboard focus off-screen). rAF-throttled.
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 24);
-        ticking = false;
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const openSearch = () =>
@@ -88,26 +72,14 @@ export function SiteHeader() {
 
   return (
     <>
-      <header
-        className={cn(
-          "site-header sticky top-0 z-40 motion-reduce:transition-none",
-          scrolled
-            ? "border-b border-[#172121]/10 bg-[#FBF6F3]/85 shadow-[0_12px_40px_rgba(23,33,33,0.12)] backdrop-blur-xl"
-            : "border-b border-transparent bg-[#FBF6F3]",
-        )}
-      >
-        <div
-          className={cn(
-            "mx-auto grid max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 transition-all duration-300 motion-reduce:transition-none sm:px-6",
-            scrolled ? "py-2" : "py-4",
-          )}
-        >
+      <header className="site-header sticky top-0 z-50 border-b border-white/15 bg-black">
+        <div className="mx-auto grid max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-4 sm:px-6">
           <div className="flex items-center">
             <a
               href={`https://wa.me/${SITE.whatsappDigits}`}
               target="_blank"
               rel="noreferrer"
-              className="hidden text-[12.5px] font-medium tracking-[0.08em] text-[#172121]/80 uppercase underline-offset-4 hover:text-clay hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] lg:block"
+              className="hidden text-[12.5px] font-medium tracking-[0.08em] text-steel uppercase underline-offset-4 hover:text-gold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] lg:block"
             >
               WhatsApp {SITE.whatsappDisplay}
             </a>
@@ -116,10 +88,7 @@ export function SiteHeader() {
           <Link
             href="/"
             aria-label={`${SITE.name} — home`}
-            className={cn(
-              "text-center font-semibold tracking-[0.06em] whitespace-nowrap text-[#172121] uppercase transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B] motion-reduce:transition-none",
-              scrolled ? "text-[19px]" : "text-[22px] sm:text-[25px]",
-            )}
+            className="text-center text-[22px] font-semibold tracking-[0.06em] whitespace-nowrap text-[#F5F5F5] uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] sm:text-[25px]"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             {SITE.name}

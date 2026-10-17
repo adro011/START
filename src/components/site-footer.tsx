@@ -55,23 +55,23 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
   }
 
   return (
-    <footer className="relative overflow-hidden bg-[#101414] text-[#FBF6F3]">
+    <footer className="relative overflow-hidden bg-[#181818] text-[#F5F5F5]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-24 left-1/3 h-[300px] w-[520px] rounded-full bg-[#D5573B]/12 blur-[120px]" />
+        <div className="absolute -top-24 left-1/3 h-[300px] w-[520px] rounded-full bg-[#FFC000]/12 blur-[120px]" />
         <span aria-hidden="true" className="text-ghost absolute -bottom-8 left-4 text-[18vw] leading-none font-semibold tracking-tight opacity-60 select-none">ABRAR</span>
       </div>
       {/* Newsletter */}
-      <div className="relative border-b border-white/10">
+      <div className="relative border-b border-white/15">
         <div className="mx-auto grid max-w-[1280px] gap-6 px-4 py-14 sm:px-6 md:grid-cols-2 md:items-center">
           <div>
-            <p className="kicker text-blush">First dibs, every drop</p>
+            <p className="kicker text-gold">First dibs, every drop</p>
             <p
               className="mt-2 text-[34px] leading-tight font-medium sm:text-[40px]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
               {d.newsletter_title}
             </p>
-            <p className="mt-1 max-w-[44ch] text-[15px] text-white/70">{d.newsletter_sub}</p>
+            <p className="mt-1 max-w-[44ch] text-[15px] text-steel">{d.newsletter_sub}</p>
           </div>
           <form
             id="newsletter"
@@ -89,12 +89,12 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={d.newsletter_placeholder}
-              className="glass-dark h-13 flex-1 px-4 py-3.5 text-[15px] text-white placeholder:text-white/40 focus:border-[#D5573B] focus:outline-none"
+              className="glass-dark h-13 flex-1 px-4 py-3.5 text-[15px] text-white placeholder:text-ash focus:border-[#FFC000] focus:outline-none"
             />
             <button
               type="submit"
               disabled={state === "busy"}
-              className="h-13 bg-clay px-7 py-3.5 text-[13px] font-semibold tracking-[0.16em] uppercase transition-all duration-300 hover:bg-[#7D451B] hover:shadow-[0_12px_32px_rgba(213,87,59,0.4)] disabled:opacity-60"
+              className="h-13 bg-gold px-7 py-3.5 text-[13px] font-semibold tracking-[0.16em] text-black uppercase transition-all duration-300 hover:bg-gold-dark hover:shadow-[0_12px_32px_rgba(255,192,0,0.4)] disabled:opacity-60"
             >
               {state === "busy" ? "…" : d.newsletter_cta}
             </button>
@@ -107,12 +107,12 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
             </span>
           </form>
           {state === "ok" && (
-            <p className="text-[14px] text-[#7E9181] md:col-span-2">
+            <p className="text-[14px] text-gold md:col-span-2">
               {d.newsletter_ok}
             </p>
           )}
           {state === "err" && (
-            <p className="text-[14px] text-blush md:col-span-2">
+            <p className="text-[14px] text-gold md:col-span-2">
               {d.newsletter_error}
             </p>
           )}
@@ -128,22 +128,22 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
           >
             {SITE.name}
           </p>
-          <p className="mt-2 max-w-[32ch] text-[14px] leading-relaxed text-white/65">
+          <p className="mt-2 max-w-[32ch] text-[14px] leading-relaxed text-ash">
             {SITE.tagline}. {SITE.supportHours}.
           </p>
-          <p className="mt-4 text-[14px] text-white/65">
+          <p className="mt-4 text-[14px] text-ash">
             <a
               href={`https://wa.me/${SITE.whatsappDigits}`}
               target="_blank"
               rel="noreferrer"
-              className="underline-offset-4 hover:text-white hover:underline"
+              className="underline-offset-4 hover:text-gold hover:underline"
             >
               WhatsApp {SITE.whatsappDisplay}
             </a>
             {" · "}
             <a
               href={`mailto:${SITE.email}`}
-              className="underline-offset-4 hover:text-white hover:underline"
+              className="underline-offset-4 hover:text-gold hover:underline"
             >
               {SITE.email}
             </a>
@@ -161,7 +161,7 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
                 href={href}
                 target="_blank"
                 rel="noreferrer"
-                className="text-white/65 underline-offset-4 hover:text-white hover:underline"
+                className="text-ash underline-offset-4 hover:text-gold hover:underline"
               >
                 {label}
               </a>
@@ -170,26 +170,26 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
         </div>
 
         <nav aria-label={d.footer_shop}>
-          <p className="mb-4 text-[12px] font-semibold tracking-[0.18em] text-white/50 uppercase">
+          <p className="mb-4 text-[12px] font-semibold tracking-[0.18em] text-ash uppercase">
             {d.footer_shop}
           </p>
           <ul className="space-y-2.5 text-[14.5px]">
-            <li><Link className="text-white/80 hover:text-white hover:underline" href="/men">{d.nav_men}</Link></li>
-            <li><Link className="text-white/80 hover:text-white hover:underline" href="/women">{d.nav_women}</Link></li>
-            <li><Link className="text-white/80 hover:text-white hover:underline" href="/kids">{d.nav_kids}</Link></li>
-            <li><Link className="text-white/80 hover:text-white hover:underline" href="/new-arrivals">{d.nav_new}</Link></li>
-            <li><Link className="text-white/80 hover:text-white hover:underline" href="/sale">{d.nav_sale}</Link></li>
+            <li><Link className="text-steel hover:text-gold hover:underline" href="/men">{d.nav_men}</Link></li>
+            <li><Link className="text-steel hover:text-gold hover:underline" href="/women">{d.nav_women}</Link></li>
+            <li><Link className="text-steel hover:text-gold hover:underline" href="/kids">{d.nav_kids}</Link></li>
+            <li><Link className="text-steel hover:text-gold hover:underline" href="/new-arrivals">{d.nav_new}</Link></li>
+            <li><Link className="text-steel hover:text-gold hover:underline" href="/sale">{d.nav_sale}</Link></li>
           </ul>
         </nav>
 
         <nav aria-label={d.footer_help}>
-          <p className="mb-4 text-[12px] font-semibold tracking-[0.18em] text-white/50 uppercase">
+          <p className="mb-4 text-[12px] font-semibold tracking-[0.18em] text-ash uppercase">
             {d.footer_help}
           </p>
           <ul className="space-y-2.5 text-[14.5px]">
             {HELP_LINKS.map((l) => (
               <li key={l.href}>
-                <Link className="text-white/80 hover:text-white hover:underline" href={l.href}>
+                <Link className="text-steel hover:text-gold hover:underline" href={l.href}>
                   {l.label}
                 </Link>
               </li>
@@ -198,13 +198,13 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
         </nav>
 
         <nav aria-label={d.footer_company}>
-          <p className="mb-4 text-[12px] font-semibold tracking-[0.18em] text-white/50 uppercase">
+          <p className="mb-4 text-[12px] font-semibold tracking-[0.18em] text-ash uppercase">
             {d.footer_company}
           </p>
           <ul className="space-y-2.5 text-[14.5px]">
             {COMPANY_LINKS.map((l) => (
               <li key={l.href}>
-                <Link className="text-white/80 hover:text-white hover:underline" href={l.href}>
+                <Link className="text-steel hover:text-gold hover:underline" href={l.href}>
                   {l.label}
                 </Link>
               </li>
@@ -214,15 +214,15 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
       </div>
 
       {/* Bottom bar: payments + language + rights */}
-      <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-4 px-4 py-6 text-[13px] text-white/60 sm:px-6 md:flex-row md:items-center md:justify-between">
+      <div className="border-t border-white/15">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-4 px-4 py-6 text-[13px] text-ash sm:px-6 md:flex-row md:items-center md:justify-between">
           <p>
             {d.footer_payments}:{" "}
             <span className="inline-flex gap-1.5">
               {["COD", "bKash", "Nagad"].map((p) => (
                 <span
                   key={p}
-                  className="border border-white/20 px-2 py-0.5 text-[12px] font-semibold tracking-wide text-white/80"
+                  className="border border-white/15 px-2 py-0.5 text-[12px] font-semibold tracking-wide text-steel"
                 >
                   {p}
                 </span>
@@ -239,8 +239,8 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
                 aria-pressed={locale === l}
                 className={
                   locale === l
-                    ? "border border-[#D5573B] px-2.5 py-1 font-semibold text-white"
-                    : "border border-white/20 px-2.5 py-1 text-white/60 hover:text-white"
+                    ? "border border-[#FFC000] px-2.5 py-1 font-semibold text-gold"
+                    : "border border-white/15 px-2.5 py-1 text-ash hover:text-gold"
                 }
               >
                 {l === "en" ? "EN" : "বাং"}

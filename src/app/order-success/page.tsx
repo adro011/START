@@ -20,13 +20,13 @@ export default async function OrderSuccessPage({
           Order no: <span className="font-mono font-semibold">{order}</span>
         </p>
       ) : (
-        <p className="mt-2 text-sm text-neutral-600">No order number in URL — did you refresh?</p>
+        <p className="mt-2 text-sm text-ash">No order number in URL — did you refresh?</p>
       )}
-      <p className="mt-2 text-sm text-neutral-600">
+      <p className="mt-2 text-sm text-ash">
         We’ll call to confirm, then dispatch in 24–48h. Track anytime with your order no + phone.
       </p>
       <div className="mt-6 flex justify-center gap-3 text-sm">
-        <Link href="/track" className="rounded-full bg-neutral-900 px-5 py-2.5 font-medium text-white">Track order</Link>
+        <Link href="/track" className="rounded-full bg-gold px-5 py-2.5 font-medium text-black hover:bg-gold-dark">Track order</Link>
         <Link href="/" className="rounded-full border px-5 py-2.5">Continue shopping</Link>
       </div>
     </main>

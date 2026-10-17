@@ -15,15 +15,15 @@ const VALUES = [
 
 export default function AboutPage() {
   return (
-    <main className="bg-[#FBF6F3] text-[#172121]">
+    <main className="bg-black text-[#F5F5F5]">
       <section className="mx-auto w-full max-w-5xl px-5 pb-6 pt-14 sm:pt-20">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7D451B]">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
           Our story
         </p>
         <h1 className="mt-3 font-serif text-4xl leading-tight sm:text-6xl">
           A heritage label, made for everyday Bangladesh.
         </h1>
-        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-[#172121]/80">
+        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-steel">
           {SITE.name} started with a simple frustration: festive wear that
           only comes out twice a year. So we cut panjabis, sharees, tunics
           and kids&apos; sets you can wear to Eid, weddings — and ordinary
@@ -32,14 +32,14 @@ export default function AboutPage() {
       </section>
       <section className="mx-auto grid w-full max-w-5xl gap-4 px-5 py-8 sm:grid-cols-3">
         {VALUES.map((v) => (
-          <div key={v.title} className="border border-[#172121]/10 bg-white/60 p-6">
-            <div aria-hidden="true" className="h-0.5 w-10 bg-[#D5573B]" />
+          <div key={v.title} className="border border-white/15 bg-[#181818] p-6">
+            <div aria-hidden="true" className="h-0.5 w-10 bg-gold" />
             <h2 className="mt-4 font-serif text-2xl">{v.title}</h2>
-            <p className="mt-2 text-[0.98rem] leading-relaxed text-[#172121]/80">{v.body}</p>
+            <p className="mt-2 text-[0.98rem] leading-relaxed text-steel">{v.body}</p>
           </div>
         ))}
       </section>
-      <section className="bg-[#172121] text-[#FBF6F3]">
+      <section className="bg-[#181818] text-[#F5F5F5]">
         <div className="mx-auto grid w-full max-w-5xl gap-8 px-5 py-14 sm:grid-cols-3">
           {[
             ["3", "sections — Men, Women, Kids"],
@@ -47,27 +47,27 @@ export default function AboutPage() {
             ["7 days", "easy size exchange"],
           ].map(([n, label]) => (
             <div key={label}>
-              <p className="font-serif text-5xl text-[#F2CCC3]">{n}</p>
-              <p className="mt-2 text-sm uppercase tracking-[0.18em] text-[#FBF6F3]/70">{label}</p>
+              <p className="font-serif text-5xl text-gold">{n}</p>
+              <p className="mt-2 text-sm uppercase tracking-[0.18em] text-steel">{label}</p>
             </div>
           ))}
         </div>
       </section>
       <section className="mx-auto w-full max-w-5xl px-5 py-14">
         <h2 className="font-serif text-3xl">Come say hello</h2>
-        <p className="mt-3 max-w-2xl leading-relaxed text-[#172121]/80">
+        <p className="mt-3 max-w-2xl leading-relaxed text-steel">
           Questions about fit, fabric or delivery to your district? Write to{" "}
-          <a className="text-clay underline underline-offset-4" href={`mailto:${SITE.email}`}>{SITE.email}</a>{" "}
-          or call <a className="text-clay underline underline-offset-4" href={`tel:${SITE.phone}`}>{SITE.phone}</a>.
+          <a className="text-gold underline underline-offset-4" href={`mailto:${SITE.email}`}>{SITE.email}</a>{" "}
+          or call <a className="text-gold underline underline-offset-4" href={`tel:${SITE.phone}`}>{SITE.phone}</a>.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link href="/craft" className="bg-clay px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-white hover:bg-[#172121]">
+          <Link href="/craft" className="bg-gold px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-black hover:bg-gold-dark">
             Our craft →
           </Link>
-          <Link href="/stories" className="border border-[#172121]/25 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-[#D5573B] hover:text-clay">
+          <Link href="/stories" className="border border-white/15 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-gold hover:text-gold">
             Journal
           </Link>
-          <Link href="/contact" className="border border-[#172121]/25 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-[#D5573B] hover:text-clay">
+          <Link href="/contact" className="border border-white/15 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] hover:border-gold hover:text-gold">
             Contact
           </Link>
         </div>

@@ -36,29 +36,25 @@ test.describe('purchase flow (COD)', () => {
       .toMatch(/\/product\//);
     await expect(page.locator('main, [role="main"]').first()).toBeVisible({ timeout: 15000 });
 
-    // 4-5. Select a size (retry: clicks during client-side nav transitions can
-    // land on detaching nodes) and verify the Add button appears after each.
-    const sizeCandidates = page
-      .locator('main button:not([disabled])')
-      .filter({ hasText: /^(XS|S|M|L|XL|XXL|2XL|3XL|\d{2,3})$/ });
+    // 4-5. Select a size (stable test id; enabled options only) and verify the
+    // Add button becomes enabled.
+    const sizeCandidates = page.locator('[data-testid="pdp-size"]:not([disabled])');
     await expect(sizeCandidates.first()).toBeVisible({ timeout: 15000 });
-    const addBtn = page.getByRole('button', { name: /add to (cart|bag)/i }).first();
+    // Stable test id: the buy-box Add button (not StickyATC / "Pairs well with").
+    const addBtn = page.locator('[data-testid="pdp-add"]');
+    await expect(addBtn, 'expected a buy-box "Add to bag" button on the product page').toBeVisible({ timeout: 15000 });
     const nSizes = await sizeCandidates.count();
     for (let i = 0; i < nSizes; i++) {
       const btn = sizeCandidates.nth(i);
       if (await btn.isVisible().catch(() => false)) {
         await btn.click().catch(() => {});
-        if (await addBtn.isVisible({ timeout: 2500 }).catch(() => false)) break;
+        if (await addBtn.isEnabled({ timeout: 2500 }).catch(() => false)) break;
       }
     }
-    await expect(addBtn, 'expected an "Add to cart" button on the product page').toBeVisible({ timeout: 15000 });
+    await expect(addBtn, 'expected the Add button enabled after selecting a size').toBeEnabled({ timeout: 15000 });
     await addBtn.click();
-    const drawer = page
-      .getByRole('dialog')
-      .filter({ hasText: /cart|added|subtotal/i })
-      .or(page.locator('[data-testid="cart-drawer"], [data-testid="cart-dialog"]'))
-      .first();
-    await expect(drawer, 'expected cart drawer/dialog after Add to cart').toBeVisible({ timeout: 15000 });
+    const drawer = page.locator('[data-testid="cart-drawer"]');
+    await expect(drawer, 'expected cart drawer after Add to bag').toBeVisible({ timeout: 15000 });
 
     // 6. Go to checkout (drawer CTA, else direct navigation fallback)
     const checkoutCta = page.getByRole('link', { name: /checkout|proceed/i }).or(

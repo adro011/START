@@ -11,13 +11,13 @@ export default function Loading() {
         ))}
       </div>
       <div className="mx-auto max-w-[1280px] px-4 py-14 sm:px-6">
-        <div className="mb-8 h-10 w-64 animate-pulse bg-[#172121]/10" />
+        <div className="mb-8 h-10 w-64 animate-pulse bg-white/10" />
         <div className="flex gap-4 overflow-hidden">
           {[0, 1, 2, 3].map((i) => (
             <div key={i} className="w-[240px] shrink-0">
-              <div className="aspect-[3/4] animate-pulse bg-[#172121]/10" />
-              <div className="mt-3 h-4 w-3/4 animate-pulse bg-[#172121]/10" />
-              <div className="mt-2 h-4 w-1/3 animate-pulse bg-[#172121]/10" />
+              <div className="aspect-[3/4] animate-pulse bg-white/10" />
+              <div className="mt-3 h-4 w-3/4 animate-pulse bg-white/10" />
+              <div className="mt-2 h-4 w-1/3 animate-pulse bg-white/10" />
             </div>
           ))}
         </div>

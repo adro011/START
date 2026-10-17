@@ -1,7 +1,13 @@
-/* Minimal PWA service worker: cache-first for static assets, offline fallback for navigations. */
-const VERSION = 'v1';
+/* Minimal PWA service worker: cache-first for immutable, content-hashed static
+ * assets; network-first navigations with an offline fallback.
+ *
+ * NOTE: page navigations/HTML are intentionally NOT cached. Next.js HTML
+ * references build-specific chunk URLs; caching HTML past a new deploy makes the
+ * browser request chunks that no longer exist (ChunkLoadError / "Cannot find
+ * module"). The SW is registered in production only (see sw-register.tsx). */
+const VERSION = 'v2';
 const STATIC_CACHE = `static-${VERSION}`;
-const PRECACHE = ['/offline', '/icons/icon.svg', '/icons/maskable.svg'];
+const PRECACHE = ['/offline', '/hero/icons/icon.svg', '/hero/icons/maskable.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -37,15 +43,10 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   // Navigations: network-first, fall back to cached /offline page.
+  // Do NOT cache the HTML response (see header comment).
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(STATIC_CACHE).then((c) => c.put(req, copy)).catch(() => {});
-          return res;
-        })
-        .catch(() => caches.match('/offline', { ignoreSearch: true })),
+      fetch(req).catch(() => caches.match('/offline', { ignoreSearch: true })),
     );
     return;
   }

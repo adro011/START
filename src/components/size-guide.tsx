@@ -5,7 +5,7 @@ import type { Section } from "@/lib/catalog";
 import { cn } from "@/lib/format";
 
 const RING =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]";
 
 const TABLES: Record<Section, { size: string; chest: string; length: string }[]> = {
   men: [
@@ -73,7 +73,7 @@ export default function SizeGuide({ section }: { section: Section }) {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
           onClick={() => setOpen(false)}
         >
-          <div className="w-full max-w-md rounded-xl bg-white p-5" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full max-w-md rounded-xl bg-[#181818] p-5" onClick={(e) => e.stopPropagation()}>
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-base font-semibold capitalize">Size guide · {section}</h2>
               <button
@@ -88,7 +88,7 @@ export default function SizeGuide({ section }: { section: Section }) {
             </div>
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b text-left text-neutral-600">
+                <tr className="border-b text-left text-ash">
                   <th className="py-2">Size</th>
                   <th>Chest</th>
                   <th>Length</th>
@@ -104,7 +104,7 @@ export default function SizeGuide({ section }: { section: Section }) {
                 ))}
               </tbody>
             </table>
-            <p className="mt-3 text-xs text-neutral-600">
+            <p className="mt-3 text-xs text-ash">
               Between sizes? Take the larger for panjabi/sharee drape, smaller for fitted tops.
             </p>
           </div>

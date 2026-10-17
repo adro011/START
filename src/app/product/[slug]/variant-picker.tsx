@@ -10,7 +10,7 @@ import BackInStock from "@/components/back-in-stock";
 import StickyATC from "@/components/sticky-atc";
 
 const RING =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]";
 
 /**
  * Buy box: price, colour/size pickers with live stock, quantity stepper,
@@ -63,18 +63,18 @@ export default function VariantPicker({ product }: { product: Product }) {
     <div>
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <p
-          className="price text-[34px] leading-none font-medium tracking-tight text-[#7D451B]"
+          className="price text-[34px] leading-none font-medium tracking-tight text-gold"
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
           {formatBDT(unitPrice)}
         </p>
         {product.compareAtPaisa && product.compareAtPaisa > product.pricePaisa && (
-          <p className="text-[15px] text-[#172121]/60 line-through">
+          <p className="text-[15px] text-ash line-through">
             {formatBDT(product.compareAtPaisa)}
           </p>
         )}
         {product.isSale && (
-          <span className="bg-clay px-2 py-0.5 text-[11px] font-semibold tracking-[0.14em] text-white uppercase">
+          <span className="bg-gold px-2 py-0.5 text-[11px] font-semibold tracking-[0.14em] text-black uppercase">
             Sale
           </span>
         )}
@@ -83,7 +83,7 @@ export default function VariantPicker({ product }: { product: Product }) {
       {/* Colour */}
       <div className="mt-5">
         <p className="text-[13px] font-semibold tracking-[0.08em] uppercase">
-          Colour <span className="ml-1 font-normal text-[#172121]/60 normal-case">— {color}</span>
+          Colour <span className="ml-1 font-normal text-ash normal-case">— {color}</span>
         </p>
         <div className="mt-2 flex gap-2.5">
           {product.colors.map((c) => (
@@ -99,9 +99,9 @@ export default function VariantPicker({ product }: { product: Product }) {
               title={c.name}
               style={{ backgroundColor: c.hex }}
               className={cn(
-                "h-9 w-9 rounded-full border border-[#172121]/20 transition-transform duration-200 hover:scale-110",
+                "h-9 w-9 rounded-full border border-white/15 transition-transform duration-200 hover:scale-110",
                 RING,
-                color === c.name && "ring-2 ring-[#172121] ring-offset-2 ring-offset-[#FBF6F3]",
+                color === c.name && "ring-2 ring-gold ring-offset-2 ring-offset-black",
               )}
             >
               <span className="sr-only">{c.name}</span>
@@ -126,6 +126,7 @@ export default function VariantPicker({ product }: { product: Product }) {
               <button
                 key={s}
                 type="button"
+                data-testid="pdp-size"
                 disabled={!v || out}
                 onClick={() => pickSize(s)}
                 aria-pressed={size === s}
@@ -133,8 +134,8 @@ export default function VariantPicker({ product }: { product: Product }) {
                   "min-w-12 border px-4 py-2.5 text-[14px] font-medium transition-all duration-200",
                   RING,
                   size === s
-                    ? "border-[#172121] bg-[#172121] text-[#FBF6F3]"
-                    : "border-[#172121]/20 bg-transparent hover:border-[#172121]",
+                    ? "border-gold bg-gold text-black"
+                    : "border-white/15 bg-transparent hover:border-white/40",
                   out && "opacity-35 line-through",
                 )}
               >
@@ -143,7 +144,7 @@ export default function VariantPicker({ product }: { product: Product }) {
             );
           })}
         </div>
-        {!size && <p className="mt-1.5 text-[13px] text-[#172121]/60">Select a size to see stock.</p>}
+        {!size && <p className="mt-1.5 text-[13px] text-ash">Select a size to see stock.</p>}
         {selected && stock > 0 && stock <= 3 && (
           <p className="mt-1.5 text-[14px] font-semibold text-red-700" role="status">
             Only {stock} left in {selected.size} / {selected.color}
@@ -159,7 +160,7 @@ export default function VariantPicker({ product }: { product: Product }) {
       {/* Qty + ATC row */}
       <div className="mt-6 flex gap-3">
         <div
-          className="flex items-center border border-[#172121]/20"
+          className="flex items-center border border-white/15"
           role="group"
           aria-label="Quantity"
         >
@@ -168,7 +169,7 @@ export default function VariantPicker({ product }: { product: Product }) {
             onClick={() => setQty((q) => Math.max(1, q - 1))}
             disabled={qty <= 1}
             aria-label="Decrease quantity"
-            className={cn("px-3.5 py-3 text-[16px] transition-colors hover:text-clay disabled:opacity-30", RING)}
+            className={cn("px-3.5 py-3 text-[16px] transition-colors hover:text-gold disabled:opacity-30", RING)}
           >
             −
           </button>
@@ -180,23 +181,24 @@ export default function VariantPicker({ product }: { product: Product }) {
             onClick={() => setQty((q) => Math.min(maxQty, q + 1))}
             disabled={qty >= maxQty}
             aria-label="Increase quantity"
-            className={cn("px-3.5 py-3 text-[16px] transition-colors hover:text-clay disabled:opacity-30", RING)}
+            className={cn("px-3.5 py-3 text-[16px] transition-colors hover:text-gold disabled:opacity-30", RING)}
           >
             +
           </button>
         </div>
         <button
           type="button"
+          data-testid="pdp-add"
           onClick={handleAdd}
           disabled={!selected || stock === 0}
           className={cn(
             "flex-1 py-3.5 text-[13px] font-semibold tracking-[0.16em] uppercase transition-all duration-300",
             RING,
             !selected || stock === 0
-              ? "cursor-not-allowed bg-[#172121]/25 text-white"
+              ? "cursor-not-allowed bg-gold/25 text-black/60"
               : added
                 ? "bg-[#7E9181] text-white"
-                : "bg-[#172121] text-[#FBF6F3] hover:bg-clay",
+                : "bg-gold text-black hover:bg-gold-dark",
           )}
         >
           {!selected ? "Select a size" : stock === 0 ? "Sold out" : added ? "✓ Added to bag" : "Add to bag"}
@@ -216,16 +218,16 @@ export default function VariantPicker({ product }: { product: Product }) {
       )}
 
       {/* Free-shipping meter (live with qty) */}
-      <div className="mt-5 border border-[#172121]/12 bg-white/50 px-4 py-3.5">
+      <div className="mt-5 border border-white/15 bg-[#181818]/50 px-4 py-3.5">
         <p className="text-[13.5px] font-medium">
           {shipDone ? (
-            <>You unlocked <span className="font-semibold text-clay">FREE delivery</span> 🎉</>
+            <>You unlocked <span className="font-semibold text-gold">FREE delivery</span> 🎉</>
           ) : (
             <>{formatBDT(FREE_SHIP_THRESHOLD_PAISA - shipValue)} away from <span className="font-semibold">free delivery</span></>
           )}
         </p>
         <div
-          className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[#172121]/10"
+          className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10"
           role="progressbar"
           aria-valuenow={shipPct}
           aria-valuemin={0}
@@ -233,13 +235,19 @@ export default function VariantPicker({ product }: { product: Product }) {
           aria-label="Progress to free delivery"
         >
           <div
-            className="h-full rounded-full bg-[#D5573B] transition-[width] duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]"
+            className="h-full rounded-full bg-gold transition-[width] duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]"
             style={{ width: `${shipPct}%` }}
           />
         </div>
       </div>
 
-      <StickyATC name={product.name} pricePaisa={unitPrice} disabled={!selected || stock === 0} onAdd={handleAdd} />
+      <StickyATC
+        name={product.name}
+        pricePaisa={unitPrice}
+        disabled={!selected || stock === 0}
+        onAdd={handleAdd}
+        label={!selected ? "Select a size" : stock === 0 ? "Out of stock" : "Add to bag"}
+      />
     </div>
   );
 }

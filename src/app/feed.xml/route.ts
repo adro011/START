@@ -1,5 +1,6 @@
 import { SITE } from '@/config/site';
-import { PRODUCTS } from '@/lib/catalog';
+import { PRODUCTS, type Product } from '@/lib/catalog';
+import { getLiveProducts } from '@/lib/storefront';
 
 const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
@@ -33,7 +34,15 @@ function firstImage(p: FeedRow): string {
 
 export async function GET(): Promise<Response> {
   const brand = (SITE as unknown as { name?: string })?.name ?? 'brand-store';
-  const rows = PRODUCTS as unknown as FeedRow[];
+  // Live-first (Supabase) with local fallback — never throws.
+  let list: Product[] = PRODUCTS;
+  try {
+    const { products } = await getLiveProducts();
+    if (products.length > 0) list = products;
+  } catch {
+    /* local fallback */
+  }
+  const rows = list as unknown as FeedRow[];
   const items = rows
     .map((p) => {
       const paisa = p.pricePaisa ?? p.price_paisa ?? 0;

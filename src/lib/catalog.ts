@@ -225,10 +225,10 @@ export const CATEGORIES: Category[] = [
   },
 ];
 
-export function getCategory(slug: string): Category | undefined {
-  const direct = CATEGORIES.find((c) => c.slug === slug);
+export function getCategory(slug: string, list: Category[] = CATEGORIES): Category | undefined {
+  const direct = list.find((c) => c.slug === slug);
   if (direct) return direct;
-  for (const c of CATEGORIES) {
+  for (const c of list) {
     const child = c.children?.find((k) => k.slug === slug);
     if (child) return { slug: child.slug, name: child.name, section: c.section };
   }
@@ -708,12 +708,12 @@ export const PRODUCTS: Product[] = [
     ],
     sizes: [...S],
     colors: [
-      { name: "Floral Pink", hex: "#f9a8d4" },
-      { name: "Floral Blue", hex: "#93c5fd" },
+      { name: "Petal Pink", hex: "#f9a8d4" },
+      { name: "Bloom Blue", hex: "#93c5fd" },
     ],
     variants: buildVariants("TOP15", S, [
-      { name: "Floral Pink", hex: "#f9a8d4" },
-      { name: "Floral Blue", hex: "#93c5fd" },
+      { name: "Petal Pink", hex: "#f9a8d4" },
+      { name: "Bloom Blue", hex: "#93c5fd" },
     ], 7),
     rating: 4.2,
     reviewCount: 118,
@@ -993,8 +993,8 @@ export const PRODUCTS: Product[] = [
 /* Queries                                                             */
 /* ------------------------------------------------------------------ */
 
-export function getProduct(slug: string): Product | undefined {
-  return PRODUCTS.find((p) => p.slug === slug);
+export function getProduct(slug: string, list: Product[] = PRODUCTS): Product | undefined {
+  return list.find((p) => p.slug === slug);
 }
 
 export type SortKey = "newest" | "price-asc" | "price-desc" | "rating" | "popular";
@@ -1008,65 +1008,65 @@ export type SectionFilter = {
   inStock?: boolean;
 };
 
-export function getBySection(section: string, f: SectionFilter = {}): Product[] {
-  let list = [...PRODUCTS];
-  if (section === "new-arrivals") list = list.filter((p) => p.isNew);
-  else if (section === "sale") list = list.filter((p) => p.isSale);
-  else list = list.filter((p) => p.section === section);
+export function getBySection(section: string, f: SectionFilter = {}, list: Product[] = PRODUCTS): Product[] {
+  let out = [...list];
+  if (section === "new-arrivals") out = out.filter((p) => p.isNew);
+  else if (section === "sale") out = out.filter((p) => p.isSale);
+  else out = out.filter((p) => p.section === section);
 
-  if (f.category) list = list.filter((p) => p.category === f.category);
+  if (f.category) out = out.filter((p) => p.category === f.category);
   if (f.query) {
     const q = f.query.toLowerCase().trim();
-    list = list.filter((p) =>
+    out = out.filter((p) =>
       `${p.name} ${p.categoryName} ${p.section} ${p.description}`.toLowerCase().includes(q),
     );
   }
   if (typeof f.maxPrice === "number" && Number.isFinite(f.maxPrice)) {
-    list = list.filter((p) => effectivePrice(p) <= (f.maxPrice as number));
+    out = out.filter((p) => effectivePrice(p) <= (f.maxPrice as number));
   }
   if (f.sizes && f.sizes.length > 0) {
     const want = new Set(f.sizes);
-    list = list.filter((p) => p.sizes.some((s) => want.has(s)));
+    out = out.filter((p) => p.sizes.some((s) => want.has(s)));
   }
-  if (f.inStock) list = list.filter((p) => p.variants.some((v) => v.stock > 0));
+  if (f.inStock) out = out.filter((p) => p.variants.some((v) => v.stock > 0));
 
   switch (f.sort) {
     case "price-asc":
-      list.sort((a, b) => effectivePrice(a) - effectivePrice(b));
+      out.sort((a, b) => effectivePrice(a) - effectivePrice(b));
       break;
     case "price-desc":
-      list.sort((a, b) => effectivePrice(b) - effectivePrice(a));
+      out.sort((a, b) => effectivePrice(b) - effectivePrice(a));
       break;
     case "rating":
-      list.sort((a, b) => b.rating - a.rating);
+      out.sort((a, b) => b.rating - a.rating);
       break;
     case "popular":
-      list.sort((a, b) => b.reviewCount - a.reviewCount);
+      out.sort((a, b) => b.reviewCount - a.reviewCount);
       break;
     case "newest":
-      list.sort((a, b) => Number(b.isNew) - Number(a.isNew));
+      out.sort((a, b) => Number(b.isNew) - Number(a.isNew));
       break;
     default:
       break;
   }
-  return list;
+  return out;
 }
 
-export function getNewArrivals(limit = 8): Product[] {
-  return PRODUCTS.filter((p) => p.isNew).slice(0, limit);
+export function getNewArrivals(limit = 8, list: Product[] = PRODUCTS): Product[] {
+  return list.filter((p) => p.isNew).slice(0, limit);
 }
 
-export function getSale(limit = 8): Product[] {
-  return PRODUCTS.filter((p) => p.isSale).slice(0, limit);
+export function getSale(limit = 8, list: Product[] = PRODUCTS): Product[] {
+  return list.filter((p) => p.isSale).slice(0, limit);
 }
 
-export function getFeatured(limit = 6): Product[] {
-  const feat = PRODUCTS.filter((p) => p.isFeatured);
-  return (feat.length > 0 ? feat : PRODUCTS).slice(0, limit);
+export function getFeatured(limit = 6, list: Product[] = PRODUCTS): Product[] {
+  const feat = list.filter((p) => p.isFeatured);
+  return (feat.length > 0 ? feat : list).slice(0, limit);
 }
 
-export function getRelated(product: Product, limit = 4): Product[] {
-  const others = PRODUCTS.filter((p) => p.slug !== product.slug);
+export function getRelated(product: Product, limit = 4, list: Product[] = PRODUCTS): Product[] {
+  const others = list.filter((p) => p.slug !== product.slug);
   const sameCat = others.filter((p) => p.category === product.category);
   const sameSec = others.filter((p) => p.section === product.section && p.category !== product.category);
   const rest = others.filter((p) => p.section !== product.section);
@@ -1088,11 +1088,11 @@ function isSubsequence(needle: string, haystack: string): boolean {
   return j === n.length;
 }
 
-export function searchProducts(q: string, limit = 12): Product[] {
+export function searchProducts(q: string, limit = 12, list: Product[] = PRODUCTS): Product[] {
   const query = normalize(q);
   if (!query) return [];
   const scored: { p: Product; score: number }[] = [];
-  for (const p of PRODUCTS) {
+  for (const p of list) {
     const hay = normalize(`${p.name} ${p.slug} ${p.categoryName} ${p.section} ${p.fabric}`);
     if (hay.includes(query)) {
       scored.push({ p, score: 0 });
@@ -1104,10 +1104,10 @@ export function searchProducts(q: string, limit = 12): Product[] {
   return scored.slice(0, limit).map((s) => s.p);
 }
 
-export function priceBounds(): { min: number; max: number } {
+export function priceBounds(list: Product[] = PRODUCTS): { min: number; max: number } {
   let min = Number.POSITIVE_INFINITY;
   let max = 0;
-  for (const p of PRODUCTS) {
+  for (const p of list) {
     const e = effectivePrice(p);
     if (e < min) min = e;
     if (e > max) max = e;
@@ -1125,8 +1125,8 @@ export function variantUnitPrice(p: Product, sku: string): number {
   return p.pricePaisa;
 }
 
-export function variantBySku(sku: string): { product: Product; variant: ProductVariant } | undefined {
-  for (const p of PRODUCTS) {
+export function variantBySku(sku: string, list: Product[] = PRODUCTS): { product: Product; variant: ProductVariant } | undefined {
+  for (const p of list) {
     const v = p.variants.find((x) => x.sku === sku);
     if (v) return { product: p, variant: v };
   }
@@ -1175,5 +1175,13 @@ export function asCatalogProduct(p: Product): CatalogProduct {
     reviewCount: p.reviewCount,
     fabricCare: p.care,
     fitNotes: p.fitNotes ?? "",
+    variants: p.variants.map((v) => ({
+      sku: v.sku,
+      size: v.size,
+      color: v.color,
+      colorHex: v.colorHex,
+      stock: v.stock,
+      pricePaisa: v.priceOverridePaisa ?? p.pricePaisa,
+    })),
   };
 }

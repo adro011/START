@@ -14,7 +14,7 @@ export default function WhatsAppOrder({ name, slug }: { name: string; slug: stri
       href={`https://wa.me/${number}?text=${text}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex w-full items-center justify-center gap-2 border border-[#172121]/25 px-4 py-3 text-[13px] font-semibold tracking-[0.12em] uppercase transition-colors hover:border-green-700 hover:text-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D5573B]"
+      className="inline-flex w-full items-center justify-center gap-2 border border-white/15 bg-gold px-4 py-3 text-[13px] font-semibold tracking-[0.12em] text-black uppercase transition-colors hover:bg-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
     >
       <span aria-hidden="true">💬</span> Order via WhatsApp
     </a>

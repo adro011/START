@@ -59,27 +59,27 @@ export default function TrustPanel() {
   return (
     <section
       aria-label="Why shop with us"
-      className="relative overflow-hidden bg-[#101414] px-5 py-6 text-[#FBF6F3] sm:px-6"
+      className="relative overflow-hidden bg-[#181818] px-5 py-6 text-[#F5F5F5] sm:px-6"
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-16 right-0 h-48 w-64 rounded-full bg-[#D5573B]/20 blur-[80px]"
+        className="pointer-events-none absolute -top-16 right-0 h-48 w-64 rounded-full bg-white/5 blur-[80px]"
       />
       <ul className="relative grid grid-cols-2 gap-x-4 gap-y-5 sm:grid-cols-3">
         {ITEMS.slice(0, 3).map((t) => (
           <li key={t.title} className="flex flex-col items-start gap-1.5">
-            <span className="text-[#F2CCC3]">{t.icon}</span>
+            <span className="text-steel">{t.icon}</span>
             <p className="text-[13.5px] leading-snug font-semibold">{t.title}</p>
-            <p className="text-[12px] leading-snug text-white/60">{t.copy}</p>
+            <p className="text-[12px] leading-snug text-ash">{t.copy}</p>
           </li>
         ))}
       </ul>
-      <ul className="relative mt-5 grid grid-cols-2 gap-x-4 border-t border-white/10 pt-5">
+      <ul className="relative mt-5 grid grid-cols-2 gap-x-4 border-t border-white/15 pt-5">
         {ITEMS.slice(3).map((t) => (
           <li key={t.title} className="flex flex-col items-start gap-1.5">
-            <span className="text-[#F2CCC3]">{t.icon}</span>
+            <span className="text-steel">{t.icon}</span>
             <p className="text-[13.5px] leading-snug font-semibold">{t.title}</p>
-            <p className="text-[12px] leading-snug text-white/60">{t.copy}</p>
+            <p className="text-[12px] leading-snug text-ash">{t.copy}</p>
           </li>
         ))}
       </ul>

@@ -13,12 +13,12 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between print:hidden">
-        <Link href={`/admin/orders/${order.id}`} className="text-sm text-stone-500 hover:underline">← {order.orderNo}</Link>
-        <button id="print-btn" type="button" className="rounded bg-stone-900 px-4 py-2 text-sm font-medium text-white">Print</button>
+        <Link href={`/admin/orders/${order.id}`} className="text-sm text-ash hover:underline">← {order.orderNo}</Link>
+        <button id="print-btn" type="button" className="rounded bg-gold px-4 py-2 text-sm font-medium text-black hover:bg-gold-dark">Print</button>
       </div>
 
       {/* Invoice */}
-      <section className="rounded-lg border border-stone-200 bg-white p-6 text-sm" aria-label="Invoice">
+      <section className="rounded-lg border border-stone-200 bg-white p-6 text-sm text-stone-900" aria-label="Invoice">
         <div className="flex justify-between gap-4">
           <div><p className="text-lg font-semibold">{brand}</p><p className="text-stone-500">Invoice · {order.orderNo}</p></div>
           <div className="text-right text-stone-500"><p>{new Date(order.createdAt).toLocaleDateString('en-BD')}</p><p>{order.paymentMethod} · {order.paymentStatus}</p></div>
@@ -44,7 +44,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
       </section>
 
       {/* Packing slip (no prices) */}
-      <section className="rounded-lg border border-dashed border-stone-300 bg-white p-6 text-sm" aria-label="Packing slip">
+      <section className="rounded-lg border border-dashed border-stone-300 bg-white p-6 text-sm text-stone-900" aria-label="Packing slip">
         <p className="text-lg font-semibold">Packing slip</p>
         <p className="text-stone-500">{order.orderNo} · {order.address.district} · {order.items.reduce((s, i) => s + i.qty, 0)} pcs</p>
         <ul className="mt-3 space-y-1">

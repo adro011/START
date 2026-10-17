@@ -342,11 +342,10 @@ export interface LowStockItem {
 }
 
 export const DEMO_LOW_STOCK: LowStockItem[] = [
-  { sku: 'DEMO-PANJABI01-WHI-M', productSlug: 'classic-cotton-panjabi-white', productName: 'Classic Cotton Panjabi — White', size: 'M', color: 'White', stock: 2 },
-  { sku: 'DEMO-JAMD10-EME-S', productSlug: 'jamdani-sharee-emerald', productName: 'Jamdani Sharee — Emerald', size: 'S', color: 'Emerald', stock: 3 },
-  { sku: 'DEMO-BPANJ18-CRE-S', productSlug: 'boys-panjabi-cream', productName: 'Boys Panjabi — Cream', size: 'S', color: 'Cream', stock: 1 },
-  { sku: 'DEMO-FATUA04-NAT-XL', productSlug: 'endi-fatua-natural', productName: 'Endi Fatua — Natural', size: 'XL', color: 'Natural', stock: 4 },
-  { sku: 'DEMO-TOPS15-POL-S', productSlug: 'ladies-blazer-sand', productName: 'Ladies Blazer — Sand', size: 'S', color: 'Sand', stock: 0 },
+  { sku: 'CCP-W-XL', productSlug: 'classic-cotton-panjabi-white', productName: 'Classic Cotton Panjabi', size: 'XL', color: 'White', stock: 3 },
+  { sku: 'MSR-W-L', productSlug: 'muslin-sharee-rose', productName: 'Muslin Sharee', size: 'L', color: 'Rose', stock: 3 },
+  { sku: 'BKM-M-4-5Y', productSlug: 'boys-kabli-mustard', productName: 'Boys Kabli Set', size: '4-5Y', color: 'Mustard', stock: 3 },
+  { sku: 'L3M-G-L', productSlug: 'lawn-3pcs-mint', productName: 'Lawn 3 Pcs Set', size: 'L', color: 'Mint', stock: 3 },
 ];
 
 export function getLowStock(threshold = 5): LowStockItem[] {
@@ -413,11 +412,11 @@ export interface TopProduct {
 }
 
 export const DEMO_TOP_PRODUCTS: TopProduct[] = [
-  { slug: 'classic-cotton-panjabi-white', name: 'Classic Cotton Panjabi — White', qty: 34, revenuePaisa: 10196600 },
-  { slug: 'jamdani-sharee-emerald', name: 'Jamdani Sharee — Emerald', qty: 21, revenuePaisa: 7347900 },
-  { slug: 'lawn-3pcs-mint', name: 'Lawn 3Pcs — Mint', qty: 18, revenuePaisa: 5938200 },
-  { slug: 'endi-fatua-natural', name: 'Endi Fatua — Natural', qty: 15, revenuePaisa: 2398500 },
-  { slug: 'boys-panjabi-cream', name: 'Boys Panjabi — Cream', qty: 12, revenuePaisa: 2278800 },
+  { slug: 'classic-cotton-panjabi-white', name: 'Classic Cotton Panjabi', qty: 34, revenuePaisa: 11896600 },
+  { slug: 'muslin-sharee-rose', name: 'Muslin Sharee', qty: 21, revenuePaisa: 18897900 },
+  { slug: 'lawn-3pcs-mint', name: 'Lawn 3 Pcs Set', qty: 18, revenuePaisa: 5938200 },
+  { slug: 'endi-fatua-natural', name: 'Endi Fatua', qty: 15, revenuePaisa: 4198500 },
+  { slug: 'boys-kabli-mustard', name: 'Boys Kabli Set', qty: 12, revenuePaisa: 2998800 },
 ];
 
 export const ORDER_STATUS_FLOW: OrderStatus[] = ['pending', 'confirmed', 'packed', 'shipped', 'delivered'];

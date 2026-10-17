@@ -10,6 +10,7 @@ import { SiteFooter } from "../components/site-footer";
 import { CartDrawer } from "../components/cart-drawer";
 import SearchPalette from "../components/search-palette";
 import { SwRegister } from "../components/sw-register";
+import { TabRefresh } from "../components/tab-refresh";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
@@ -67,7 +68,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       >
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[70] focus:bg-[#172121] focus:px-4 focus:py-2 focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[70] focus:bg-gold focus:px-4 focus:py-2 focus:text-black"
         >
           Skip to content
         </a>
@@ -81,6 +82,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <CartDrawer locale={locale} />
           <SearchPalette />
           <SwRegister />
+          <TabRefresh />
         </Providers>
         {/* Paper-grain overlay (`.grain` defined here; foundation owns globals.css).
             Same recipe as plan §4: SVG noise, ~3% opacity, pointer-events none. */}
