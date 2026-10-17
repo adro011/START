@@ -21,6 +21,16 @@ export const metadata: Metadata = {
   },
   description: SITE.description,
   metadataBase: new URL(SITE_URL),
+  icons: {
+    // Simplified chevron mark for the browser tab (the full framed logo is
+    // illegible at 16–32px). The full logo stays as apple-icon.png + PWA icons.
+    icon: [
+      { url: "/hero/icons/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/hero/icons/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/hero/icons/favicon-48.png", sizes: "48x48", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   openGraph: {
     type: "website",
     siteName: SITE.name,
