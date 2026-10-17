@@ -192,6 +192,12 @@ export default async function HomePage() {
     ][tiles.length];
     if (fb) tiles.push(fb);
   }
+  // Reorder category tiles per brand: 03 COATY, 04 SHIRT JACKET, 05 COAT
+  if (tiles.length >= 6) {
+    tiles[2] = { name: "COATY", href: "/men/coaty" };
+    tiles[3] = { name: "SHIRT JACKET", href: "/men/jackets" };
+    tiles[4] = { name: "COAT", href: "/men/coaty" };
+  }
 
   return (
     <div className="overflow-clip">
