@@ -1,6 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 88" role="img" aria-label="ABRAR-EXCLUSIVE wordmark">
-  <title>ABRAR-EXCLUSIVE</title>
-  <rect width="420" height="88" fill="none"/>
-  <text x="20" y="50" font-family="Georgia, 'Times New Roman', 'Noto Serif Bengali', serif" font-size="34" font-weight="500" letter-spacing="0.5" fill="#172121">ABRAR-EXCLUSIVE<tspan fill="#D5573B">.</tspan></text>
-  <text x="21" y="70" font-family="Verdana, 'Hind Siliguri', sans-serif" font-size="10.5" letter-spacing="3.4" fill="#7E9181">QUALITY · BEAUTY · ELEGANCE</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 180" role="img" aria-label="ABRAR">
+  <defs>
+    <linearGradient id="markGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#917300"/>
+    </linearGradient>
+    <linearGradient id="markGradCool" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7E9181"/>
+      <stop offset="100%" stop-color="#172121"/>
+    </linearGradient>
+  </defs>
+  <path d="M450 36 L368 132 L320 132 L450 36 Z" fill="url(#markGrad)"/>
+  <path d="M450 36 L532 132 L580 132 L450 36 Z" fill="url(#markGradCool)"/>
+  <path d="M320 132 L580 132 L450 52 Z" fill="#0A0A0F"/>
+  <text x="450" y="118" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" letter-spacing="8" fill="#F5F5F5">ABRAR</text>
 </svg>
