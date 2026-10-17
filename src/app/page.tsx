@@ -176,13 +176,14 @@ export default async function HomePage() {
   ]);
 
   const cats = liveCategories.length > 0 ? liveCategories : undefined;
+  type Tile = { name: string; href: string; img?: string };
   const tiles = (
     Array.isArray(cats) && cats.length > 0
-      ? cats.slice(0, 6).map((c) => ({
+      ? cats.slice(0, 6).map((c): Tile => ({
           name: c.name,
           href: `/${c.section}/${c.slug}`,
         }))
-      : []
+      : [] as Tile[]
   );
   while (tiles.length < 3) {
     const fb = [
@@ -192,11 +193,14 @@ export default async function HomePage() {
     ][tiles.length];
     if (fb) tiles.push(fb);
   }
-  // Reorder category tiles per brand: 03 COATY, 04 SHIRT JACKET, 05 COAT
+  // Reorder category tiles per brand: 01 PANJABI, 02 PANJABI PAJAMA SETS, 03 COATY, 04 SHIRT, 05 COAT, 06 JACKETS
   if (tiles.length >= 6) {
-    tiles[2] = { name: "COATY", href: "/men/coaty" };
-    tiles[3] = { name: "SHIRT JACKET", href: "/men/jackets" };
-    tiles[4] = { name: "COAT", href: "/men/coaty" };
+    tiles[0] = { name: "PANJABI", href: "/men/panjabi", img: "/hero/men.jpg" };
+    tiles[1] = { name: "PANJABI PAJAMA SETS", href: "/men/panjabi-pajama-sets", img: "/hero/men.jpg" };
+    tiles[2] = { name: "COATY", href: "/men/coaty", img: "/hero/men.jpg" };
+    tiles[3] = { name: "SHIRT", href: "/men/shirts", img: "/hero/men.jpg" };
+    tiles[4] = { name: "COAT", href: "/men/coaty", img: "/hero/men.jpg" };
+    tiles[5] = { name: "JACKETS", href: "/men/jackets", img: "/hero/men.jpg" };
   }
 
   return (
@@ -393,6 +397,15 @@ export default async function HomePage() {
                 className="lift group relative overflow-hidden border border-[#172121]/10 bg-[#172121] px-6 py-10 sm:py-14"
               >
                 <Link href={t.href} className="block" data-cursor="Open">
+                  {t.img && (
+                    <Image
+                      src={t.img}
+                      alt={`${t.name} collection`}
+                      className="mb-3 block h-48 w-full object-cover object-center opacity-90 transition-all duration-700 group-hover:opacity-100"
+                      loading="lazy"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  )}
                   <span aria-hidden="true" className="text-ghost pointer-events-none absolute -right-2 -bottom-6 text-[96px] leading-none font-semibold">
                     {String(i + 1).padStart(2, "0")}
                   </span>
