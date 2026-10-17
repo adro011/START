@@ -1,4 +1,4 @@
--- brand-store 0010: Shop Registry schema.
+-- brand-store 0011: Shop Registry schema.
 -- Soft-delete everywhere (deleted_at); no ON DELETE CASCADE on registry FKs.
 -- Max 5 images per registry product (trigger + unique product_id+position).
 -- Idempotent: IF NOT EXISTS / CREATE OR REPLACE / DROP TRIGGER IF EXISTS.
