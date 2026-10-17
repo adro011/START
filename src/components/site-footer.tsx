@@ -48,12 +48,6 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
     }
   }
 
-  function switchLocale(next: Locale) {
-    if (next === locale) return;
-    document.cookie = `locale=${next}; path=/; max-age=31536000`;
-    window.location.reload();
-  }
-
   return (
     <footer className="relative overflow-hidden bg-[#181818] text-[#F5F5F5]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
@@ -229,24 +223,6 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
               ))}
             </span>
           </p>
-          <div className="flex items-center gap-2" role="group" aria-label={d.language}>
-            <span className="tracking-[0.1em] uppercase">{d.language}:</span>
-            {(["en", "bn"] as const).map((l) => (
-              <button
-                key={l}
-                type="button"
-                onClick={() => switchLocale(l)}
-                aria-pressed={locale === l}
-                className={
-                  locale === l
-                    ? "border border-[#FFC000] px-2.5 py-1 font-semibold text-gold"
-                    : "border border-white/15 px-2.5 py-1 text-ash hover:text-gold"
-                }
-              >
-                {l === "en" ? "EN" : "বাং"}
-              </button>
-            ))}
-          </div>
           <p>
             © {new Date().getFullYear()} {SITE.name}. {d.footer_rights}
           </p>
