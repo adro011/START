@@ -32,9 +32,11 @@ export default async function RegistryProductPage({
   params: Promise<{ id: string }>;
   searchParams?: Promise<Record<string, string | undefined>>;
 }) {
-  const session = await requireStaff("/registry/products/[id]");
   const sp = (await searchParams) ?? {};
   const { id } = await params;
+  // Resolve the real path first so an expired session returns here, not to a
+  // literal "[id]" target.
+  const session = await requireStaff(`/registry/products/${id}`);
   const product = await getRegistryProduct(id);
   if (!product) notFound();
 
