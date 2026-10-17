@@ -596,30 +596,13 @@ html.lenis body {
    inactive one stays visible in Ash. Geometry is variable-driven so one
    media query rescales the whole control. */
 .lang-toggle {
-  --lang-h: 60px;
-  --lang-w: 160px;
-  --lang-knob: 40px;
-  --lang-left: 10px;
-  --lang-right: 106px;
+  --lang-h: 44px;
+  --lang-w: 116px;
+  --lang-knob: 30px;
+  --lang-left: 6px;
+  --lang-right: 80px;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-}
-
-.lang-code {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: 0.96px;
-  text-transform: uppercase;
-  color: var(--color-ash);
-  transition: color 300ms ease;
-}
-
-.lang-toggle[data-lang="bn"] .lang-code-bn,
-.lang-toggle[data-lang="en"] .lang-code-en {
-  color: var(--color-gold-text);
 }
 
 .lang-pill {
@@ -679,7 +662,7 @@ html.lenis body {
   transform: translateY(-50%);
   width: var(--lang-knob);
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0.225px;
@@ -694,7 +677,7 @@ html.lenis body {
   left: var(--lang-left);
   font-family: "LamboType", "Noto Sans Bengali", Vrinda, "Bangla MN",
     "Hind Siliguri", var(--font-display);
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .lang-pill-txt-en {
@@ -709,17 +692,17 @@ html.lenis body {
 
 @media (max-width: 640px) {
   .lang-toggle {
-    --lang-h: 48px;
-    --lang-w: 132px;
-    --lang-knob: 32px;
-    --lang-left: 8px;
-    --lang-right: 92px;
+    --lang-h: 38px;
+    --lang-w: 96px;
+    --lang-knob: 26px;
+    --lang-left: 5px;
+    --lang-right: 65px;
   }
-  .lang-toggle .lang-code {
-    display: none;
+  .lang-pill-txt {
+    font-size: 8px;
   }
   .lang-pill-txt-bn {
-    font-size: 10px;
+    font-size: 9px;
   }
 }
 

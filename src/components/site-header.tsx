@@ -112,12 +112,20 @@ export function SiteHeader() {
               </HeaderIcon>
             </span>
             <span className="hidden sm:block">
-              <HeaderIcon label={d.wishlist} href="/wishlist">
+              <HeaderIcon label={d.wishlist} href="/account/wishlist">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinejoin="round" className="h-[21px] w-[21px]" aria-hidden="true">
                   <path d="M12 20.5C7 16.5 3.5 13.3 3.5 9.6 3.5 7 5.5 5 8 5c1.6 0 3.1.8 4 2.1C12.9 5.8 14.4 5 16 5c2.5 0 4.5 2 4.5 4.6 0 3.7-3.5 6.9-8.5 10.9Z" />
                 </svg>
               </HeaderIcon>
             </span>
+            <Link
+              href="/registry/login"
+              aria-label="Shop registry"
+              className="flex items-center gap-1.5 rounded-xl border border-gold border-l-4 border-cyan-pulse px-3 py-2 text-[12px] font-semibold tracking-wide text-gold uppercase transition-all duration-300 hover:bg-gold hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            >
+              Shop registry
+            </Link>
             <HeaderIcon
               label={`${d.cart} (${count})`}
               badge={count}

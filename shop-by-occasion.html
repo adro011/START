@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop by Occasion — ABRAR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --color-bg: #17110f;
+      --color-caption: #0c0807;
+      --color-text-main: #f6efe6;
+      --color-text-secondary: #e6dccf;
+      --color-gold: #d9b26f;
+
+      --font-heading: "Cormorant Garamond", "Times New Roman", "Noto Serif Bengali", serif;
+      --font-body: "Jost", "Hind Siliguri", "Verdana", sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    body {
+      background: var(--color-bg);
+      color: var(--color-text-main);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Section ── */
+    .occasion-section {
+      background: var(--color-bg);
+      padding: 44px 80px;
+    }
+
+    .occasion-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    .occasion-eyebrow {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-gold);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .occasion-heading {
+      font-family: var(--font-heading);
+      font-size: 52px;
+      font-weight: 500;
+      line-height: 1.05;
+      color: var(--color-text-main);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .occasion-intro {
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--color-text-secondary);
+      margin-bottom: 28px;
+    }
+
+    /* ── Grid ── */
+    .occasion-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    /* ── Card (whole card is one link) ── */
+    .occasion-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .occasion-card:focus-visible {
+      outline: 2px solid var(--color-gold);
+      outline-offset: 3px;
+    }
+
+    /* ── Photo ── */
+    .occasion-photo-wrap {
+      position: relative;
+      height: 242px;
+      overflow: hidden;
+    }
+
+    .occasion-photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 30%;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .occasion-card:focus-visible .occasion-photo-wrap img,
+    .occasion-card:hover .occasion-photo-wrap img {
+      transform: scale(1.04);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .occasion-photo-wrap img {
+        transition: none;
+      }
+      .occasion-card:focus-visible .occasion-photo-wrap img,
+      .occasion-card:hover .occasion-photo-wrap img {
+        transform: none;
+      }
+    }
+
+    /* ── Caption bar ── */
+    .occasion-caption {
+      background: var(--color-caption);
+      padding: 18px 20px;
+      border-top: 3px solid var(--color-gold);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .occasion-card:focus-visible .occasion-caption,
+    .occasion-card:hover .occasion-caption {
+      border-top-width: 5px;
+    }
+
+    .occasion-caption-row1 {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .occasion-name {
+      font-family: var(--font-heading);
+      font-size: 36px;
+      font-weight: 600;
+      color: var(--color-text-main);
+      line-height: 1.1;
+    }
+
+    .occasion-number {
+      font-family: var(--font-body);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      color: var(--color-gold);
+    }
+
+    .occasion-tagline {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+
+    .occasion-shop {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      color: var(--color-gold);
+      text-decoration: none;
+      margin-top: auto;
+    }
+
+    .occasion-shop:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .occasion-section {
+        padding: 36px 40px;
+      }
+      .occasion-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      .occasion-heading {
+        font-size: 42px;
+      }
+      .occasion-intro {
+        margin-bottom: 24px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .occasion-section {
+        padding: 32px 20px;
+      }
+      .occasion-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .occasion-heading {
+        font-size: 36px;
+      }
+      .occasion-eyebrow {
+        font-size: 11px;
+        margin-bottom: 6px;
+      }
+      .occasion-intro {
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      .occasion-name {
+        font-size: 28px;
+      }
+      .occasion-photo-wrap {
+        height: 200px;
+      }
+      .occasion-caption {
+        padding: 14px 16px;
+        gap: 6px;
+      }
+      .occasion-shop {
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="occasion-section" aria-labelledby="occasion-heading">
+    <div class="occasion-inner">
+      <h2 id="occasion-heading" class="occasion-heading">Shop by occasion</h2>
+      <p class="occasion-eyebrow">Dress for the day</p>
+      <p class="occasion-intro">
+        Eid mornings, wedding evenings, and everything in between.
+      </p>
+
+      <div class="occasion-grid">
+
+        <!-- 01 Eid -->
+        <a
+          href="/collections/eid"
+          class="occasion-card"
+          aria-label="Shop Eid collection — Moonlit whites and golds"
+        >
+          <div class="occasion-photo-wrap">
+            <img
+              src="[IMAGE-URL]"
+              alt="Model wearing Eid festive heritage wear in cream and gold tones"
+              width="400"
+              height="242"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="occasion-caption">
+            <div class="occasion-caption-row1">
+              <span class="occasion-name">Eid</span>
+              <span class="occasion-number">01</span>
+            </div>
+            <span class="occasion-tagline">Moonlit whites and golds</span>
+            <span class="occasion-shop">SHOP NOW &rarr;</span>
+          </div>
+        </a>
+
+        <!-- 02 Wedding -->
+        <a
+          href="/collections/wedding"
+          class="occasion-card"
+          aria-label="Shop Wedding collection — Made for the moment"
+        >
+          <div class="occasion-photo-wrap">
+            <img
+              src="[IMAGE-URL]"
+              alt="Couple in formal heritage wedding attire"
+              width="400"
+              height="242"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="occasion-caption">
+            <div class="occasion-caption-row1">
+              <span class="occasion-name">Wedding</span>
+              <span class="occasion-number">02</span>
+            </div>
+            <span class="occasion-tagline">Made for the moment</span>
+            <span class="occasion-shop">SHOP NOW &rarr;</span>
+          </div>
+        </a>
+
+        <!-- 03 Everyday -->
+        <a
+          href="/collections/everyday"
+          class="occasion-card"
+          aria-label="Shop Everyday collection — Breathable, reworn often"
+        >
+          <div class="occasion-photo-wrap">
+            <img
+              src="[IMAGE-URL]"
+              alt="Model wearing breathable cotton everyday kurta"
+              width="400"
+              height="242"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="occasion-caption">
+            <div class="occasion-caption-row1">
+              <span class="occasion-name">Everyday</span>
+              <span class="occasion-number">03</span>
+            </div>
+            <span class="occasion-tagline">Breathable, reworn often</span>
+            <span class="occasion-shop">SHOP NOW &rarr;</span>
+          </div>
+        </a>
+
+        <!-- 04 Winter -->
+        <a
+          href="/collections/winter"
+          class="occasion-card"
+          aria-label="Shop Winter collection — Layers with intention"
+        >
+          <div class="occasion-photo-wrap">
+            <img
+              src="[IMAGE-URL]"
+              alt="Model wearing layered warm winter garments"
+              width="400"
+              height="242"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="occasion-caption">
+            <div class="occasion-caption-row1">
+              <span class="occasion-name">Winter</span>
+              <span class="occasion-number">04</span>
+            </div>
+            <span class="occasion-tagline">Layers with intention</span>
+            <span class="occasion-shop">SHOP NOW &rarr;</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

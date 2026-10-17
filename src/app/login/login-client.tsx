@@ -275,19 +275,16 @@ export default function LoginClient({
           )}
         </div>
 
-        {/* ── Bottom-left small-font admin entry (as requested) ── */}
+        {/* ── Bottom-left shop registry entry (blue side-left) ── */}
         <div className="absolute bottom-4 left-5 sm:left-8">
           {mode === "account" ? (
             <button
               type="button"
-              onClick={() => {
-                router.replace("/login?mode=admin", { scroll: false });
-                setMode("admin");
-              }}
-              className="text-[11px] tracking-wide text-ash underline-offset-4 hover:text-gold hover:underline focus-visible:outline-2 focus-visible:outline-[#FFC000]"
-              aria-label="Shop registry admin log in"
+              onClick={() => router.push("/registry/login")}
+              className="text-[11px] tracking-wide text-cyan-pulse underline-offset-4 hover:text-gold hover:underline focus-visible:outline-2 focus-visible:outline-cyan-pulse"
+              aria-label="Shop registry log in"
             >
-              Shop registry · Admin log in
+              Shop registry
             </button>
           ) : (
             <span className="text-[11px] tracking-wide text-ash">Shop registry · authorised staff only</span>

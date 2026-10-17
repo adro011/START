@@ -30,10 +30,6 @@ export function LanguageSwitch({ locale }: { locale: Locale }) {
 
   return (
     <div className="lang-toggle" data-lang={locale}>
-      <span className="lang-code lang-code-bn" aria-hidden="true">
-        বাং
-      </span>
-
       <input
         id={id}
         type="checkbox"
@@ -46,17 +42,13 @@ export function LanguageSwitch({ locale }: { locale: Locale }) {
 
       <label htmlFor={id} className="lang-pill">
         <span className="lang-pill-txt lang-pill-txt-bn" aria-hidden="true">
-          বাংলা
+          বাং
         </span>
         <span className="lang-pill-txt lang-pill-txt-en" aria-hidden="true">
           ENG
         </span>
         <span className="lang-knob" aria-hidden="true" />
       </label>
-
-      <span className="lang-code lang-code-en" aria-hidden="true">
-        ENG
-      </span>
     </div>
   );
 }

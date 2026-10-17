@@ -115,7 +115,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
     { key: "home", label: d.home, href: "/", icon: "M3 11.5 12 4l9 7.5M5.5 10.5V20h13v-9.5" },
     { key: "shop", label: d.shop, action: () => setOpen(true), icon: "M4 7h16M4 7v13h16V7M4 7l1.5-3h13L20 7M10 11a2 2 0 0 0 4 0" },
     { key: "search", label: d.search, action: openSearch, icon: "M11 5a6 6 0 1 0 0 12 6 6 0 0 0 0-12ZM20 20l-4.2-4.2" },
-    { key: "wishlist", label: d.wishlist, href: "/wishlist", icon: "M12 20.5C7 16.5 3.5 13.3 3.5 9.6 3.5 7 5.5 5 8 5c1.6 0 3.1.8 4 2.1C12.9 5.8 14.4 5 16 5c2.5 0 4.5 2 4.5 4.6 0 3.7-3.5 6.9-8.5 10.9Z" },
+    { key: "wishlist", label: d.wishlist, href: "/account/wishlist", icon: "M12 20.5C7 16.5 3.5 13.3 3.5 9.6 3.5 7 5.5 5 8 5c1.6 0 3.1.8 4 2.1C12.9 5.8 14.4 5 16 5c2.5 0 4.5 2 4.5 4.6 0 3.7-3.5 6.9-8.5 10.9Z" },
   ] as const;
 
   return (
