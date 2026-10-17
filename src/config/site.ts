@@ -6,13 +6,13 @@
  * (plan.md §0: brand placeholder lives in src/config/site.ts)
  */
 
-export const BRAND_NAME = "ABRAR-EXCLUSIVE";
+export const BRAND_NAME = "ABRAR";
 
 export const SITE = {
   name: BRAND_NAME,
   tagline: "Quality, beauty and elegance",
   description:
-    "ABRAR-EXCLUSIVE is a modern Bangladeshi heritage label — panjabis, sharees, kurtas and kids' wear in breathable fabrics, cut for real life and made to be reworn.",
+    "ABRAR is a modern Bangladeshi heritage label — panjabis, sharees, kurtas and kids' wear in breathable fabrics, cut for real life and made to be reworn.",
   phone: "+8801XXXXXXXXX",
   whatsapp: "+8801XXXXXXXXX",
   /** Digits-only WhatsApp for wa.me links (derived, keeps placeholder in one place). */

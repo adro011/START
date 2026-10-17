@@ -1,17 +1,43 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import {
+  asCatalogProduct,
   getNewArrivals,
   getSale,
   getFeatured,
-  CATEGORIES,
 } from "@/lib/catalog";
+import { getLiveCategories, getLiveProducts } from "@/lib/storefront";
 import type { CatalogProduct } from "@/types/catalog";
 import { ProductCard } from "../components/product-card";
 import Reveal from "../components/reveal";
 import Magnetic from "../components/magnetic";
 import { formatBDT } from "../lib/format";
-import { FREE_SHIP_THRESHOLD_PAISA } from "@/config/site";
+import { FREE_SHIP_THRESHOLD_PAISA, SITE } from "@/config/site";
+
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    alternates: { canonical: "/" },
+    openGraph: { url: "/" },
+  };
+}
+
+const ORG_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE.name,
+  slogan: SITE.tagline,
+  url: SITE_URL,
+  sameAs: Object.values(SITE.socials),
+};
+const SITE_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE.name,
+  url: SITE_URL,
+};
 
 async function safe<T>(fn: () => T | Promise<T>, fallback: T): Promise<T> {
   try {
@@ -22,8 +48,8 @@ async function safe<T>(fn: () => T | Promise<T>, fallback: T): Promise<T> {
 }
 
 /** Catalog lib products satisfy the card's needs; bridge the two product types. */
-function asCard(p: { slug: string }): CatalogProduct {
-  return p as unknown as CatalogProduct;
+function asCard(p: Parameters<typeof asCatalogProduct>[0]): CatalogProduct {
+  return asCatalogProduct(p);
 }
 
 function SectionHeading({
@@ -83,25 +109,25 @@ const HERO = [
   {
     key: "men",
     index: "01",
-    title: "Men",
+    title: "MAN",
     href: "/men",
-    img: "/hero/men.jpg",
+    img: "/library/men.png",
     bg: "linear-gradient(150deg,#000000 0%,#172121 45%,#3a2a1c 75%,#7D451B 100%)",
   },
   {
     key: "women",
     index: "02",
-    title: "Women",
+    title: "WOMEN",
     href: "/women",
-    img: "/hero/women.jpg",
+    img: "/library/women.png",
     bg: "linear-gradient(150deg,#000000 0%,#3d1c12 45%,#7D451B 75%,#D5573B 100%)",
   },
   {
     key: "kids",
     index: "03",
-    title: "Kids",
+    title: "CHILDREN",
     href: "/kids",
-    img: "/hero/kids.jpg",
+    img: "/library/children.png",
     bg: "linear-gradient(150deg,#000000 0%,#172121 45%,#2e4238 75%,#7E9181 100%)",
   },
 ] as const;
@@ -134,15 +160,25 @@ const TESTIMONIALS = [
  * Server component; catalog lib supplies products.
  */
 export default async function HomePage() {
+  // Live-first: Supabase products/categories, local TS mirror as fallback
+  // (offline builds, missing env). Same helpers, source list injected.
+  const [{ products: liveProducts }, { categories: liveCategories }] = await Promise.all([
+    safe(() => getLiveProducts(), { products: [], live: false }),
+    safe(() => getLiveCategories(), { categories: [], live: false }),
+  ]);
+  // Live-first: Supabase products, local TS mirror as fallback (offline
+  // builds, missing env). `undefined` selects the catalog default (local).
+  const liveList = liveProducts.length > 0 ? liveProducts : undefined;
   const [arrivals, sale, featured] = await Promise.all([
-    safe(() => getNewArrivals(), []),
-    safe(() => getSale(), []),
-    safe(() => getFeatured(), []),
+    safe(() => getNewArrivals(8, liveList), []),
+    safe(() => getSale(8, liveList), []),
+    safe(() => getFeatured(6, liveList), []),
   ]);
 
+  const cats = liveCategories.length > 0 ? liveCategories : undefined;
   const tiles = (
-    Array.isArray(CATEGORIES) && CATEGORIES.length > 0
-      ? CATEGORIES.slice(0, 6).map((c) => ({
+    Array.isArray(cats) && cats.length > 0
+      ? cats.slice(0, 6).map((c) => ({
           name: c.name,
           href: `/${c.section}/${c.slug}`,
         }))
@@ -159,6 +195,62 @@ export default async function HomePage() {
 
   return (
     <div className="overflow-clip">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_JSON_LD) }} />
+      {/* ── Gucci-style cover: full-viewport slow-zoom portrait, grade, giant wordmark ── */}
+      <section aria-label="New collection" className="cover relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-black text-center text-[#FBF6F3]">
+        <div aria-hidden="true" className="cover-media absolute inset-0">
+          <Image
+            src="/hero/women.jpg"
+            alt=""
+            fill
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+            className="object-cover object-[50%_18%]"
+          />
+        </div>
+        <div aria-hidden="true" className="grade-cine absolute inset-0" />
+        <div aria-hidden="true" className="paper-grain absolute inset-0 opacity-60" />
+
+        <div className="relative mx-auto max-w-[1100px] px-6 pt-16 pb-24">
+          <p className="cover-eyebrow hero-text-rise text-[#F2CCC3]" style={{ animationDelay: "150ms" }}>
+            New Collection — Eid ’26 Edit
+          </p>
+          <h1 className="cover-title hero-text-rise mt-5 uppercase" style={{ animationDelay: "300ms" }}>
+            ABRAR
+          </h1>
+          <p className="hero-text-rise mt-5 text-[13px] font-medium tracking-[0.32em] text-white/75 uppercase" style={{ animationDelay: "450ms" }}>
+            Quality · Beauty · Elegance
+          </p>
+          <div className="hero-text-rise mt-9 flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: "600ms" }}>
+            <Magnetic strength={10}>
+              <Link
+                href="/new-arrivals"
+                className="inline-flex items-center gap-3 bg-[#FBF6F3] px-9 py-4 text-[12px] font-semibold tracking-[0.2em] text-[#172121] uppercase transition-colors duration-300 hover:bg-clay hover:text-white"
+              >
+                Shop new arrivals <span aria-hidden="true">→</span>
+              </Link>
+            </Magnetic>
+            <Link
+              href="/women"
+              className="link-lux px-2 py-4 text-[12px] font-semibold tracking-[0.2em] text-white/85 uppercase hover:text-white"
+            >
+              Explore women
+            </Link>
+          </div>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between px-5 pb-6 sm:px-8">
+          <p className="text-[11px] font-semibold tracking-[0.22em] text-white/50 uppercase">Dhaka — Worldwide</p>
+          <div className="flex flex-col items-center gap-2 text-[11px] font-semibold tracking-[0.22em] text-white/60 uppercase">
+            <span>Scroll</span>
+            <span className="cue-line block h-10 w-px bg-white/20"><span className="block h-full w-px bg-[#F2CCC3]" /></span>
+          </div>
+          <p className="hidden text-[11px] font-semibold tracking-[0.22em] text-white/50 uppercase sm:block">N°01 — The Cover</p>
+        </div>
+      </section>
+
       {/* ── Cinematic hero: 100dvh, split-type entrance, depth orbs ── */}
       <section aria-label="Shop by section" className="relative bg-black text-[#FBF6F3]">
         {/* ambient orbs */}
@@ -172,7 +264,7 @@ export default async function HomePage() {
           {/* eyebrow */}
           <div className="flex items-center justify-between px-1 pt-4 pb-3 sm:px-2">
             <p className="text-[12px] font-semibold tracking-[0.12em] text-[#F2CCC3]/90 uppercase">Quality, beauty and elegance — Made in Bangladesh</p>
-            <p className="hidden text-[12px] tracking-[0.12em] text-white/45 uppercase sm:block">Est. Dhaka · Eid ’26 edit live</p>
+            <p className="hidden text-[12px] tracking-[0.12em] text-white/60 uppercase sm:block">Est. Dhaka · Eid ’26 edit live</p>
           </div>
 
           <div className="hero-shell flex min-h-[86dvh] flex-col gap-3 pb-3 md:flex-row">
@@ -188,8 +280,8 @@ export default async function HomePage() {
                   src={h.img}
                   alt={`${h.title} collection`}
                   fill
+                  loading="lazy"
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  priority={h.key === "women"}
                   className="object-cover opacity-90 transition-all duration-700 group-hover:scale-[1.06]"
                 />
                 <span className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/5" aria-hidden="true" />

@@ -50,6 +50,62 @@ body {
   animation: hero-text-rise 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* ── Gucci-style full-viewport cover: fade in, settle 1.14→1.02,
+   then an 18s perceptual slow-drift (transform/opacity only) ── */
+@keyframes cover-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes cover-settle {
+  from { transform: scale(1.14); }
+  to { transform: scale(1.02); }
+}
+@keyframes cover-drift {
+  from { transform: scale(1.02); }
+  to { transform: scale(1.1); }
+}
+.cover {
+  animation: cover-fade 1.2s ease-out both;
+}
+.cover-media img {
+  animation:
+    cover-settle 2.4s cubic-bezier(0.22, 1, 0.36, 1) both,
+    cover-drift 18s ease-in-out 2.4s infinite alternate;
+  will-change: transform;
+}
+/* Cinematic grade, interpolated in OKLCH (no muddy sRGB midpoint):
+   ink shadows, warm terracotta highlight wash, bottom-weighted for type */
+.grade-cine {
+  background:
+    linear-gradient(0deg in oklch, oklch(0.16 0.02 30 / 0.94), oklch(0.16 0.02 30 / 0.28) 46%, transparent 72%),
+    linear-gradient(180deg in oklch, oklch(0.16 0.02 30 / 0.6), transparent 32%),
+    radial-gradient(120% 90% at 50% 118% in oklch, oklch(0.58 0.15 45 / 0.38), transparent 62%);
+}
+.cover-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(2.1rem, 7.5vw, 5.75rem);
+  letter-spacing: 0.05em;
+  line-height: 0.95;
+  text-wrap: balance;
+}
+.cover-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+@media (min-width: 640px) {
+  .cover-eyebrow {
+    letter-spacing: 0.42em;
+  }
+}
+/* Preloader letter-stagger (JS sets per-char delay, ~30ms steps) */
+.preloader-word .ch {
+  display: inline-block;
+  animation: preloader-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Marquee strip (announcement bar) */
 @keyframes marquee {
   from {
@@ -310,12 +366,16 @@ html.lenis body {
   background-size: 0% 1px;
   background-repeat: no-repeat;
   background-position: 0 100%;
-  transition: background-size 450ms var(--ease-lux), color 250ms ease;
+  transition: background-size 500ms var(--ease-lux), color 220ms var(--ease-lux), transform 120ms var(--ease-lux);
   text-underline-offset: 5px;
+  display: inline-block;
 }
 .link-lux:hover,
 .group:hover .link-lux {
   background-size: 100% 1px;
+}
+.link-lux:active {
+  transform: scale(0.96);
 }
 
 /* Frosted glass */
@@ -413,6 +473,17 @@ html.lenis body {
   .lift:hover {
     transform: translateY(-5px);
   }
+  .lift:active {
+    transform: translateY(-2px) scale(0.985);
+  }
+}
+
+/* Pressed state for buttons / interactive links on click */
+button:active,
+a:active,
+[role="button"]:active {
+  transform: scale(0.97);
+  transition: transform 100ms var(--ease-lux);
 }
 
 /* Outlined ghost numerals */
