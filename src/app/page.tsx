@@ -13,7 +13,6 @@ import { ProductCard } from "../components/product-card";
 import Reveal from "../components/reveal";
 import Magnetic from "../components/magnetic";
 import InstagramGrid from "../components/instagram-grid";
-import CategoryShowcase from "../components/category-showcase";
 import { formatBDT } from "../lib/format";
 import { FREE_SHIP_THRESHOLD_PAISA, SITE } from "@/config/site";
 
@@ -346,9 +345,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* ── Category showcase ─────────────────────────── */}
-      <CategoryShowcase />
 
       {/* ── Brand statement ─────────────────────────── */}
       <section aria-label="House statement" className="mx-auto max-w-[1280px] px-4 pt-16 pb-4 sm:px-6">
