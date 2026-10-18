@@ -1003,6 +1003,30 @@ a:active,
   }
 }
 
+/* Category showcase: responsive stacking + reduced motion */
+@media (max-width: 700px) {
+  .category-showcase > div {
+    flex-direction: column !important;
+  }
+  .category-showcase [data-parallax] {
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .category-showcase [data-parallax] {
+    transform: none !important;
+    animation: none !important;
+  }
+  .category-showcase [data-overlay],
+  .category-showcase [data-title],
+  .category-showcase [data-cta],
+  .category-showcase [data-glaze] {
+    transition: none !important;
+  }
+}
+
 /* Standalone variant: the same gold underline reveal works directly on an
    input/textarea that has no `.textInputWrapper` parent (admin/registry forms).
    The gold bar is a bottom-anchored background gradient whose width animates. */
