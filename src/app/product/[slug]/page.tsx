@@ -14,6 +14,8 @@ import { getLiveProducts, getLiveReviews } from "@/lib/storefront";
 import { formatBDT } from "@/lib/format";
 import { ProductCard } from "@/components/product-card";
 
+export const revalidate = 300;
+
 async function liveList() {
   // Live-first (Supabase) with local fallback — never throws (offline builds).
   try {

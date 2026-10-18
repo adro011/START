@@ -9,6 +9,8 @@ import Reveal from "@/components/reveal";
 import { CATEGORIES, asCatalogProduct, getBySection, isValidSection, priceBounds } from "@/lib/catalog";
 import { getLiveCategories, getLiveProducts } from "@/lib/storefront";
 
+export const revalidate = 300;
+
 export function generateStaticParams() {
   return [{ section: "men" }, { section: "women" }, { section: "kids" }, { section: "new-arrivals" }, { section: "sale" }];
 }

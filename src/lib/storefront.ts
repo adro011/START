@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import {
   CATEGORIES,
   PRODUCTS,
@@ -138,7 +139,7 @@ export interface LiveReview {
 type ServerSupabase = NonNullable<Awaited<ReturnType<typeof createClient>>>;
 
 async function fetchCategories(): Promise<Category[] | null> {
-  const supabase: ServerSupabase | null = await createClient();
+  const supabase = createPublicClient();
   if (!supabase) return null;
   const { data, error } = await supabase
     .from("categories")
@@ -175,7 +176,7 @@ async function fetchCategories(): Promise<Category[] | null> {
 }
 
 async function fetchProducts(): Promise<Product[] | null> {
-  const supabase: ServerSupabase | null = await createClient();
+  const supabase = createPublicClient();
   if (!supabase) return null;
   const { data: prows, error: perror } = await supabase
     .from("products")
@@ -290,7 +291,7 @@ async function fetchProducts(): Promise<Product[] | null> {
 }
 
 async function fetchLiveReviews(productSlug: string): Promise<LiveReview[] | null> {
-  const supabase: ServerSupabase | null = await createClient();
+  const supabase = createPublicClient();
   if (!supabase) return null;
   // Resolve slug → product id via the products table, then approved reviews only.
   const { data: prow, error: perror } = await supabase
@@ -367,7 +368,7 @@ export const getLiveSearch = cache(
     const trimmed = q.trim();
     if (!trimmed) return { products: [], live: false };
     try {
-      const supabase: ServerSupabase | null = await createClient();
+      const supabase = createPublicClient();
       if (!supabase) throw new Error("no supabase client");
       const { data, error } = await supabase.rpc("search_products", {
         q: trimmed,

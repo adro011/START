@@ -8,6 +8,8 @@ import { ProductCard } from "@/components/product-card";
 import { CATEGORIES, asCatalogProduct, getBySection, getCategory, isValidSection, priceBounds } from "@/lib/catalog";
 import { getLiveCategories, getLiveProducts } from "@/lib/storefront";
 
+export const revalidate = 300;
+
 export async function generateStaticParams() {
   // Live-first so new Supabase categories get static pages; local fallback
   // keeps offline builds green.
