@@ -144,13 +144,13 @@ a[href^="mailto:"] {
   display: block;
   backface-visibility: hidden;
 }
-/* Cinematic grade, interpolated in OKLCH (no muddy sRGB midpoint):
-   ink shadows, warm terracotta highlight wash, bottom-weighted for type */
+/* Legibility scrim only — the hero photo must read at full brightness.
+   A soft radial sits behind the centred wordmark and a faint gradient anchors
+   the bottom edge; everything above the midpoint is left untouched. */
 .grade-cine {
   background:
-    linear-gradient(0deg in oklch, oklch(0.16 0.02 30 / 0.94), oklch(0.16 0.02 30 / 0.28) 46%, transparent 72%),
-    linear-gradient(180deg in oklch, oklch(0.16 0.02 30 / 0.6), transparent 32%),
-    radial-gradient(120% 90% at 50% 118% in oklch, oklch(0.58 0.15 45 / 0.38), transparent 62%);
+    radial-gradient(58% 42% at 50% 52%, rgba(0, 0, 0, 0.38), transparent 72%),
+    linear-gradient(to top, rgba(0, 0, 0, 0.42), transparent 42%);
 }
 .cover-title {
   font-family: var(--display);

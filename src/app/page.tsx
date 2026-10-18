@@ -13,6 +13,7 @@ import { ProductCard } from "../components/product-card";
 import Reveal from "../components/reveal";
 import Magnetic from "../components/magnetic";
 import InstagramGrid from "../components/instagram-grid";
+import CategoryShowcase from "../components/category-showcase";
 import { formatBDT } from "../lib/format";
 import { FREE_SHIP_THRESHOLD_PAISA, SITE } from "@/config/site";
 
@@ -238,17 +239,19 @@ export default async function HomePage() {
             <Magnetic strength={10}>
               <Link
                 href="/new-arrivals"
-                className="inline-flex items-center gap-3 bg-[#FFC000] px-9 py-4 text-[12px] font-semibold tracking-[0.2em] text-black uppercase transition-colors duration-300 hover:bg-[#917300] hover:text-white"
+                className="inline-flex items-center gap-3 border border-white/70 bg-transparent px-9 py-4 text-[12px] font-semibold tracking-[0.2em] text-white uppercase transition-colors duration-300 hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
               >
                 Shop new arrivals <span aria-hidden="true">→</span>
               </Link>
             </Magnetic>
-            <Link
-              href="/women"
-              className="link-lux px-2 py-4 text-[12px] font-semibold tracking-[0.2em] text-white/85 uppercase hover:text-white"
-            >
-              Explore women
-            </Link>
+            <Magnetic strength={10}>
+              <Link
+                href="/women"
+                className="inline-flex items-center gap-3 border border-white/70 bg-transparent px-9 py-4 text-[12px] font-semibold tracking-[0.2em] text-white uppercase transition-colors duration-300 hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+              >
+                Explore women <span aria-hidden="true">→</span>
+              </Link>
+            </Magnetic>
           </div>
         </div>
 
@@ -343,6 +346,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Category showcase ─────────────────────────── */}
+      <CategoryShowcase />
 
       {/* ── Brand statement ─────────────────────────── */}
       <section aria-label="House statement" className="mx-auto max-w-[1280px] px-4 pt-16 pb-4 sm:px-6">
