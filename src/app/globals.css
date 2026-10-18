@@ -127,12 +127,22 @@ a[href^="mailto:"] {
   to { transform: scale(1.1); }
 }
 .cover {
-  animation: cover-fade 1.2s ease-out both;
+  /* No animation here: opacity is animated on .cover-media instead. Fading the
+     ancestor while its child scales created two nested composited layers over a
+     3840px object-cover image — Chrome then tore the img's tile raster into a
+     blurred horizontal band on first paint. */
 }
-.cover-media img {
+.cover-media {
+  backface-visibility: hidden;
+  will-change: transform, opacity;
   animation:
+    cover-fade 900ms cubic-bezier(0.22, 1, 0.36, 1) both,
     cover-settle 2.4s cubic-bezier(0.22, 1, 0.36, 1) both,
     cover-drift 18s ease-in-out 2.4s infinite alternate;
+}
+.cover-media img {
+  display: block;
+  backface-visibility: hidden;
 }
 /* Cinematic grade, interpolated in OKLCH (no muddy sRGB midpoint):
    ink shadows, warm terracotta highlight wash, bottom-weighted for type */

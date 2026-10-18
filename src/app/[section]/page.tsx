@@ -76,7 +76,7 @@ export default async function SectionPage({
   const title = section === "new-arrivals" ? "New Arrivals" : section === "sale" ? "Sale" : section[0].toUpperCase() + section.slice(1);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-6">
+    <main className="mx-auto max-w-[1280px] px-4 py-6">
       <nav className="text-xs text-ash" aria-label="Breadcrumb">
         <Link href="/" className="underline">Home</Link> / <span className="capitalize text-[#F5F5F5]">{title}</span>
       </nav>

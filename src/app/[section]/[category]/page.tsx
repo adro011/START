@@ -106,7 +106,7 @@ export default async function CategoryPage({
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-6">
+    <main className="mx-auto max-w-[1280px] px-4 py-6">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <nav className="text-xs text-ash" aria-label="Breadcrumb">
         <Link href="/" className="underline">Home</Link> /{" "}

@@ -75,7 +75,7 @@ export function SiteHeader() {
   return (
     <>
       <header className="site-header sticky top-0 z-50 border-b border-white/15 bg-black">
-        <div className="mx-auto grid max-w-[1280px] grid-cols-[auto_1fr] items-center gap-2 px-4 py-4 sm:px-6">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-[auto_1fr] items-center gap-2 py-4 pl-2 pr-4 sm:pl-3 sm:pr-6">
 <Link
             href="/"
             aria-label={`${SITE.name} \u2014 home`}
