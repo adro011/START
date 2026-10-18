@@ -4,7 +4,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { Locale } from "../lib/dictionary";
 import SmoothScroll from "./smooth-scroll";
-import Preloader from "./preloader";
 import CursorRing from "./cursor-ring";
 
 type LocaleCtx = {
@@ -59,7 +58,6 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <Ctx.Provider value={{ locale, setLocale, mounted }}>
       <SmoothScroll />
-      <Preloader />
       <CursorRing />
       {children}
     </Ctx.Provider>

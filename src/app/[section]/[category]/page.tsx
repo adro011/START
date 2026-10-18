@@ -123,7 +123,7 @@ export default async function CategoryPage({
         </Suspense>
       </div>
       <div className="mt-4 grid gap-6 lg:grid-cols-[240px_1fr]">
-        <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-white/10" />}>
+        <Suspense>
           <Filters categories={cats} sizes={["S", "M", "L", "XL"]} bounds={priceBounds(allProducts)} />
         </Suspense>
         <div>

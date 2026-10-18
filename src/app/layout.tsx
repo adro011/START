@@ -53,7 +53,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   // Locale cookie drives <html lang> + footer dictionary (header reads it client-side).
   const locale = (await cookies()).get("locale")?.value === "bn" ? "bn" : "en";
   return (
-    <html lang={locale}>
+    <html lang={locale} className="overflow-x-hidden">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -68,13 +68,43 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         />
       </head>
       <body
-        className="bg-[#000000] text-[#F5F5F5] antialiased"
+        className="overflow-x-hidden bg-[#000000] text-[#F5F5F5] antialiased"
         style={{
           fontFamily: "'LamboType', 'Roboto', 'Helvetica Neue', Arial, ui-sans-serif, system-ui, sans-serif",
           textTransform: "uppercase",
           letterSpacing: "0.02em",
         }}
       >
+        {/* Single full-screen brand loader: injected before first paint, gates the
+            hero entrance via html[data-loader] (see globals.css), removes itself
+            after window load (400ms min display, 500ms fade, 6s failsafe). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){
+  var root=document.documentElement;
+  root.setAttribute("data-loader","1");
+  document.body.insertAdjacentHTML("afterbegin",'<style id="abrar-loader-css">#abrar-loader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#000;transition:opacity 500ms ease}#abrar-loader::after{content:"";width:56px;height:56px;border-radius:50%;border:3px solid rgba(212,175,55,.2);border-top-color:#D4AF37;border-right-color:#F5C518;box-shadow:0 0 18px rgba(212,175,55,.45);animation:abrar-spin .9s linear infinite}@keyframes abrar-spin{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){#abrar-loader{transition:none!important}#abrar-loader::after{animation-duration:2s!important}}</style><div id="abrar-loader" aria-hidden="true"></div>');
+  var t0=Date.now(),done=false;
+  function finish(){
+    if(done)return;done=true;
+    var el=document.getElementById("abrar-loader");
+    var st=document.getElementById("abrar-loader-css");
+    function remove(){
+      if(el&&el.parentNode)el.parentNode.removeChild(el);
+      if(st&&st.parentNode)st.parentNode.removeChild(st);
+      root.removeAttribute("data-loader");
+    }
+    if(!el||window.matchMedia("(prefers-reduced-motion: reduce)").matches){remove();return;}
+    el.style.opacity="0";
+    setTimeout(remove,500);
+  }
+  function onReady(){setTimeout(finish,Math.max(0,400-(Date.now()-t0)));}
+  if(document.readyState==="complete")onReady();
+  else window.addEventListener("load",onReady,{once:true});
+  setTimeout(finish,6000);
+})();`,
+          }}
+        />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[70] focus:bg-gold focus:px-4 focus:py-2 focus:text-black"

@@ -91,6 +91,15 @@ a[href^="mailto:"] {
   animation: hero-text-rise 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Loader gate: hold hero entrance at frame 0 while the full-screen loader is up
+   (html[data-loader] is set by the boot script in layout.tsx and removed only
+   after the loader has fully faded, so the entrance plays on a clean stage). */
+html[data-loader] .hero-text-rise,
+html[data-loader] .hero-enter,
+html[data-loader] .cover-media {
+  animation-play-state: paused;
+}
+
 /* ── Header brand mark: breathing white glow (one technique, idle loop).
    Halo breathes between a whisper and a soft lit edge — glyph geometry is
    never touched (text-shadow only), on the black permanent header. ── */
@@ -172,12 +181,6 @@ a[href^="mailto:"] {
     letter-spacing: 0.42em;
   }
 }
-/* Preloader letter-stagger (JS sets per-char delay, ~30ms steps) */
-.preloader-word .ch {
-  display: inline-block;
-  animation: preloader-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
 /* Marquee strip (announcement bar) */
 @keyframes marquee {
   from {
@@ -190,27 +193,6 @@ a[href^="mailto:"] {
 
 .animate-marquee {
   animation: marquee 30s linear infinite;
-}
-
-/* Skeleton shimmer for loading states */
-@keyframes shimmer {
-  from {
-    background-position: -200% 0;
-  }
-  to {
-    background-position: 200% 0;
-  }
-}
-
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--color-blush) 25%,
-    var(--color-paper) 50%,
-    var(--color-blush) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s linear infinite;
 }
 
 /* Hide scrollbars while keeping scrollability */
@@ -319,53 +301,6 @@ html.lenis body {
 
 .cursor-ring-label:empty {
   display: none;
-}
-
-/* First-visit preloader curtain (clip-path lift, never blocks content) */
-.preloader {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: #172121;
-  clip-path: inset(0 0 0 0);
-  transition: clip-path 450ms cubic-bezier(0.22, 1, 0.36, 1);
-  cursor: pointer;
-}
-
-.preloader-leaving {
-  clip-path: inset(0 0 100% 0);
-}
-
-.preloader-word {
-  font-family: "Cormorant Garamond", serif;
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
-  font-weight: 600;
-  color: #fbf6f3;
-  animation: preloader-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.preloader-sub {
-  font-size: 12px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: #f2ccc3;
-  animation: preloader-rise 700ms 120ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes preloader-rise {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 24px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }
 
 /* Subtle paper-grain texture overlay (SVG noise, pointer-events none) */
@@ -960,8 +895,7 @@ a:active,
   .hero-panel img {
     animation: none;
   }
-  .animate-marquee,
-  .skeleton {
+  .animate-marquee {
     animation: none;
   }
   .logo-glow {
@@ -979,7 +913,6 @@ a:active,
     transition: none;
   }
 
-  .preloader,
   .cursor-ring {
     display: none;
   }
