@@ -76,17 +76,17 @@ export function SiteHeader() {
     <>
       <header className="site-header sticky top-0 z-50 border-b border-white/15 bg-black">
         <div className="mx-auto grid max-w-[1280px] grid-cols-[auto_1fr] items-center gap-2 px-4 py-4 sm:px-6">
-          <Link
+<Link
             href="/"
-            aria-label={`${SITE.name} — home`}
+            aria-label={`${SITE.name} \u2014 home`}
             className="flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
           >
             <Image
               src="/hero/icons/icon.svg"
               alt={`${SITE.name} logo`}
-              width={36}
-              height={36}
-              className="h-9 w-9 object-contain"
+              width={56}
+              height={56}
+              className="h-14 w-14 object-contain"
               priority
             />
             <span
