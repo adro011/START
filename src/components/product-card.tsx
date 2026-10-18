@@ -53,7 +53,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
 
   return (
     <article className="group relative flex w-full flex-col" data-cursor="View">
-      <div className="lift card-sheen relative aspect-[3/4] overflow-hidden border border-[#172121]/8 bg-gradient-to-br from-[#F2CCC3] via-[#FBF6F3] to-[#7E9181]/30 shadow-[0_0_0_rgba(0,0,0,0)] group-hover:shadow-[0_24px_48px_rgba(23,33,33,0.16)]">
+      <div className="lift card-sheen relative aspect-[3/4] overflow-hidden border border-[#172121]/8 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-dark)]/25 shadow-[0_0_0_rgba(0,0,0,0)] group-hover:shadow-[0_24px_48px_rgba(23,33,33,0.16)]">
         {first ? (
           <Link
             href={`/product/${p.slug}`}
