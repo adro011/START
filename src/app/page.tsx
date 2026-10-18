@@ -522,7 +522,7 @@ export default async function HomePage() {
         <div className="relative mx-auto grid max-w-[1280px] gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1.2fr_1fr] md:items-center">
           <Reveal>
             <div>
-              <p className="kicker text-clay">Woven, not rushed</p>
+              <p className="kicker text-[#172121]">Woven, not rushed</p>
               <h2 className="display-xl mt-3">
                 From loom to doorstep, with patience.
               </h2>

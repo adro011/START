@@ -181,7 +181,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </div>
 
       <section aria-label="Related products" className="mt-12">
-        <p className="kicker text-clay">Complete the look</p>
+        <p className="kicker text-blush">Complete the look</p>
         <h2
           className="display-xl mt-2"
           style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)" }}

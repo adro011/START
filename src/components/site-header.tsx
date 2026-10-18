@@ -82,7 +82,7 @@ export function SiteHeader() {
             className="flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
           >
             <Image
-              src="/hero/icons/icon.svg"
+              src="/hero/icons/icon-192.png"
               alt={`${SITE.name} logo`}
               width={56}
               height={56}
