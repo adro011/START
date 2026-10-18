@@ -12,6 +12,7 @@ import type { CatalogProduct } from "@/types/catalog";
 import { ProductCard } from "../components/product-card";
 import Reveal from "../components/reveal";
 import Magnetic from "../components/magnetic";
+import InstagramGrid from "../components/instagram-grid";
 import { formatBDT } from "../lib/format";
 import { FREE_SHIP_THRESHOLD_PAISA, SITE } from "@/config/site";
 
@@ -609,6 +610,9 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ── Instagram-style grid ─────────────────────── */}
+      <InstagramGrid />
 
       {/* ── Newsletter CTA ───────────────────────────── */}
       <section aria-label="Newsletter" className="cv relative overflow-hidden bg-[#172121] text-center text-[#FBF6F3]">
