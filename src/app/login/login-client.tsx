@@ -15,16 +15,41 @@ type Mode = "account" | "admin";
 const EASE = "cubic-bezier(0.22,1,0.36,1)";
 
 function splitChars(text: string) {
-  return text.split("").map((c, i) => (
-    <span
-      key={i}
-      aria-hidden="true"
-      className="login-ch"
-      style={{ animationDelay: `${120 + i * 28}ms` }}
-    >
-      {c === " " ? "\u00A0" : c}
-    </span>
-  ));
+  const words = text.split(" ");
+  let index = 0;
+  return words.map((word, wi) => {
+    const chars = word.split("").map((c, ci) => {
+      const delay = `${120 + index * 28}ms`;
+      index += 1;
+      return (
+        <span
+          key={ci}
+          aria-hidden="true"
+          className="login-ch"
+          style={{ animationDelay: delay }}
+        >
+          {c}
+        </span>
+      );
+    });
+    const isLast = wi === words.length - 1;
+    const spaceDelay = `${120 + index * 28}ms`;
+    if (!isLast) index += 1;
+    return (
+      <span key={wi} className="inline-block whitespace-nowrap">
+        {chars}
+        {!isLast ? (
+          <span
+            aria-hidden="true"
+            className="login-ch"
+            style={{ animationDelay: spaceDelay }}
+          >
+            {"\u00A0"}
+          </span>
+        ) : null}
+      </span>
+    );
+  });
 }
 
 /** Magnetic pull (desktop fine-pointer only, transform-only, 8px max). */
@@ -220,18 +245,22 @@ export default function LoginClient({
               {/* Demo login — any credentials */}
               <form action={demoLoginAction} onSubmit={() => coverForSubmit("Welcome back")} className="login-rise space-y-3" style={{ animationDelay: "340ms" }}>
                 <input type="hidden" name="next" value={next} />
-                <label className="block">
-                  <span className="text-sm font-medium">Username <span className="font-normal text-ash">(anything works)</span></span>
-                  <input name="username" required autoComplete="username" placeholder="e.g. demo.shopper"
-                    className="mt-1.5 w-full rounded-xl border border-white/15 bg-[#181818]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash focus:border-gold focus:ring-2 focus:ring-gold/25" />
-                </label>
-                <label className="block">
-                  <span className="text-sm font-medium">Password <span className="font-normal text-ash">(no restrictions)</span></span>
-                  <input name="password" type="password" required autoComplete="current-password" placeholder="Anything — demo only"
-                    className="mt-1.5 w-full rounded-xl border border-white/15 bg-[#181818]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash focus:border-gold focus:ring-2 focus:ring-gold/25" />
-                </label>
+                <div className="textInputWrapper">
+                  <label className="block">
+                    <span className="text-sm font-medium">Username <span className="font-normal text-ash">(anything works)</span></span>
+                    <input name="username" required autoComplete="username" placeholder="e.g. demo.shopper"
+                      className="mt-1.5 w-full rounded-xl border-0 bg-[#181818]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash" />
+                  </label>
+                </div>
+                <div className="textInputWrapper">
+                  <label className="block">
+                    <span className="text-sm font-medium">Password <span className="font-normal text-ash">(no restrictions)</span></span>
+                    <input name="password" type="password" required autoComplete="current-password" placeholder="Anything — demo only"
+                      className="mt-1.5 w-full rounded-xl border-0 bg-[#181818]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash" />
+                  </label>
+                </div>
                 <button ref={primaryBtn} type="submit"
-                  className="magnetic w-full rounded-xl bg-gold px-4 py-3 text-sm font-semibold tracking-wide text-black transition-[box-shadow,background] duration-300 hover:bg-gold-dark hover:shadow-[0_16px_36px_rgba(213,87,59,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                  className="magnetic w-full rounded-xl bg-gold px-4 py-3 text-sm font-semibold tracking-wide text-black transition-[transform,box-shadow,background] duration-300 hover:bg-gold-dark hover:shadow-[0_16px_36px_rgba(213,87,59,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                   style={{ transitionTimingFunction: EASE }}>
                   Sign in & continue →
                 </button>
@@ -262,7 +291,7 @@ export default function LoginClient({
                     className="mt-1.5 w-full rounded-xl border border-white/15 bg-[#181818]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash focus:border-gold focus:ring-2 focus:ring-gold/25" />
                 </label>
                 <button ref={adminBtn} type="submit"
-                  className="magnetic w-full rounded-xl bg-gold px-4 py-3 text-sm font-semibold tracking-wide text-black transition-[box-shadow,background] duration-300 hover:bg-gold-dark hover:shadow-[0_16px_36px_rgba(23,33,33,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                  className="magnetic w-full rounded-xl bg-gold px-4 py-3 text-sm font-semibold tracking-wide text-black transition-[transform,box-shadow,background] duration-300 hover:bg-gold-dark hover:shadow-[0_16px_36px_rgba(23,33,33,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                   style={{ transitionTimingFunction: EASE }}>
                   Open registry →
                 </button>
@@ -324,7 +353,7 @@ export default function LoginClient({
         @keyframes login-curtain-hold{from{opacity:0}to{opacity:1}}
         .login-bar{animation:login-bar 620ms ${EASE} both;will-change:transform}
         @keyframes login-bar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-        .magnetic{will-change:transform;transition:transform 250ms ${EASE}}
+        .magnetic{will-change:transform}
         @media (prefers-reduced-motion: reduce){
           .login-ch,.login-rise,.login-bar{animation:none;opacity:1;transform:none}
           .login-curtain{display:none}

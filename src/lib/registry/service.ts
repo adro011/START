@@ -208,7 +208,7 @@ class SupabaseProductRepository implements ProductRepository {
       const { data, error } = await this.adminTable()
         .update({ active: false, deleted_at: nowISO() })
         .eq("id", id)
-        .eq("deleted_at", null)
+        .is("deleted_at", null)
         .eq("active", true)
         .select();
       if (error) throw error;

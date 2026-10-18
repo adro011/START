@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { SITE } from "@/config/site";
 import Reveal from "./reveal";
 
 const IMAGES = [
@@ -19,7 +20,7 @@ const IMAGES = [
 export default function InstagramGrid({
   title = "Follow the drop",
   caption = "Tag us @abrarexclusive.bd — we love seeing how you style it.",
-  href = "https://instagram.com/abrarexclusive.bd",
+  href = SITE.socials.instagram,
 }: {
   title?: string;
   caption?: string;

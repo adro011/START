@@ -490,7 +490,7 @@ html.lenis body {
   transition: color 220ms var(--ease-lux), border-color 220ms var(--ease-lux);
 }
 .link-lux:hover {
-  color: var(--color-link-blue);
+  color: var(--color-gold);
 }
 
 /* ── Typography scale (LamboType, uppercase default) ── */
@@ -631,11 +631,27 @@ html.lenis body {
 
 /* ── Cards & containers: zero radius, charcoal on black ── */
 
+@layer components {
 .card, .panel, .lift {
   background: var(--color-charcoal);
   border-radius: 0;
   box-shadow: none;
   border: none;
+}
+
+/* Frosted glass */
+.glass {
+  background: color-mix(in srgb, #fbf6f3 72%, transparent);
+  backdrop-filter: blur(18px) saturate(1.25);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  border: 1px solid color-mix(in srgb, #172121 12%, transparent);
+}
+.glass-dark {
+  background: color-mix(in srgb, #172121 62%, transparent);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border: 1px solid rgba(251, 246, 243, 0.14);
+}
 }
 
 /* ── Language switch (বাংলা / ENG) ──
