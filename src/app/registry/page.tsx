@@ -18,9 +18,9 @@ const STATUS_LABEL: Record<RegistryStatus, string> = {
 };
 
 const STATUS_BADGE: Record<RegistryStatus, string> = {
-  active: "border-gold/30 bg-gold/5 text-gold",
-  inactive: "border-white/15 bg-white/5 text-ash",
-  deleted: "border-red-900/30 bg-red-900/5 text-red-400",
+  active: "reg-badge-active",
+  inactive: "reg-badge-inactive",
+  deleted: "reg-badge-deleted",
 };
 
 const SIZES = ["S", "M", "L", "XL"];
@@ -49,20 +49,17 @@ export default async function RegistryPage({
   const pageUrl = (p: number) => `/registry?${base.toString()}&page=${p}`;
 
   return (
-    <div className="min-h-screen bg-black text-[#F5F5F5]">
-      <header className="sticky top-0 z-20 border-b border-white/15 bg-black/80 backdrop-blur-md">
+    <div className="min-h-screen">
+      <header className="reg-header">
         <div className="mx-auto flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/registry" className="flex items-center gap-2">
             <span className="font-display font-semibold text-gold tracking-tight">ABRAR</span>
             <span className="text-xs text-ash uppercase">registry</span>
           </Link>
           <div className="ml-auto flex items-center gap-2 text-xs text-ash">
             <span>{session.user.email}{session.isDev ? " · dev" : ""}</span>
             <form action={registryLogoutAction}>
-              <button
-                type="submit"
-                className="cursor-pointer rounded border border-white/15 px-2.5 py-1 hover:bg-white/10"
-              >
+              <button type="submit" className="reg-btn reg-btn-ghost reg-btn-xs">
                 Sign out
               </button>
             </form>
@@ -78,29 +75,26 @@ export default async function RegistryPage({
               {products.length} listed · soft-delete (deleted_at) · max {limit}/page
             </p>
           </div>
-          <Link
-            href="/registry/products/new"
-            className="rounded bg-gold px-3 py-2 text-sm font-semibold text-black hover:bg-gold-dark"
-          >
+          <Link href="/registry/products/new" className="reg-btn reg-btn-primary">
             + Add new product
           </Link>
         </div>
 
         <form method="get" className="flex flex-wrap gap-2 items-end mb-6">
-          <div className="textInputWrapper min-w-52 flex-1">
+          <div className="min-w-52 flex-1">
             <input
               name="q"
               defaultValue={q}
               placeholder="Search name or slug…"
               aria-label="Search products"
-              className="textInput w-full py-2 px-3 placeholder:text-ash outline-none"
+              className="w-full"
             />
           </div>
           <select
             name="type"
             defaultValue={type}
             aria-label="Filter by type"
-            className="rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 text-sm"
+            className="max-w-40"
           >
             <option value="">All types</option>
             <option value="men">Men</option>
@@ -111,7 +105,7 @@ export default async function RegistryPage({
             name="size"
             defaultValue={size}
             aria-label="Filter by size"
-            className="rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 text-sm"
+            className="max-w-32"
           >
             <option value="">All sizes</option>
             {SIZES.map((s) => (
@@ -124,21 +118,18 @@ export default async function RegistryPage({
             name="status"
             defaultValue={status}
             aria-label="Filter by status"
-            className="rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 text-sm"
+            className="max-w-40"
           >
             <option value="">All statuses</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
             <option value="deleted">Deleted</option>
           </select>
-          <button
-            type="submit"
-            className="rounded border border-white/15 px-3 py-2 text-sm font-medium hover:bg-white/10"
-          >
+          <button type="submit" className="reg-btn reg-btn-ghost">
             Filter
           </button>
           {(q || type || size || status) && (
-            <Link href="/registry" className="rounded border border-white/15 px-3 py-2 text-sm font-medium hover:bg-white/10">
+            <Link href="/registry" className="reg-btn reg-btn-ghost">
               Clear
             </Link>
           )}
@@ -149,7 +140,7 @@ export default async function RegistryPage({
             <RegistryCard key={p.id} product={p} deleteAction={softDeleteProduct} />
           ))}
           {products.length === 0 && (
-            <div className="col-span-full rounded-lg border border-white/15 bg-[#111111] px-6 py-12 text-center">
+            <div className="reg-card col-span-full px-6 py-12 text-center">
               <p className="text-ash">No products match the current filters.</p>
             </div>
           )}
@@ -161,18 +152,12 @@ export default async function RegistryPage({
           </p>
           <div className="flex gap-2">
             {page > 1 && (
-              <Link
-                href={pageUrl(page - 1)}
-                className="rounded border border-white/15 px-3 py-1.5 hover:bg-white/10"
-              >
+              <Link href={pageUrl(page - 1)} className="reg-btn reg-btn-ghost reg-btn-sm">
                 ← Prev
               </Link>
             )}
             {hasNextPage && (
-              <Link
-                href={pageUrl(page + 1)}
-                className="rounded border border-white/15 px-3 py-1.5 hover:bg-white/10"
-              >
+              <Link href={pageUrl(page + 1)} className="reg-btn reg-btn-ghost reg-btn-sm">
                 Next →
               </Link>
             )}
@@ -195,7 +180,7 @@ function RegistryCard({
   const size = product.sizes[0] ?? "—";
 
   return (
-    <article className="rounded-lg border border-white/15 bg-[#181818] p-3 flex flex-col h-full">
+    <article className="reg-card p-3 flex flex-col h-full">
       <div className="relative h-36 w-full rounded overflow-hidden bg-black mb-2">
         {product.image ? (
           <Image
@@ -222,10 +207,7 @@ function RegistryCard({
         </p>
         <p className="mt-auto font-medium text-gold">{formatBDT(product.price)}</p>
         <span
-          className={cn(
-            "inline-block rounded border px-2 py-0.5 text-[10px] font-semibold",
-            badge
-          )}
+          className={cn("reg-badge", badge)}
         >
           {label}
         </span>
@@ -233,7 +215,7 @@ function RegistryCard({
       <div className="mt-3 flex gap-1">
         <Link
           href={`/registry/products/${product.id}`}
-          className="flex-1 rounded border border-white/15 px-2 py-1 text-[11px] font-semibold text-center text-smoke hover:bg-white/10"
+          className="reg-btn reg-btn-ghost reg-btn-xs flex-1 text-center"
         >
           Edit
         </Link>
@@ -245,7 +227,7 @@ function RegistryCard({
           <input name="id" value={product.id} hidden />
           <button
             type="submit"
-            className="rounded border border-white/15 px-2 py-1 text-[11px] font-semibold text-center text-ash hover:bg-white/10"
+            className="reg-btn reg-btn-danger reg-btn-xs flex-1 text-center"
           >
             Delete
           </button>

@@ -14,9 +14,9 @@ import { registryLogoutAction } from "@/app/registry/login/actions";
 import ConfirmForm from "@/app/registry/confirm-form";
 
 const STATUS_BADGE: Record<string, string> = {
-  active: "border-gold/30 bg-gold/5 text-gold",
-  inactive: "border-white/15 bg-white/5 text-ash",
-  deleted: "border-red-900/30 bg-red-900/5 text-red-400",
+  active: "reg-badge reg-badge-active",
+  inactive: "reg-badge reg-badge-inactive",
+  deleted: "reg-badge reg-badge-deleted",
 };
 
 const SECTION_LABEL: Record<string, string> = {
@@ -43,8 +43,8 @@ export default async function RegistryProductPage({
   const isDeleted = product.status === "deleted";
 
   return (
-    <div className="min-h-screen bg-black text-[#F5F5F5]">
-      <header className="sticky top-0 z-20 border-b border-white/15 bg-black/80 backdrop-blur-md">
+    <div className="min-h-screen">
+      <header className="reg-header">
         <div className="mx-auto flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Link href="/registry" className="flex items-center gap-2">
             <span className="font-display font-semibold text-gold tracking-tight">ABRAR</span>
@@ -55,7 +55,7 @@ export default async function RegistryProductPage({
             <form action={registryLogoutAction}>
               <button
                 type="submit"
-                className="cursor-pointer rounded border border-white/15 px-2.5 py-1 hover:bg-white/10"
+                className="reg-btn reg-btn-ghost reg-btn-xs"
               >
                 Sign out
               </button>
@@ -83,7 +83,7 @@ export default async function RegistryProductPage({
           <div className="flex gap-2">
             <Link
               href="/registry/products/new"
-              className="rounded bg-gold px-3 py-2 text-sm font-semibold text-black hover:bg-gold-dark"
+              className="reg-btn reg-btn-primary"
             >
               + Add new product
             </Link>
@@ -92,7 +92,7 @@ export default async function RegistryProductPage({
                 <input name="id" value={product.id} hidden />
                 <button
                   type="submit"
-                  className="rounded border border-white/15 px-3 py-2 text-sm font-semibold text-emerald-400 hover:bg-white/5"
+                  className="reg-btn reg-btn-success"
                 >
                   Restore
                 </button>
@@ -106,7 +106,7 @@ export default async function RegistryProductPage({
                 <input name="id" value={product.id} hidden />
                 <button
                   type="submit"
-                  className="rounded border border-white/15 px-3 py-2 text-sm font-semibold text-red-400 hover:bg-white/5"
+                  className="reg-btn reg-btn-danger"
                 >
                   Soft delete
                 </button>
@@ -118,15 +118,14 @@ export default async function RegistryProductPage({
         <div className="grid gap-6 lg:grid-cols-4">
           {/* Gallery */}
           <div className="lg:col-span-1 space-y-2">
-            {[
-              product.image,
-              ...(product.sizes.map(() => product.image).slice(0, 2)),
-            ].map((src, i) => (
+            {(product.images.length > 0 ? product.images : product.image ? [product.image] : [])
+              .slice(0, 4)
+              .map((src, i) => (
               <div
                 key={i}
                 className={cn(
-                  "aspect-[3/4] rounded overflow-hidden border border-white/15 bg-black",
-                  i === 0 ? "ring-2 ring-gold" : "hover:border-gold/50 cursor-pointer"
+                  "relative aspect-[3/4] rounded overflow-hidden border border-white/15 bg-black",
+                  i === 0 ? "ring-2 ring-gold" : "hover:border-gold/50"
                 )}
               >
                 {src ? (
@@ -148,14 +147,14 @@ export default async function RegistryProductPage({
 
           {/* Details + edit form */}
           <div className="lg:col-span-3 space-y-6">
-            <section className="rounded-lg border border-white/15 bg-[#181818] p-5">
+            <section className="reg-panel">
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-ash">
                 Details
               </h2>
               <dl className="grid gap-2 sm:grid-cols-2 text-sm">
                 <div className="col-span-full flex items-center gap-3">
                   <span className="font-medium text-smoke">Type</span>
-                  <span className={cn("rounded border px-2 py-0.5 text-[11px] font-semibold", STATUS_BADGE[product.status])}>
+                  <span className={cn(STATUS_BADGE[product.status])}>
                     {SECTION_LABEL[product.type] ?? product.type}
                   </span>
                 </div>
@@ -175,10 +174,7 @@ export default async function RegistryProductPage({
                 <div className="col-span-full flex items-center gap-3">
                   <span className="font-medium text-smoke">Status</span>
                   <span
-                    className={cn(
-                      "inline-block rounded border px-2 py-0.5 text-[11px] font-semibold",
-                      STATUS_BADGE[product.status]
-                    )}
+                    className={cn(STATUS_BADGE[product.status])}
                   >
                     {product.status.charAt(0).toUpperCase() + product.status.slice(1)}
                   </span>
@@ -193,7 +189,7 @@ export default async function RegistryProductPage({
               </dl>
             </section>
 
-            <section className="rounded-lg border border-white/15 bg-[#181818] p-5">
+            <section className="reg-panel">
               <form action={updateRegistryProduct as unknown as RegistryFormAction} className="space-y-4">
                 <input name="id" value={product.id} hidden />
                 <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-ash">
@@ -208,7 +204,7 @@ export default async function RegistryProductPage({
                       name="name"
                       defaultValue={product.name}
                       required
-                      className="textInput w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 text-sm"
+                      className="w-full"
                     />
                   </div>
                   <div>
@@ -218,7 +214,7 @@ export default async function RegistryProductPage({
                     <select
                       name="section"
                       defaultValue={product.type}
-                      className="w-full rounded border border-white/15 bg-[#111111] text-[#F5F5F5] px-3 py-2 text-sm"
+                      className="w-full"
                     >
                       <option value="men">Men</option>
                       <option value="women">Women</option>
@@ -236,7 +232,7 @@ export default async function RegistryProductPage({
                       min="0"
                       required
                       inputMode="numeric"
-                      className="textInput w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 text-sm"
+                      className="w-full"
                     />
                   </div>
                   <div className="self-end">
@@ -254,7 +250,7 @@ export default async function RegistryProductPage({
                 <div className="flex gap-2 pt-2">
                   <button
                     type="submit"
-                    className="rounded bg-gold px-4 py-2 text-sm font-semibold text-black hover:bg-gold-dark"
+                    className="reg-btn reg-btn-primary"
                   >
                     Save changes
                   </button>
@@ -267,11 +263,6 @@ export default async function RegistryProductPage({
         {sp.saved === "1" && (
           <p className="mt-4 rounded border border-emerald-500/30 bg-emerald-900/20 px-3 py-2 text-xs text-emerald-400">
             Saved.
-          </p>
-        )}
-        {product.image && (
-          <p className="mt-6 text-[11px] text-ash">
-            Image: {product.image}
           </p>
         )}
       </div>

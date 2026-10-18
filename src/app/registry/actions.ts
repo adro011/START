@@ -7,9 +7,9 @@ import { createServiceRoleClient } from "@/lib/supabase/service-role";
 
 const MAX_LIMIT = 50;
 const SECTION_FALLBACK_IMAGE: Record<string, string> = {
-  men: "/hero/men.svg",
-  women: "/hero/women.svg",
-  kids: "/hero/kids.svg",
+  men: "/hero/men.jpg",
+  women: "/hero/women.jpg",
+  kids: "/hero/kids.jpg",
 };
 
 export type RegistryStatus = "active" | "inactive" | "deleted";
@@ -26,6 +26,7 @@ export interface RegistryProduct {
   createdAt: string;
   updatedAt: string;
   image: string | null;
+  images: string[];
   sizes: string[];
   status: RegistryStatus;
 }
@@ -71,11 +72,13 @@ function mapRow(r: DbProductRow): RegistryProduct {
   const variants = r.product_variants ?? [];
   const sizes = [...new Set(variants.map((v) => v.size).filter((s): s is string => !!s))];
   const images = r.product_images ?? [];
-  const ordered = [...images].sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
-  const image =
-    ordered.find((im) => im.path_thumb)?.path_thumb ??
-    SECTION_FALLBACK_IMAGE[r.section] ??
-    null;
+  const thumbs = [...new Set(
+    [...images]
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+      .map((im) => im.path_thumb)
+      .filter((s): s is string => !!s),
+  )];
+  const image = thumbs[0] ?? SECTION_FALLBACK_IMAGE[r.section] ?? null;
   return {
     id: r.id,
     slug: r.slug,
@@ -88,6 +91,7 @@ function mapRow(r: DbProductRow): RegistryProduct {
     createdAt: r.created_at,
     updatedAt: r.updated_at,
     image,
+    images: thumbs,
     sizes,
     status: statusOf(r),
   };

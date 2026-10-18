@@ -32,8 +32,7 @@ const TYPE_LABELS: Record<TypeValue, string> = {
   others: "Others (new arrivals)",
 };
 
-const INPUT =
-  "textInput w-full bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash";
+const INPUT = "w-full";
 
 export const registryFormSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters.").max(120),
@@ -182,7 +181,7 @@ export default function ProductForm() {
         </p>
       ) : null}
 
-      <fieldset className="rounded-lg border border-white/15 bg-[#111111]/50 p-5">
+      <fieldset className="reg-panel">
         <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">Product basics</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
@@ -245,7 +244,7 @@ export default function ProductForm() {
         </div>
       </fieldset>
 
-      <fieldset className="rounded-lg border border-white/15 bg-[#111111]/50 p-5">
+      <fieldset className="reg-panel">
         <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">Size & age</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           {type === "children" ? (
@@ -289,7 +288,7 @@ export default function ProductForm() {
         </p>
       </fieldset>
 
-      <fieldset className="rounded-lg border border-white/15 bg-[#111111]/50 p-5">
+      <fieldset className="reg-panel">
         <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">Details & review</legend>
         <div className="space-y-4">
           <div className="space-y-2">
@@ -349,7 +348,7 @@ export default function ProductForm() {
         </div>
       </fieldset>
 
-      <fieldset className="rounded-lg border border-white/15 bg-[#111111]/50 p-5">
+      <fieldset className="reg-panel">
         <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">Price & status</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
@@ -397,7 +396,7 @@ export default function ProductForm() {
         </div>
       </fieldset>
 
-      <fieldset className="rounded-lg border border-white/15 bg-[#111111]/50 p-5">
+      <fieldset className="reg-panel">
         <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">
           Product images (max {MAX_IMAGES})
         </legend>
@@ -444,7 +443,7 @@ export default function ProductForm() {
               <button
                 type="button"
                 onClick={() => removeImage(index)}
-                className="absolute right-1 top-1 rounded bg-black/60 p-1 text-xs text-smoke hover:bg-gold text-black"
+                className="absolute right-1 top-1 reg-btn reg-btn-danger reg-btn-xs"
               >
                 Remove
               </button>
@@ -461,13 +460,13 @@ export default function ProductForm() {
         <button
           type="submit"
           disabled={saving}
-          className="rounded bg-gold text-black px-6 py-3 text-sm font-medium uppercase tracking-wider hover:bg-gold-dark disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+          className="reg-btn reg-btn-primary disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {saving ? "Saving…" : "Save product"}
         </button>
         <Link
           href="/"
-          className="rounded border border-white/15 px-6 py-3 text-sm font-medium uppercase tracking-wider text-[#F5F5F5] hover:text-gold transition-colors"
+          className="reg-btn reg-btn-ghost"
         >
           Cancel
         </Link>

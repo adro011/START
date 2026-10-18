@@ -144,22 +144,22 @@ export default function RegistryLoginClient({
             ) : null}
             <form action={registryLoginAction} onSubmit={() => coverForSubmit("Opening shop registry")} className="login-rise mt-5 space-y-3" style={{ animationDelay: "220ms" }}>
               <input type="hidden" name="next" value={next} />
-              <div className="textInputWrapper">
+              <div>
                 <label className="block">
                   <span className="text-sm font-medium">Registry username</span>
                   <input name="username" required autoComplete="username" placeholder="Email or full name"
-                    className="textInput mt-1.5 w-full py-2.5 px-3 placeholder:text-ash outline-none" />
+                    className="w-full" />
                 </label>
               </div>
-              <div className="textInputWrapper">
+              <div>
                 <label className="block">
                   <span className="text-sm font-medium">Registry password</span>
                   <input name="password" type="password" required autoComplete="current-password" placeholder="••••••••"
-                    className="textInput mt-1.5 w-full py-2.5 px-3 placeholder:text-ash outline-none" />
+                    className="w-full" />
                 </label>
               </div>
               <button ref={primaryBtn} type="submit"
-                className="magnetic w-full rounded-xl bg-gold px-4 py-3 text-sm font-semibold tracking-wide text-black transition-[transform,box-shadow,background] duration-300 hover:bg-gold-dark hover:shadow-[0_16px_36px_rgba(213,87,59,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                className="magnetic w-full rounded-xl reg-btn reg-btn-primary text-sm font-semibold tracking-wide transition-[transform,box-shadow,background] duration-300 hover:shadow-[0_16px_36px_rgba(213,87,59,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                 style={{ transitionTimingFunction: EASE }}>
                 Open registry →
               </button>
