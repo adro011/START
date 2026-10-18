@@ -284,9 +284,9 @@ export const PRODUCTS: Product[] = [
     pricePaisa: 249000,
     compareAtPaisa: 299000,
     images: [
-      { src: "/hero/men.svg", alt: "Classic Cotton Panjabi front view" },
-      { src: "/hero/men.svg", alt: "Classic Cotton Panjabi collar detail" },
-      { src: "/hero/men.svg", alt: "Classic Cotton Panjabi on model" },
+      { src: "/products/classic-cotton-panjabi-white-1.jpg", alt: "Classic Cotton Panjabi front view" },
+      { src: "/products/classic-cotton-panjabi-white-2.jpg", alt: "Classic Cotton Panjabi collar detail" },
+      { src: "/products/classic-cotton-panjabi-white-3.jpg", alt: "Classic Cotton Panjabi on model" }
     ],
     sizes: [...S],
     colors: [
@@ -317,8 +317,8 @@ export const PRODUCTS: Product[] = [
     pricePaisa: 499000,
     compareAtPaisa: 599000,
     images: [
-      { src: "/hero/men.svg", alt: "Silk Panjabi front view" },
-      { src: "/hero/men.svg", alt: "Silk Panjabi fabric close-up" },
+      { src: "/products/premium-silk-panjabi-maroon-1.jpg", alt: "Silk Panjabi front view" },
+      { src: "/products/premium-silk-panjabi-maroon-2.jpg", alt: "Silk Panjabi fabric close-up" }
     ],
     sizes: [...S],
     colors: [
@@ -346,8 +346,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Panjabi",
     pricePaisa: 329000,
     images: [
-      { src: "/hero/men.svg", alt: "Addi Panjabi front" },
-      { src: "/hero/men.svg", alt: "Addi Panjabi back" },
+      { src: "/products/addi-panjabi-sky-1.jpg", alt: "Addi Panjabi front" },
+      { src: "/products/addi-panjabi-sky-2.jpg", alt: "Addi Panjabi back" }
     ],
     sizes: [...S],
     colors: [
@@ -375,8 +375,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Fatua",
     pricePaisa: 189000,
     images: [
-      { src: "/hero/men.svg", alt: "Endi Fatua front" },
-      { src: "/hero/men.svg", alt: "Endi Fatua texture detail" },
+      { src: "/products/endi-fatua-natural-1.jpg", alt: "Endi Fatua front" },
+      { src: "/products/endi-fatua-natural-2.jpg", alt: "Endi Fatua texture detail" }
     ],
     sizes: [...S],
     colors: [
@@ -406,8 +406,8 @@ export const PRODUCTS: Product[] = [
     pricePaisa: 179000,
     compareAtPaisa: 229000,
     images: [
-      { src: "/hero/men.svg", alt: "Khaki chinos front" },
-      { src: "/hero/men.svg", alt: "Khaki chinos detail" },
+      { src: "/products/slim-chino-trousers-khaki-1.jpg", alt: "Khaki chinos front" },
+      { src: "/products/slim-chino-trousers-khaki-2.jpg", alt: "Khaki chinos detail" }
     ],
     sizes: [...S],
     colors: [
@@ -435,8 +435,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Shirts",
     pricePaisa: 159000,
     images: [
-      { src: "/hero/men.svg", alt: "Executive shirt front" },
-      { src: "/hero/men.svg", alt: "Executive shirt cuff detail" },
+      { src: "/products/executive-shirt-lightblue-1.jpg", alt: "Executive shirt front" },
+      { src: "/products/executive-shirt-lightblue-2.jpg", alt: "Executive shirt cuff detail" }
     ],
     sizes: [...S],
     colors: [
@@ -464,8 +464,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Coaty",
     pricePaisa: 359000,
     images: [
-      { src: "/hero/men.svg", alt: "Coaty front" },
-      { src: "/hero/men.svg", alt: "Coaty layered look" },
+      { src: "/products/taaga-coaty-charcoal-1.jpg", alt: "Coaty front" },
+      { src: "/products/taaga-coaty-charcoal-2.jpg", alt: "Coaty layered look" }
     ],
     sizes: [...S],
     colors: [
@@ -494,8 +494,8 @@ export const PRODUCTS: Product[] = [
     pricePaisa: 99000,
     compareAtPaisa: 129000,
     images: [
-      { src: "/hero/men.svg", alt: "Lungi folded" },
-      { src: "/hero/men.svg", alt: "Lungi check detail" },
+      { src: "/products/comfort-lungi-check-1.jpg", alt: "Lungi folded" },
+      { src: "/products/comfort-lungi-check-2.jpg", alt: "Lungi check detail" }
     ],
     sizes: [...S],
     colors: [
@@ -526,9 +526,9 @@ export const PRODUCTS: Product[] = [
     categoryName: "Sharee",
     pricePaisa: 549000,
     images: [
-      { src: "/hero/women.svg", alt: "Muslin sharee drape" },
-      { src: "/hero/women.svg", alt: "Muslin sharee border detail" },
-      { src: "/hero/women.svg", alt: "Muslin sharee blouse piece" },
+      { src: "/products/muslin-sharee-rose-1.jpg", alt: "Muslin sharee drape" },
+      { src: "/products/muslin-sharee-rose-2.jpg", alt: "Muslin sharee border detail" },
+      { src: "/products/muslin-sharee-rose-3.jpg", alt: "Muslin sharee blouse piece" }
     ],
     sizes: [...S],
     colors: [
@@ -556,8 +556,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Sharee",
     pricePaisa: 899000,
     images: [
-      { src: "/hero/women.svg", alt: "Jamdani sharee full drape" },
-      { src: "/hero/women.svg", alt: "Jamdani motif close-up" },
+      { src: "/products/jamdani-sharee-emerald-1.jpg", alt: "Jamdani sharee full drape" },
+      { src: "/products/jamdani-sharee-emerald-2.jpg", alt: "Jamdani motif close-up" }
     ],
     sizes: [...S],
     colors: [
@@ -586,8 +586,8 @@ export const PRODUCTS: Product[] = [
     pricePaisa: 299000,
     compareAtPaisa: 359000,
     images: [
-      { src: "/hero/women.svg", alt: "Lawn 3pcs set" },
-      { src: "/hero/women.svg", alt: "Lawn 3pcs embroidery detail" },
+      { src: "/products/lawn-3pcs-mint-1.jpg", alt: "Lawn 3pcs set" },
+      { src: "/products/lawn-3pcs-mint-2.jpg", alt: "Lawn 3pcs embroidery detail" }
     ],
     sizes: [...S],
     colors: [
@@ -615,8 +615,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "3 Pcs & 2 Pcs",
     pricePaisa: 249000,
     images: [
-      { src: "/hero/women.svg", alt: "Cord set front" },
-      { src: "/hero/women.svg", alt: "Cord set back" },
+      { src: "/products/cord-set-lavender-1.jpg", alt: "Cord set front" },
+      { src: "/products/cord-set-lavender-2.jpg", alt: "Cord set back" }
     ],
     sizes: [...S],
     colors: [
@@ -644,8 +644,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Tunic",
     pricePaisa: 199000,
     images: [
-      { src: "/hero/women.svg", alt: "Long tunic front" },
-      { src: "/hero/women.svg", alt: "Long tunic side slit" },
+      { src: "/products/long-tunic-terracotta-1.jpg", alt: "Long tunic front" },
+      { src: "/products/long-tunic-terracotta-2.jpg", alt: "Long tunic side slit" }
     ],
     sizes: [...S],
     colors: [
@@ -674,8 +674,8 @@ export const PRODUCTS: Product[] = [
     pricePaisa: 449000,
     compareAtPaisa: 529000,
     images: [
-      { src: "/hero/women.svg", alt: "Gown full length" },
-      { src: "/hero/women.svg", alt: "Gown waist detail" },
+      { src: "/products/georgette-gown-midnight-1.jpg", alt: "Gown full length" },
+      { src: "/products/georgette-gown-midnight-2.jpg", alt: "Gown waist detail" }
     ],
     sizes: [...S],
     colors: [
@@ -703,8 +703,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Tops & Shirt",
     pricePaisa: 129000,
     images: [
-      { src: "/hero/women.svg", alt: "Floral top front" },
-      { src: "/hero/women.svg", alt: "Floral top print detail" },
+      { src: "/products/casual-tops-floral-1.jpg", alt: "Floral top front" },
+      { src: "/products/casual-tops-floral-2.jpg", alt: "Floral top print detail" }
     ],
     sizes: [...S],
     colors: [
@@ -732,8 +732,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Blazer",
     pricePaisa: 399000,
     images: [
-      { src: "/hero/women.svg", alt: "Blazer front" },
-      { src: "/hero/women.svg", alt: "Blazer lapel detail" },
+      { src: "/products/ladies-blazer-sand-1.jpg", alt: "Blazer front" },
+      { src: "/products/ladies-blazer-sand-2.jpg", alt: "Blazer lapel detail" }
     ],
     sizes: [...S],
     colors: [
@@ -763,8 +763,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Boys",
     pricePaisa: 149000,
     images: [
-      { src: "/hero/kids.svg", alt: "Boys kabli set" },
-      { src: "/hero/kids.svg", alt: "Boys kabli detail" },
+      { src: "/products/boys-kabli-mustard-1.jpg", alt: "Boys kabli set" },
+      { src: "/products/boys-kabli-mustard-2.jpg", alt: "Boys kabli detail" }
     ],
     sizes: [...S],
     colors: [
@@ -792,8 +792,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Boys",
     pricePaisa: 139000,
     images: [
-      { src: "/hero/kids.svg", alt: "Boys panjabi front" },
-      { src: "/hero/kids.svg", alt: "Boys panjabi back snap" },
+      { src: "/products/boys-panjabi-cream-1.jpg", alt: "Boys panjabi front" },
+      { src: "/products/boys-panjabi-cream-2.jpg", alt: "Boys panjabi back snap" }
     ],
     sizes: [...S],
     colors: [
@@ -822,8 +822,8 @@ export const PRODUCTS: Product[] = [
     pricePaisa: 189000,
     compareAtPaisa: 229000,
     images: [
-      { src: "/hero/kids.svg", alt: "Boys denim set" },
-      { src: "/hero/kids.svg", alt: "Boys denim set detail" },
+      { src: "/products/boys-denim-set-indigo-1.jpg", alt: "Boys denim set" },
+      { src: "/products/boys-denim-set-indigo-2.jpg", alt: "Boys denim set detail" }
     ],
     sizes: [...S],
     colors: [
@@ -851,9 +851,9 @@ export const PRODUCTS: Product[] = [
     categoryName: "Girls",
     pricePaisa: 179000,
     images: [
-      { src: "/hero/kids.svg", alt: "Girls 3pcs set" },
-      { src: "/hero/kids.svg", alt: "Girls 3pcs dupatta detail" },
-      { src: "/hero/kids.svg", alt: "Girls 3pcs back" },
+      { src: "/products/girls-3pcs-peach-1.jpg", alt: "Girls 3pcs set" },
+      { src: "/products/girls-3pcs-peach-2.jpg", alt: "Girls 3pcs dupatta detail" },
+      { src: "/products/girls-3pcs-peach-3.jpg", alt: "Girls 3pcs back" }
     ],
     sizes: [...S],
     colors: [
@@ -881,8 +881,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Girls",
     pricePaisa: 159000,
     images: [
-      { src: "/hero/kids.svg", alt: "Girls 2pcs set" },
-      { src: "/hero/kids.svg", alt: "Girls 2pcs print detail" },
+      { src: "/products/girls-2pcs-sky-1.jpg", alt: "Girls 2pcs set" },
+      { src: "/products/girls-2pcs-sky-2.jpg", alt: "Girls 2pcs print detail" }
     ],
     sizes: [...S],
     colors: [
@@ -911,8 +911,8 @@ export const PRODUCTS: Product[] = [
     pricePaisa: 149000,
     compareAtPaisa: 189000,
     images: [
-      { src: "/hero/kids.svg", alt: "Girls jumpsuit front" },
-      { src: "/hero/kids.svg", alt: "Girls jumpsuit pocket detail" },
+      { src: "/products/girls-jumpsuit-coral-1.jpg", alt: "Girls jumpsuit front" },
+      { src: "/products/girls-jumpsuit-coral-2.jpg", alt: "Girls jumpsuit pocket detail" }
     ],
     sizes: [...S],
     colors: [
@@ -940,8 +940,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Boys",
     pricePaisa: 99000,
     images: [
-      { src: "/hero/kids.svg", alt: "Kids tee pack" },
-      { src: "/hero/kids.svg", alt: "Kids tee fabric" },
+      { src: "/products/kids-tee-duo-mint-1.jpg", alt: "Kids tee pack" },
+      { src: "/products/kids-tee-duo-mint-2.jpg", alt: "Kids tee fabric" }
     ],
     sizes: [...S],
     colors: [
@@ -969,8 +969,8 @@ export const PRODUCTS: Product[] = [
     categoryName: "Girls",
     pricePaisa: 89000,
     images: [
-      { src: "/hero/kids.svg", alt: "Girls yellow top" },
-      { src: "/hero/kids.svg", alt: "Girls top sleeve detail" },
+      { src: "/products/girls-top-yellow-1.jpg", alt: "Girls yellow top" },
+      { src: "/products/girls-top-yellow-2.jpg", alt: "Girls top sleeve detail" }
     ],
     sizes: [...S],
     colors: [
