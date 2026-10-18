@@ -75,33 +75,52 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           letterSpacing: "0.02em",
         }}
       >
-        {/* Single full-screen brand loader: injected before first paint, gates the
-            hero entrance via html[data-loader] (see globals.css), removes itself
-            after window load (400ms min display, 500ms fade, 6s failsafe). */}
+        {/* Single full-screen brand loader: server-rendered black stage + gold
+            ring (#abrar-loader in globals.css). The gate style holds the hero
+            entrance at frame 0; the boot script removes loader + gate after
+            window load (400ms min display, 500ms fade, 6s failsafe), waiting
+            for hydration (data-mounted) so React never sees a missing node. */}
+        <style
+          id="abrar-loader-gate"
+          dangerouslySetInnerHTML={{
+            __html:
+              ".hero-text-rise,.hero-enter,.cover-media{animation-play-state:paused!important}",
+          }}
+        />
+        <div id="abrar-loader" aria-hidden="true" />
+        <noscript>
+          <style>{"#abrar-loader{display:none}"}</style>
+        </noscript>
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){
-  var root=document.documentElement;
-  root.setAttribute("data-loader","1");
-  document.body.insertAdjacentHTML("afterbegin",'<style id="abrar-loader-css">#abrar-loader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#000;transition:opacity 500ms ease}#abrar-loader::after{content:"";width:56px;height:56px;border-radius:50%;border:3px solid rgba(212,175,55,.2);border-top-color:#D4AF37;border-right-color:#F5C518;box-shadow:0 0 18px rgba(212,175,55,.45);animation:abrar-spin .9s linear infinite}@keyframes abrar-spin{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){#abrar-loader{transition:none!important}#abrar-loader::after{animation-duration:2s!important}}</style><div id="abrar-loader" aria-hidden="true"></div>');
-  var t0=Date.now(),done=false;
-  function finish(){
-    if(done)return;done=true;
+  var t0=Date.now(),done=false,root=document.documentElement;
+  function cleanup(){
     var el=document.getElementById("abrar-loader");
-    var st=document.getElementById("abrar-loader-css");
-    function remove(){
-      if(el&&el.parentNode)el.parentNode.removeChild(el);
-      if(st&&st.parentNode)st.parentNode.removeChild(st);
-      root.removeAttribute("data-loader");
-    }
-    if(!el||window.matchMedia("(prefers-reduced-motion: reduce)").matches){remove();return;}
-    el.style.opacity="0";
-    setTimeout(remove,500);
+    var gate=document.getElementById("abrar-loader-gate");
+    if(el&&el.parentNode)el.parentNode.removeChild(el);
+    if(gate&&gate.parentNode)gate.parentNode.removeChild(gate);
   }
-  function onReady(){setTimeout(finish,Math.max(0,400-(Date.now()-t0)));}
+  function finish(){
+    if(done)return;
+    done=true;
+    var el=document.getElementById("abrar-loader");
+    if(!el||window.matchMedia("(prefers-reduced-motion: reduce)").matches){cleanup();return;}
+    el.style.opacity="0";
+    setTimeout(cleanup,500);
+  }
+  function whenMounted(cb){
+    if(root.getAttribute("data-mounted")==="1"){cb();return;}
+    var n=0,iv=setInterval(function(){
+      if(root.getAttribute("data-mounted")==="1"||++n>60){clearInterval(iv);cb();}
+    },50);
+  }
+  function onReady(){
+    setTimeout(function(){whenMounted(finish);},Math.max(0,400-(Date.now()-t0)));
+  }
   if(document.readyState==="complete")onReady();
   else window.addEventListener("load",onReady,{once:true});
-  setTimeout(finish,6000);
+  setTimeout(function(){whenMounted(finish);},6000);
 })();`,
           }}
         />
