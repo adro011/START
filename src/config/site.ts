@@ -8,17 +8,29 @@
 
 export const BRAND_NAME = "ABRAR";
 
+/**
+ * ── CONTACT / WHATSAPP — SINGLE SOURCE OF TRUTH ─────────────────────────────
+ * The one number used by the header, footer, product page and every wa.me
+ * link. Change it HERE, or set NEXT_PUBLIC_WHATSAPP at build time (full
+ * international form, e.g. "+8801XXXXXXXXX") without editing code.
+ */
+const WHATSAPP_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP ?? "+8801712216576").trim();
+const WHATSAPP_DIGITS = WHATSAPP_NUMBER.replace(/\D/g, "");
+const WHATSAPP_DISPLAY = WHATSAPP_DIGITS.startsWith("880")
+  ? `0${WHATSAPP_DIGITS.slice(3)}`
+  : WHATSAPP_DIGITS;
+
 export const SITE = {
   name: BRAND_NAME,
   tagline: "Connecting Consumer through Digital media",
   description:
     "ABRAR — Connecting Consumer through Digital media. A modern Bangladeshi heritage label — panjabis, sharees, kurtas and kids' wear in breathable fabrics, cut for real life and made to be reworn.",
-  phone: "+8801712216576",
-  whatsapp: "+8801712216576",
-  /** Digits-only WhatsApp for wa.me links (derived, keeps placeholder in one place). */
-  whatsappDigits: "8801712216576",
-  whatsappDisplay: "01712216576",
-  email: "ziahoque@1980@gmail.com",
+  phone: WHATSAPP_NUMBER,
+  whatsapp: WHATSAPP_NUMBER,
+  /** Digits-only WhatsApp for wa.me links (derived from WHATSAPP_NUMBER). */
+  whatsappDigits: WHATSAPP_DIGITS,
+  whatsappDisplay: WHATSAPP_DISPLAY,
+  email: "ziahoque1980@gmail.com",
   currency: "৳" as const,
   locale: "en-BD" as const,
   socials: {
