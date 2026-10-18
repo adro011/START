@@ -71,7 +71,7 @@ function SectionHeading({
     <Reveal>
       <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
         <div className="max-w-[22rem] sm:max-w-none">
-          <p className="kicker text-clay">{kicker}</p>
+          <p className="kicker text-blush">{kicker}</p>
           <h2
             className={`display-xl mt-3 ${dark ? "text-[#FBF6F3]" : "text-[#F5F5F5]"}`}
           >
@@ -346,7 +346,7 @@ export default async function HomePage() {
       {/* ── Brand statement ─────────────────────────── */}
       <section aria-label="House statement" className="mx-auto max-w-[1280px] px-4 pt-16 pb-4 sm:px-6">
         <Reveal>
-          <p className="kicker text-clay">The house of Abrar</p>
+          <p className="kicker text-blush">The house of Abrar</p>
           <p className="display-xl mt-4 max-w-[16ch] text-[#F5F5F5]">
             Quiet luxury, cut for real weather <em className="text-gold not-italic underline decoration-[#D5573B]/40 decoration-2 underline-offset-8">and real bodies.</em>
           </p>
