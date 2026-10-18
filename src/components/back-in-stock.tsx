@@ -44,14 +44,16 @@ export default function BackInStock({ sku }: { sku: string | null }) {
     <form onSubmit={submit} className="mt-3 rounded-xl border border-dashed p-3">
       <p className="text-sm font-medium">Out of stock? Get notified</p>
       <div className="mt-2 flex gap-2">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
-          aria-label="Email for back-in-stock alert"
-          className="min-w-0 flex-1 rounded-lg border px-3 py-2 text-sm"
-        />
+        <div className="textInputWrapper min-w-0 flex-1">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            aria-label="Email for back-in-stock alert"
+            className="textInput w-full py-2 px-3 placeholder:text-ash outline-none"
+          />
+        </div>
         <button
           type="submit"
           disabled={loading}

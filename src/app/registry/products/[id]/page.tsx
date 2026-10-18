@@ -208,7 +208,7 @@ export default async function RegistryProductPage({
                       name="name"
                       defaultValue={product.name}
                       required
-                      className="w-full rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 text-sm"
+                      className="textInput w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 text-sm"
                     />
                   </div>
                   <div>
@@ -236,7 +236,7 @@ export default async function RegistryProductPage({
                       min="0"
                       required
                       inputMode="numeric"
-                      className="w-full rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 text-sm"
+                      className="textInput w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 text-sm"
                     />
                   </div>
                   <div className="self-end">

@@ -209,20 +209,22 @@ export default function SearchPalette() {
             commitSearch(query);
           }}
         >
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={onInputKeyDown}
-            role="combobox"
-            aria-expanded={results.length > 0}
-            aria-controls="search-palette-listbox"
-            aria-activedescendant={activeId}
-            aria-label="Search products"
-            autoComplete="off"
-            placeholder="Search panjabi, sharee, kabli…  (Esc to close)"
-            className={cn("w-full border-b px-4 py-3 text-base outline-none", RING)}
-          />
+          <div className="textInputWrapper">
+            <input
+              ref={inputRef}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={onInputKeyDown}
+              role="combobox"
+              aria-expanded={results.length > 0}
+              aria-controls="search-palette-listbox"
+              aria-activedescendant={activeId}
+              aria-label="Search products"
+              autoComplete="off"
+              placeholder="Search panjabi, sharee, kabli…  (Esc to close)"
+              className={cn("w-full border-b px-4 py-3 text-base outline-none", RING)}
+            />
+          </div>
         </form>
         <div className="max-h-80 overflow-y-auto p-2">
           {debounced === "" && recent.length > 0 && (

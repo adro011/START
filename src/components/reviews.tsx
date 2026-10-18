@@ -57,9 +57,15 @@ export default function Reviews({ slug, rating, reviewCount, liveReviews }: { sl
               ))}
             </select>
           </label>
-          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" required className="w-full rounded border px-3 py-2 text-sm" />
-          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title (optional)" className="w-full rounded border px-3 py-2 text-sm" />
-          <textarea value={body} onChange={(e) => setBody(e.target.value)} placeholder="Fit, fabric, delivery…" required rows={3} className="w-full rounded border px-3 py-2 text-sm" />
+          <div className="textInputWrapper">
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" required className="textInput w-full py-2 px-3 placeholder:text-ash outline-none" />
+          </div>
+          <div className="textInputWrapper">
+            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title (optional)" className="textInput w-full py-2 px-3 placeholder:text-ash outline-none" />
+          </div>
+          <div className="textInputWrapper">
+            <textarea value={body} onChange={(e) => setBody(e.target.value)} placeholder="Fit, fabric, delivery…" required rows={3} className="textInput w-full py-3 px-3 resize-y placeholder:text-ash outline-none" />
+          </div>
           <p className="text-xs text-ash">Photos: max 3 per review (upload coming with accounts — describe them for now).</p>
           <button type="submit" className="rounded-full bg-gold px-5 py-2 text-sm font-medium text-black hover:bg-gold-dark">
             Submit review

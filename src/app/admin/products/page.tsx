@@ -49,7 +49,9 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
       </div>
 
       <form method="get" className="flex flex-wrap gap-2 text-sm">
-        <input name="q" defaultValue={sp.q ?? ''} placeholder="Search name or slug…" aria-label="Search products" className="min-w-52 flex-1 rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2" />
+        <div className="textInputWrapper min-w-52 flex-1">
+          <input name="q" defaultValue={sp.q ?? ''} placeholder="Search name or slug…" aria-label="Search products" className="textInput w-full py-2 px-3 placeholder:text-ash outline-none" />
+        </div>
         <select name="section" defaultValue={section} aria-label="Filter by section" className="rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2">
           <option value="">All sections</option>
           <option value="men">Men</option>

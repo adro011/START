@@ -68,32 +68,36 @@ export default function ReviewForm({
         <label htmlFor="review-title" className="block text-sm font-medium text-smoke">
           Title
         </label>
-        <input
-          id="review-title"
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Give your review a title"
-          maxLength={80}
-          disabled={disabled}
-          className="w-full rounded border border-white/20 bg-[#FBF6F3]/10 px-3 py-2 text-sm text-smoke placeholder:text-ash/60 focus:ring-2 focus:ring-gold outline-none disabled:opacity-50 disabled:pointer-events-none"
-        />
+        <div className="textInputWrapper">
+          <input
+            id="review-title"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Give your review a title"
+            maxLength={80}
+            disabled={disabled}
+            className="textInput w-full py-2 px-3 placeholder:text-ash outline-none disabled:opacity-50 disabled:pointer-events-none"
+          />
+        </div>
       </div>
 
       <div className="space-y-1">
         <label htmlFor="review-body" className="block text-sm font-medium text-smoke">
           Review
         </label>
-        <textarea
-          id="review-body"
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          placeholder="Fit, fabric, delivery…"
-          rows={4}
-          maxLength={1000}
-          disabled={disabled}
-          className="w-full rounded border border-white/20 bg-[#FBF6F3]/10 px-3 py-2 text-sm text-smoke placeholder:text-ash/60 focus:ring-2 focus:ring-gold outline-none disabled:opacity-50 disabled:pointer-events-none"
-        />
+        <div className="textInputWrapper">
+          <textarea
+            id="review-body"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Fit, fabric, delivery…"
+            rows={4}
+            maxLength={1000}
+            disabled={disabled}
+            className="textInput w-full py-3 px-3 resize-y placeholder:text-ash outline-none disabled:opacity-50 disabled:pointer-events-none"
+          />
+        </div>
       </div>
 
       <button

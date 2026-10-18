@@ -33,7 +33,7 @@ const TYPE_LABELS: Record<TypeValue, string> = {
 };
 
 const INPUT =
-  "w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash";
+  "textInput w-full bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash";
 
 export const registryFormSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters.").max(120),

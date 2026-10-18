@@ -1003,6 +1003,43 @@ a:active,
   }
 }
 
+/* Standalone variant: the same gold underline reveal works directly on an
+   input/textarea that has no `.textInputWrapper` parent (admin/registry forms).
+   The gold bar is a bottom-anchored background gradient whose width animates. */
+.textInput {
+  border: none;
+  border-radius: 0;
+  outline: none;
+  background-image: linear-gradient(var(--color-gold), var(--color-gold));
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 0% 2px;
+  transition: background-size 250ms cubic-bezier(0, 0, 0.2, 1) 0ms,
+    background-color 200ms var(--ease-lux), opacity 200ms var(--ease-lux);
+}
+
+.textInput:focus,
+.textInput:active {
+  background-size: 100% 2px;
+  background-color: var(--color-charcoal, #202020);
+}
+
+.textInput::placeholder {
+  color: rgba(255, 255, 255, 0.58);
+  transition: opacity 250ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  opacity: 1;
+}
+
+.textInput:focus::placeholder {
+  opacity: 0;
+}
+
+/* When a wrapper is present, the pseudo-elements own the underline — drop the
+   standalone background bar so there is never a doubled border. */
+.textInputWrapper .textInput {
+  background-image: none;
+}
+
 /* Uiverse.io text input border-focus animation — gold accent, placeholder fade */
 .textInputWrapper {
   position: relative;

@@ -30,8 +30,8 @@ export default async function SettingsPage() {
         </table>
       </div>
       <form action={settingsStub} className="grid gap-3 rounded-lg border border-white/15 p-4 text-sm sm:grid-cols-3">
-        <label className="block">Key<input name="key" required placeholder="announcement" className="mt-1 w-full rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 font-mono" /></label>
-        <label className="block sm:col-span-2">Value (JSON or text)<input name="value" required placeholder='{"men":"…"} or 6000' className="mt-1 w-full rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 font-mono" /></label>
+        <label className="block">Key<input name="key" required placeholder="announcement" className="textInput mt-1 w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 font-mono" /></label>
+        <label className="block sm:col-span-2">Value (JSON or text)<input name="value" required placeholder='{"men":"…"} or 6000' className="textInput mt-1 w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 font-mono" /></label>
         <div className="sm:col-span-3"><button type="submit" className="rounded bg-gold px-4 py-2 font-medium text-black hover:bg-gold-dark">Save setting (stub)</button></div>
       </form>
     </div>

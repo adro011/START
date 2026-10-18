@@ -27,21 +27,21 @@ export default function ContactPage() {
             data-contact-form
             className="space-y-5 border border-white/15 bg-[#181818] p-6 sm:p-8"
           >
-            <div>
+            <div className="textInputWrapper">
               <label htmlFor="name" className="text-sm font-semibold uppercase tracking-[0.12em]">Name</label>
               <input id="name" name="name" required minLength={2} maxLength={80} autoComplete="name" placeholder="Your full name"
-                className="mt-2 w-full border border-white/15 bg-[#181818] px-4 py-3 outline-none placeholder:text-ash focus:border-gold" />
+                className="textInput w-full bg-[#181818] border-0 py-3 placeholder:text-ash outline-none" />
             </div>
-            <div>
+            <div className="textInputWrapper">
               <label htmlFor="email" className="text-sm font-semibold uppercase tracking-[0.12em]">Email</label>
               <input id="email" name="email" type="email" required maxLength={160} autoComplete="email" placeholder="you@example.com"
-                className="mt-2 w-full border border-white/15 bg-[#181818] px-4 py-3 outline-none placeholder:text-ash focus:border-gold" />
+                className="textInput w-full bg-[#181818] border-0 py-3 placeholder:text-ash outline-none" />
             </div>
-            <div>
+            <div className="textInputWrapper">
               <label htmlFor="message" className="text-sm font-semibold uppercase tracking-[0.12em]">Message</label>
               <textarea id="message" name="message" required minLength={10} maxLength={2000} rows={5}
                 placeholder="Order no. (if any), size, district — e.g. Panjabi size 42 to Uttara, needed before Eid…"
-                className="mt-2 w-full resize-y border border-white/15 bg-[#181818] px-4 py-3 outline-none placeholder:text-ash focus:border-gold" />
+                className="textInput w-full bg-[#181818] border-0 resize-y py-3 placeholder:text-ash outline-none" />
             </div>
             {/* honeypot */}
             <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />

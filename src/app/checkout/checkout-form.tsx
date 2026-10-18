@@ -106,10 +106,16 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
       <div className="space-y-4">
         <fieldset className="space-y-2 rounded-xl border p-4">
           <legend className="px-1 text-sm font-semibold">Contact</legend>
-          <input value={name} onChange={(e) => setName(e.target.value)} required minLength={2} placeholder="Full name" className="w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
+          <div className="textInputWrapper">
+            <input value={name} onChange={(e) => setName(e.target.value)} required minLength={2} placeholder="Full name" className="textInput w-full py-2 px-3 bg-[#111111] placeholder:text-ash outline-none" />
+          </div>
           <div className="grid gap-2 sm:grid-cols-2">
-            <input value={phone} onChange={(e) => setPhone(e.target.value)} required inputMode="numeric" placeholder="01XXXXXXXXX" aria-describedby="phone-hint" className="rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email (receipt, optional)" className="rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
+            <div className="textInputWrapper">
+              <input value={phone} onChange={(e) => setPhone(e.target.value)} required inputMode="numeric" placeholder="01XXXXXXXXX" aria-describedby="phone-hint" className="textInput w-full py-2 px-3 bg-[#111111] placeholder:text-ash outline-none" />
+            </div>
+            <div className="textInputWrapper">
+              <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email (receipt, optional)" className="textInput w-full py-2 px-3 bg-[#111111] placeholder:text-ash outline-none" />
+            </div>
           </div>
           <p id="phone-hint" className="text-xs text-ash">BD mobile format: ^01[3-9]\d{8}$ — guest checkout allowed, or sign in later.</p>
         </fieldset>
@@ -134,9 +140,15 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
               </select>
             </label>
           </div>
-          <input value={area} onChange={(e) => setArea(e.target.value)} required placeholder="Area (e.g. Mirpur 10)" className="w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
-          <input value={line1} onChange={(e) => setLine1(e.target.value)} required minLength={4} placeholder="House / road / landmark" className="w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
-          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Delivery notes (optional)" rows={2} className="w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-ash" />
+          <div className="textInputWrapper">
+              <input value={area} onChange={(e) => setArea(e.target.value)} required placeholder="Area (e.g. Mirpur 10)" className="textInput w-full py-2 px-3 bg-[#111111] placeholder:text-ash outline-none" />
+            </div>
+            <div className="textInputWrapper">
+              <input value={line1} onChange={(e) => setLine1(e.target.value)} required minLength={4} placeholder="House / road / landmark" className="textInput w-full py-2 px-3 bg-[#111111] placeholder:text-ash outline-none" />
+            </div>
+            <div className="textInputWrapper">
+              <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Delivery notes (optional)" rows={2} className="textInput w-full bg-[#111111] border-0 resize-y py-3 placeholder:text-ash outline-none" />
+            </div>
         </fieldset>
 
         <fieldset className="space-y-2 rounded-xl border p-4">
@@ -170,7 +182,9 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
             </li>
           ))}
         </ul>
-        <input value={coupon} onChange={(e) => setCoupon(e.target.value)} placeholder="Coupon (optional)" aria-label="Coupon" className="w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-sm uppercase text-[#F5F5F5] placeholder:text-ash" />
+        <div className="textInputWrapper">
+          <input value={coupon} onChange={(e) => setCoupon(e.target.value)} placeholder="Coupon (optional)" aria-label="Coupon" className="textInput w-full py-2 px-3 bg-[#111111] uppercase placeholder:text-ash outline-none" />
+        </div>
         <div className="flex justify-between text-sm font-semibold">
           <span>Subtotal</span>
           <span>{formatBDT(subtotal)}</span>

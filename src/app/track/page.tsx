@@ -56,8 +56,12 @@ export default function TrackPage() {
       <h1 className="text-2xl font-semibold">Track your order</h1>
       <p className="mt-1 text-sm text-ash">Enter the order no (e.g. BR-100231) + the phone used at checkout.</p>
       <form onSubmit={submit} className="mt-4 space-y-2 rounded-xl border p-4">
-        <input value={orderNo} onChange={(e) => setOrderNo(e.target.value)} placeholder="BR-123456" aria-label="Order number" className="w-full rounded border px-3 py-2 font-mono text-sm uppercase" />
-        <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="01XXXXXXXXX" aria-label="Phone" inputMode="numeric" className="w-full rounded border px-3 py-2 text-sm" />
+        <div className="textInputWrapper">
+          <input value={orderNo} onChange={(e) => setOrderNo(e.target.value)} placeholder="BR-123456" aria-label="Order number" className="textInput w-full py-2 px-3 font-mono uppercase placeholder:text-ash outline-none" />
+        </div>
+        <div className="textInputWrapper">
+          <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="01XXXXXXXXX" aria-label="Phone" inputMode="numeric" className="textInput w-full py-2 px-3 placeholder:text-ash outline-none" />
+        </div>
         <button disabled={loading} className="w-full rounded-full bg-gold py-2.5 text-sm font-semibold text-black hover:bg-gold-dark disabled:opacity-60">
           {loading ? "Tracking…" : "Track"}
         </button>

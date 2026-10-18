@@ -60,13 +60,15 @@ export default function CartPage() {
           </ul>
           <aside className="h-fit space-y-3 rounded-xl border p-4">
             <div className="flex gap-2">
-              <input
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="Coupon (WELCOME10 / FREESHIP)"
-                aria-label="Coupon code"
-                className="min-w-0 flex-1 rounded-lg border border-white/15 bg-[#111111] px-3 py-2 text-sm uppercase text-[#F5F5F5] placeholder:text-ash"
-              />
+              <div className="textInputWrapper min-w-0 flex-1">
+                <input
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  placeholder="Coupon (WELCOME10 / FREESHIP)"
+                  aria-label="Coupon code"
+                  className="textInput w-full py-2 px-3 bg-[#111111] uppercase placeholder:text-ash outline-none"
+                />
+              </div>
               <button onClick={apply} className="rounded-full border px-4 py-2 text-sm font-medium">Apply</button>
             </div>
             {applied && validation?.valid && (

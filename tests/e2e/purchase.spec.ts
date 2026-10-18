@@ -12,10 +12,18 @@ import { expect, test } from '@playwright/test';
 
 test.describe('purchase flow (COD)', () => {
   test('homepage -> Men -> product -> cart -> checkout -> BR- order', async ({ page }) => {
-    // 1. Homepage loads
+    // 1. Homepage loads. A cold `next dev` boot (fresh .next) can be slow, so
+    // wait for a settled document before querying roles.
     await page.goto('/');
-    await expect(page).toHaveTitle(/brand|men|women|kids|store|fashion/i, { timeout: 15000 }).catch(() => {});
-    await expect(page.getByRole('navigation').first()).toBeVisible({ timeout: 15000 });
+    await page.waitForLoadState('load');
+    // Best-effort title check against the real title (`ABRAR — <tagline>`,
+    // see src/config/site.ts). Short timeout so a mismatch can never starve
+    // the rest of the 30s test budget.
+    await expect(page).toHaveTitle(/abr.ar|connecting/i, { timeout: 5000 }).catch(() => {});
+    // Explicit desktop mega-menu nav: aria-label="Primary", `hidden lg:block`
+    // (visible at Desktop Chrome's 1280px viewport; the Mobile nav is
+    // `lg:hidden` there). Unique — footer navs are Shop/Help/Company.
+    await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible({ timeout: 15000 });
 
     // 2. Navigate to Men (nav link, case-insensitive)
     const menLink = page.getByRole('link', { name: /^men$/i }).first();

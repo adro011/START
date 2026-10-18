@@ -29,10 +29,10 @@ export default async function CouponsPage() {
         </table>
       </div>
       <form action={couponStub} className="grid gap-3 rounded-lg border border-white/15 p-4 text-sm sm:grid-cols-4">
-        <label className="block">Code<input name="code" required placeholder="EID15" className="mt-1 w-full rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 uppercase" /></label>
+        <label className="block">Code<input name="code" required placeholder="EID15" className="textInput mt-1 w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2 uppercase" /></label>
         <label className="block">Type<select name="type" className="mt-1 w-full rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2"><option value="percent">percent</option><option value="fixed">fixed</option><option value="free_shipping">free_shipping</option></select></label>
-        <label className="block">Value<input name="value" inputMode="numeric" placeholder="10 or paisa" className="mt-1 w-full rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2" /></label>
-        <label className="block">Min subtotal (paisa)<input name="min" inputMode="numeric" className="mt-1 w-full rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2" /></label>
+        <label className="block">Value<input name="value" inputMode="numeric" placeholder="10 or paisa" className="textInput mt-1 w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2" /></label>
+        <label className="block">Min subtotal (paisa)<input name="min" inputMode="numeric" className="textInput mt-1 w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2" /></label>
         <div className="sm:col-span-4"><button type="submit" className="rounded bg-gold px-4 py-2 font-medium text-black hover:bg-gold-dark">Save coupon (stub)</button></div>
       </form>
     </div>
