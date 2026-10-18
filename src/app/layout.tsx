@@ -53,7 +53,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   // Locale cookie drives <html lang> + footer dictionary (header reads it client-side).
   const locale = (await cookies()).get("locale")?.value === "bn" ? "bn" : "en";
   return (
-    <html lang={locale} className="overflow-x-hidden">
+    <html lang={locale} className="overflow-x-clip">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -68,7 +68,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         />
       </head>
       <body
-        className="overflow-x-hidden bg-[#000000] text-[#F5F5F5] antialiased"
+        className="overflow-x-clip bg-[#000000] text-[#F5F5F5] antialiased"
         style={{
           fontFamily: "'LamboType', 'Roboto', 'Helvetica Neue', Arial, ui-sans-serif, system-ui, sans-serif",
           textTransform: "uppercase",
@@ -77,16 +77,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       >
         {/* Single full-screen brand loader: server-rendered black stage + gold
             ring (#abrar-loader in globals.css). The gate style holds the hero
-            entrance at frame 0; the boot script removes loader + gate after
-            window load (400ms min display, 500ms fade, 6s failsafe), waiting
-            for hydration (data-mounted) so React never sees a missing node. */}
-        <style
-          id="abrar-loader-gate"
-          dangerouslySetInnerHTML={{
-            __html:
-              ".hero-text-rise,.hero-enter,.cover-media{animation-play-state:paused!important}",
-          }}
-        />
+            entrance at frame 0 until the loader fades. The boot script NEVER
+            removes React-owned nodes (that corrupts React's tree and crashes
+            the next client-side navigation) — it only sets `data-done` + styles
+            on the loader, then waits for hydration (data-mounted). */}
         <div id="abrar-loader" aria-hidden="true" />
         <noscript>
           <style>{"#abrar-loader{display:none}"}</style>
@@ -95,19 +89,22 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           dangerouslySetInnerHTML={{
             __html: `(function(){
   var t0=Date.now(),done=false,root=document.documentElement;
-  function cleanup(){
-    var el=document.getElementById("abrar-loader");
-    var gate=document.getElementById("abrar-loader-gate");
-    if(el&&el.parentNode)el.parentNode.removeChild(el);
-    if(gate&&gate.parentNode)gate.parentNode.removeChild(gate);
+  function hide(el){
+    el.setAttribute("data-done","1");
+    el.style.opacity="0";
+    el.style.pointerEvents="none";
+    setTimeout(function(){ if(el)el.style.visibility="hidden"; },500);
   }
   function finish(){
     if(done)return;
     done=true;
     var el=document.getElementById("abrar-loader");
-    if(!el||window.matchMedia("(prefers-reduced-motion: reduce)").matches){cleanup();return;}
+    if(!el)return;
+    if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){hide(el);return;}
+    el.setAttribute("data-done","1");
     el.style.opacity="0";
-    setTimeout(cleanup,500);
+    el.style.pointerEvents="none";
+    setTimeout(function(){ if(el)el.style.visibility="hidden"; },500);
   }
   function whenMounted(cb){
     if(root.getAttribute("data-mounted")==="1"){cb();return;}

@@ -92,8 +92,26 @@ a[href^="mailto:"] {
 }
 
 /* Single full-screen brand loader: opaque black stage + 56px gold ring.
-   Hero entrance is held at frame 0 by #abrar-loader-gate (inline in layout)
-   until the boot script fades this out and removes both. */
+   Server-rendered by the root layout. The boot script ONLY mutates the
+   loader's own style/data attributes: React owns these nodes and removing
+   them corrupts its tree (insertBefore/removeChild crash on the next
+   client-side navigation), so the node stays mounted but hidden. */
+body:has(#abrar-loader:not([data-done])) .hero-text-rise,
+body:has(#abrar-loader:not([data-done])) .hero-enter,
+body:has(#abrar-loader:not([data-done])) .cover-media {
+  animation-play-state: paused !important;
+}
+@media (scripting: none) {
+  #abrar-loader {
+    display: none;
+  }
+  /* No JS to release the gate — run the entrances as normal. */
+  body:has(#abrar-loader) .hero-text-rise,
+  body:has(#abrar-loader) .hero-enter,
+  body:has(#abrar-loader) .cover-media {
+    animation-play-state: running !important;
+  }
+}
 #abrar-loader {
   position: fixed;
   inset: 0;
@@ -121,8 +139,11 @@ a[href^="mailto:"] {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  #abrar-loader {
+    transition: none !important;
+  }
   #abrar-loader::after {
-    animation-duration: 2s;
+    animation-duration: 2s !important;
   }
 }
 
@@ -146,6 +167,52 @@ a[href^="mailto:"] {
 .logo-glow {
   animation: logo-glow-breathe 4.2s ease-in-out infinite alternate;
   will-change: text-shadow;
+}
+
+/* ── Lamborghini-style gold lighting on the header brand mark. A warm
+   #FFC000 spotlight sits behind the lockup while the mark and wordmark
+   carry stacked gold halos — the mark reads as if lit from within against
+   the permanent black header. Only the halo's opacity/scale breathe (cheap
+   compositor work); the mark/word shadows are painted once. ── */
+@keyframes brand-light-breathe {
+  from {
+    opacity: 0.4;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 0.9;
+    transform: scale(1.06);
+  }
+}
+
+.brand-halo {
+  position: absolute;
+  inset: -30% -14%;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 999px;
+  background: radial-gradient(
+    closest-side,
+    rgb(255 192 0 / 0.42),
+    rgb(255 192 0 / 0.14) 58%,
+    rgb(255 192 0 / 0) 100%
+  );
+  filter: blur(6px);
+  animation: brand-light-breathe 4.2s ease-in-out infinite alternate;
+}
+
+.brand-mark-glow {
+  filter: drop-shadow(0 0 4px rgb(255 192 0 / 0.85))
+    drop-shadow(0 0 14px rgb(255 192 0 / 0.45))
+    drop-shadow(0 0 30px rgb(221 179 33 / 0.24));
+}
+
+.brand-word-glow {
+  text-shadow:
+    0 0 4px rgb(255 192 0 / 0.8),
+    0 0 12px rgb(255 192 0 / 0.42),
+    0 0 28px rgb(221 179 33 / 0.26),
+    0 0 52px rgb(216 160 22 / 0.14);
 }
 
 /* ── Gucci-style full-viewport cover: fade in, settle 1.14→1.02,
@@ -590,6 +657,27 @@ html.lenis body {
   z-index: 50;
 }
 
+/* ── Product filter sidebar: hug content + sticky + slim scrollbar.
+   `overflow-y: auto` keeps the scrollbar hidden until content overflows. ── */
+
+.filter-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, #FFC000 40%, transparent) transparent;
+}
+
+.filter-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filter-sidebar::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, #FFC000 35%, transparent);
+  border-radius: 9999px;
+}
+
 /* ── Cards & containers: zero radius, charcoal on black ── */
 
 @layer components {
@@ -926,6 +1014,10 @@ a:active,
   }
   .logo-glow {
     animation: none;
+  }
+  .brand-halo {
+    animation: none;
+    opacity: 0.7;
   }
 
   .reveal,
