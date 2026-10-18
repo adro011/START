@@ -639,18 +639,34 @@ html.lenis body {
   border: none;
 }
 
-/* Frosted glass */
+/* Frosted glass — blur behind @supports so the minifier keeps the unprefixed property */
 .glass {
   background: color-mix(in srgb, #fbf6f3 72%, transparent);
-  backdrop-filter: blur(18px) saturate(1.25);
-  -webkit-backdrop-filter: blur(18px) saturate(1.25);
   border: 1px solid color-mix(in srgb, #172121 12%, transparent);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .glass {
+    backdrop-filter: blur(18px) saturate(1.25);
+  }
+}
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  .glass {
+    -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  }
 }
 .glass-dark {
   background: color-mix(in srgb, #172121 62%, transparent);
-  backdrop-filter: blur(18px) saturate(1.2);
-  -webkit-backdrop-filter: blur(18px) saturate(1.2);
   border: 1px solid rgba(251, 246, 243, 0.14);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .glass-dark {
+    backdrop-filter: blur(18px) saturate(1.2);
+  }
+}
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  .glass-dark {
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  }
 }
 }
 
