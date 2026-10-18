@@ -65,7 +65,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
               alt={first.alt || p.name}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
-              className="object-cover transition-all duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
+              className="object-cover transition-all duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06] group-hover:translate-y-[-2px]"
             />
             {second && (
               <Image

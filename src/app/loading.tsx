@@ -1,7 +1,7 @@
 /** Branded home skeleton — gold‑pulse, no layout shift. */
 export default function Loading() {
   return (
-    <div aria-busy="true" aria-label="Loading" className="mx-auto max-w-[1440px] px-3 pt-3 sm:px-4">
+    <div role="status" aria-busy="true" aria-label="Loading" className="mx-auto max-w-[1440px] px-3 pt-3 sm:px-4">
       <div className="flex min-h-[78vh] flex-col gap-3 md:flex-row">
         {[0, 1, 2].map((i) => (
           <div
