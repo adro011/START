@@ -151,7 +151,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
         setOk(t.productSaved);
         setName("");
         setSlug("");
-        setType("male");
+        setType("men");
         setSize(CLOTHING_SIZES[0]);
         setAgeCategory("");
         setDescription("");
