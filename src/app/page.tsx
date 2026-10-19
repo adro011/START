@@ -11,6 +11,7 @@ import { getLiveCategories, getLiveProducts } from "@/lib/storefront";
 import type { CatalogProduct } from "@/types/catalog";
 import { ProductCard } from "../components/product-card";
 import Reveal from "../components/reveal";
+import HeroPanels from "../components/hero-panels";
 import Magnetic from "../components/magnetic";
 import InstagramGrid from "../components/instagram-grid";
 import { formatBDT } from "../lib/format";
@@ -287,52 +288,7 @@ export default async function HomePage() {
             <p className="hidden text-[12px] tracking-[0.12em] text-white/60 uppercase sm:block">Est. Dhaka · Eid ’26 edit live</p>
           </div>
 
-          <div className="hero-shell flex min-h-[86dvh] flex-col gap-0 pb-0 md:flex-row">
-            {HERO.map((h, i) => (
-              <Link
-                key={h.key}
-                href={h.href}
-                data-cursor="Explore"
-                style={{ animationDelay: `${120 + i * 110}ms`, background: h.bg }}
-                className="hero-enter hero-panel group relative flex-1 transition-[flex-grow] duration-[600ms] [transition-timing-function:cubic-bezier(0.2,0.8,0.2,1)] md:hover:flex-[1.75]"
-              >
-                <span aria-hidden="true" className="absolute inset-0 overflow-hidden">
-                  <Image
-                    src={h.img}
-                    alt={`${h.title} collection`}
-                    fill
-                    loading="lazy"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover object-center opacity-100 transition-all duration-700 group-hover:scale-[1.03]"
-                  />
-                  <span className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/40 to-black/10" />
-                </span>
-                {/* index */}
-                <span aria-hidden="true" className="text-ghost absolute top-5 right-6 font-semibold text-[40px] tracking-tight sm:text-[48px]" style={{ fontFamily: "'Cormorant Garamond','Playfair Display',serif" }}>
-                  {h.index}
-                </span>
-                <span className="absolute inset-x-0 bottom-0 p-6 sm:p-9">
-                  <span
-                    className="hero-text-rise block leading-[0.92] tracking-[0.01em]"
-                    style={{ animationDelay: `${200 + i * 110}ms` }}
-                  >
-                    <span
-                      className="block whitespace-nowrap text-[clamp(2rem,4.5vw,4.5rem)] font-medium text-white uppercase [text-shadow:0_2px_14px_rgba(0,0,0,0.6)]"
-                      style={{ fontFamily: "'Cormorant Garamond','Playfair Display',Georgia,serif" }}
-                    >
-                      {h.title}
-                    </span>
-                  </span>
-                  <span className="mt-5 inline-flex items-center gap-3 bg-[#FFC000] px-7 py-3 text-[13px] font-semibold tracking-[0.12em] text-black uppercase transition-colors duration-300 group-hover:bg-[#917300] group-hover:text-white">
-                    Shop {h.title}
-                    <span aria-hidden="true" className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-                  </span>
-                </span>
-                {/* bottom progress hairline */}
-                <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-[#F2CCC3] transition-transform duration-700 group-hover:scale-x-100" />
-              </Link>
-            ))}
-          </div>
+          <HeroPanels panels={HERO} />
 
           {/* scroll cue + marquee */}
           <div className="flex items-center justify-between px-1 py-4 sm:px-2">
@@ -340,7 +296,7 @@ export default async function HomePage() {
               <span className="cue-line block h-8 w-px bg-white/20"><span className="block h-full w-px bg-[#F2CCC3]" /></span>
               Scroll to enter the house
             </div>
-            <p className="hidden text-[11px] tracking-[0.12em] text-white/55 uppercase md:block">Hover a panel — it breathes</p>
+            <p className="hidden text-[11px] tracking-[0.12em] text-white/55 uppercase md:block">Hover to open · click a panel to step in</p>
           </div>
         </div>
 

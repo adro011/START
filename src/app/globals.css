@@ -1177,6 +1177,231 @@ a:active,
 
 .textInputWrapper:focus-within .textInput {
   background-color: var(--color-charcoal, #202020);}
-
 .textInputWrapper:focus-within .textInput::placeholder {
-  opacity: 0;}
+  opacity: 0;
+}
+
+/* =========================================================
+   Home hero — three-panel spring engine (hero-panels.tsx).
+   The engine writes --a (image), --t (text), --d (sibling dim),
+   --sx/--sy (sheen) per frame; nothing here transitions on those
+   properties. Only transform / opacity / flex-grow are animated.
+   ========================================================= */
+.hp {
+  position: relative;
+  width: 100%;
+}
+.hp__shell {
+  display: flex;
+  width: 100%;
+  height: clamp(520px, 84svh, 940px);
+}
+.hp__panel {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  cursor: pointer;
+  outline: none;
+  isolation: isolate;
+  contain: layout paint;
+  /* entrance is `hero-enter` (gated by the loader); backwards fill so the
+     zoom fade rules win once the entrance has played */
+  animation-fill-mode: backwards;
+  transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hp__panel:active {
+  transform: none;
+}
+.hp__panel:focus-visible {
+  outline: 2px solid #ffc000;
+  outline-offset: -8px;
+}
+
+.hp__bg {
+  position: absolute;
+  inset: -4%;
+  will-change: transform;
+}
+.hp__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(calc(1.1 - 0.1 * var(--a, 0)));
+  will-change: transform;
+  animation: hp-breathe 14s ease-in-out infinite alternate;
+}
+@keyframes hp-breathe {
+  from {
+    scale: 1;
+  }
+  to {
+    scale: 1.04;
+  }
+}
+
+.hp__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: calc(1 - 0.28 * var(--a, 0));
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.45) 42%,
+    rgba(0, 0, 0, 0.28) 70%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+.hp__sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--a, 0);
+  background: radial-gradient(
+    circle at var(--sx, 50%) var(--sy, 50%),
+    rgba(255, 255, 255, 0.15),
+    transparent 45%
+  );
+}
+.hp__panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: #000;
+  opacity: calc(0.2 * var(--d, 0));
+}
+.hp__num {
+  position: absolute;
+  top: 20px;
+  right: clamp(18px, 2.4vw, 44px);
+  z-index: 2;
+  pointer-events: none;
+  font-size: clamp(2.4rem, 5vw, 4.6rem);
+  font-weight: 600;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(251, 246, 243, 0.5);
+  transform: translateY(calc(-8px * var(--a, 0)));
+  transition:
+    color 900ms cubic-bezier(0.16, 1, 0.3, 1),
+    -webkit-text-stroke-color 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hp__panel.is-active .hp__num {
+  color: #ffc000;
+  -webkit-text-stroke-color: #ffc000;
+}
+
+.hp__content {
+  position: absolute;
+  left: clamp(18px, 2.4vw, 44px);
+  right: clamp(18px, 2.4vw, 44px);
+  bottom: clamp(20px, 3vw, 44px);
+  z-index: 2;
+}
+.hp__title {
+  display: block;
+  font-size: clamp(2rem, 4.2vw, 4.4rem);
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+  transform: translateY(calc(-4px * var(--t, 0))) scale(calc(1 + 0.03 * var(--t, 0)));
+  transform-origin: left bottom;
+  will-change: transform;
+}
+.hp__bar {
+  display: block;
+  height: 2px;
+  margin-top: 16px;
+  background: #f2ccc3;
+  transform: scaleX(calc(0.32 + 0.68 * var(--t, 0)));
+  transform-origin: left center;
+}
+.hp__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  margin-top: 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ffc000;
+  opacity: var(--t, 0);
+  transform: translateY(calc(14px * (1 - var(--t, 0))));
+}
+
+.hp__back {
+  position: absolute;
+  left: clamp(18px, 2.4vw, 44px);
+  top: 18px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.6em 1.1em;
+  font-family: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition:
+    opacity 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hp.is-zoomed .hp__back {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
+}
+
+.hp.is-zoomed .hp__panel {
+  flex-grow: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.hp.is-zoomed .hp__panel.is-expanded {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: default;
+}
+.hp.is-zoomed .hp__panel:not(.is-expanded) .hp__content,
+.hp.is-zoomed .hp__panel:not(.is-expanded) .hp__num {
+  opacity: 0;
+  transition: opacity 300ms linear;
+}
+
+@media (max-width: 768px) {
+  .hp__shell {
+    flex-direction: column;
+    height: 86svh;
+  }
+  .hp__panel {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hp__img {
+    animation: none !important;
+  }
+  .hp__panel {
+    animation: none !important;
+  }
+}
