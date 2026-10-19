@@ -24,7 +24,7 @@ const AGE_CATEGORIES: readonly string[] = [
   "ADULT",
 ];
 
-type TypeValue = "male" | "female" | "children" | "others";
+type TypeValue = "men" | "women" | "children" | "others";
 type StatusValue = "draft" | "published";
 
 const INPUT = "w-full";
@@ -32,7 +32,7 @@ const INPUT = "w-full";
 export const registryFormSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters.").max(120),
   slug: z.string().trim().min(2, "Slug is required.").max(100).regex(/^[a-z0-9-]+$/, "Lowercase letters, numbers and hyphens only."),
-  type: z.enum(["male", "female", "children", "others"] as [string, ...string[]]),
+  type: z.enum(["men", "women", "children", "others"] as [string, ...string[]]),
   ageCategory: z.enum(AGE_CATEGORIES as [string, ...string[]]).optional(),
   size: z.string(),
   description: z.string().trim().min(10, "Description must be at least 10 characters.").max(2000),
@@ -56,14 +56,14 @@ export const registryFormSchema = z.object({
 export default function ProductForm({ locale }: { locale: Locale }) {
   const t = getRegistryDict(locale);
   const typeLabels: Record<TypeValue, string> = {
-    male: t.types.male,
-    female: t.types.female,
+    men: t.types.men,
+    women: t.types.women,
     children: t.types.children,
     others: t.types.others,
   };
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
-  const [type, setType] = useState<TypeValue>("male");
+  const [type, setType] = useState<TypeValue>("men");
   const [ageCategory, setAgeCategory] = useState("");
   const [size, setSize] = useState(CLOTHING_SIZES[0]);
   const [description, setDescription] = useState("");

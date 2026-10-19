@@ -218,7 +218,7 @@ export default async function HomePage() {
     <div className="overflow-x-hidden">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_JSON_LD) }} />
-      {/* ── Gucci-style cover: full-viewport slow-zoom portrait, grade, giant wordmark ── */}
+      {/* ── Lamborghini-style cover: full-viewport slow-zoom portrait, grade, giant wordmark ── */}
       <section aria-label="New collection" className="cover relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-black text-center text-[#FBF6F3]">
         <div aria-hidden="true" className="cover-media absolute inset-0">
           <Image
@@ -240,7 +240,7 @@ export default async function HomePage() {
             className="cover-eyebrow hero-text-rise text-white [text-shadow:0_2px_14px_rgba(0,0,0,0.6)]"
             style={{ animationDelay: "150ms", letterSpacing: "0.2em" }}
           >
-            New Collection — Eid ’26 Edit
+            New Collection — Eid '26 Edit
           </p>
           <h1 className="cover-title hero-text-rise mt-5 uppercase" style={{ animationDelay: "300ms" }}>
             ABRAR
@@ -294,7 +294,7 @@ export default async function HomePage() {
           {/* eyebrow */}
           <div className="flex items-center justify-between px-1 pt-4 pb-3 sm:px-2">
             <p className="text-[12px] font-semibold tracking-[0.12em] text-[#F2CCC3]/90 uppercase">Connecting Consumer through Digital media</p>
-            <p className="hidden text-[12px] tracking-[0.12em] text-white/60 uppercase sm:block">Est. Dhaka · Eid ’26 edit live</p>
+            <p className="hidden text-[12px] tracking-[0.12em] text-white/60 uppercase sm:block">Est. Dhaka · Eid '26 edit live</p>
           </div>
 
           <HeroPanels panels={HERO} />
@@ -562,7 +562,7 @@ export default async function HomePage() {
               <figure className="lift flex h-full flex-col border border-[#172121]/10 bg-white/60 px-7 py-8 backdrop-blur">
                 <span aria-hidden="true" className="text-[13px] tracking-[0.28em] text-[#7D451B]">★★★★★</span>
                 <blockquote className="mt-4 flex-1 text-[16px] leading-relaxed text-[#172121]/85" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "19px" }}>
-                  “{t.quote}”
+                  "{t.quote}"
                 </blockquote>
                 <figcaption className="mt-4 flex items-center gap-3 border-t border-[#172121]/10 pt-4 text-[13px] font-semibold tracking-[0.08em] text-[#172121]/80 uppercase">
                   <span aria-hidden="true" className="flex h-8 w-8 items-center justify-center rounded-full bg-[#172121] text-[13px] text-[#FBF6F3]">{t.name.slice(0, 1)}</span>
