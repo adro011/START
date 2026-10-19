@@ -105,10 +105,11 @@ body:has(#abrar-loader:not([data-done])) .cover-media {
   #abrar-loader {
     display: none;
   }
-  /* No JS to release the gate — run the entrances as normal. */
-  body:has(#abrar-loader) .hero-text-rise,
-  body:has(#abrar-loader) .hero-enter,
-  body:has(#abrar-loader) .cover-media {
+  /* No JS to release the gate — run the entrances as normal. Same
+     specificity as the paused rule above; later source order wins. */
+  body:has(#abrar-loader:not([data-done])) .hero-text-rise,
+  body:has(#abrar-loader:not([data-done])) .hero-enter,
+  body:has(#abrar-loader:not([data-done])) .cover-media {
     animation-play-state: running !important;
   }
 }

@@ -198,7 +198,7 @@ export default function ProductForm() {
               placeholder="e.g. Cotton Panjabi"
               className={INPUT}
             />
-            {fieldError("name") && <p role="alert" className="text-xs text-red-700">{fieldError("name")}</p>}
+            {fieldError("name") && <p role="alert" className="reg-input-error">{fieldError("name")}</p>}
           </div>
           <div className="space-y-2">
             <label htmlFor="slug" className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">
@@ -214,7 +214,7 @@ export default function ProductForm() {
               placeholder="cotton-panjabi"
               className={INPUT}
             />
-            {fieldError("slug") && <p role="alert" className="text-xs text-red-700">{fieldError("slug")}</p>}
+            {fieldError("slug") && <p role="alert" className="reg-input-error">{fieldError("slug")}</p>}
           </div>
           <div className="space-y-2 col-span-2">
             <label className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">Type</label>
@@ -239,7 +239,7 @@ export default function ProductForm() {
                 </label>
               ))}
             </div>
-            {fieldError("type") && <p role="alert" className="text-xs text-red-700">{fieldError("type")}</p>}
+            {fieldError("type") && <p role="alert" className="reg-input-error">{fieldError("type")}</p>}
           </div>
         </div>
       </fieldset>
@@ -249,8 +249,9 @@ export default function ProductForm() {
         <div className="grid gap-4 sm:grid-cols-2">
           {type === "children" ? (
             <div className="space-y-2">
-              <label className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">Age category</label>
+              <label htmlFor="ageCategory" className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">Age category</label>
               <select
+                id="ageCategory"
                 value={ageCategory}
                 onChange={(e) => setAgeCategory(e.target.value)}
                 className={INPUT}
@@ -263,20 +264,20 @@ export default function ProductForm() {
                 ))}
               </select>
               {fieldError("ageCategory") && (
-                <p role="alert" className="text-xs text-red-700">{fieldError("ageCategory")}</p>
+                <p role="alert" className="reg-input-error">{fieldError("ageCategory")}</p>
               )}
             </div>
           ) : null}
           <div className="space-y-2">
-            <label className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">Size</label>
-            <select value={size} onChange={(e) => setSize(e.target.value)} className={INPUT}>
+            <label htmlFor="size" className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">Size</label>
+            <select id="size" value={size} onChange={(e) => setSize(e.target.value)} className={INPUT}>
               {allowedSizes.map((s) => (
                 <option key={s} value={s}>
                   {s}
                 </option>
               ))}
             </select>
-            {fieldError("size") && <p role="alert" className="text-xs text-red-700">{fieldError("size")}</p>}
+            {fieldError("size") && <p role="alert" className="reg-input-error">{fieldError("size")}</p>}
           </div>
         </div>
         <p className="mt-2 text-xs text-ash">
@@ -307,7 +308,7 @@ export default function ProductForm() {
               className={INPUT}
             />
             {fieldError("description") && (
-              <p role="alert" className="text-xs text-red-700">{fieldError("description")}</p>
+              <p role="alert" className="reg-input-error">{fieldError("description")}</p>
             )}
           </div>
           <div className="space-y-2">
@@ -367,7 +368,7 @@ export default function ProductForm() {
                 className={`${INPUT} pl-10`}
               />
             </div>
-            {fieldError("price") && <p role="alert" className="text-xs text-red-700">{fieldError("price")}</p>}
+            {fieldError("price") && <p role="alert" className="reg-input-error">{fieldError("price")}</p>}
           </div>
           <div className="space-y-2">
             <label className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">Status</label>

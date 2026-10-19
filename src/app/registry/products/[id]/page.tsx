@@ -197,10 +197,11 @@ export default async function RegistryProductPage({
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-3">
                   <div className="col-span-full sm:col-span-2">
-                    <label className="block mb-1.5 text-xs font-medium text-ash uppercase">
+                    <label htmlFor="name" className="block mb-1.5 text-xs font-medium text-ash uppercase">
                       Name
                     </label>
                     <input
+                      id="name"
                       name="name"
                       defaultValue={product.name}
                       required
@@ -208,10 +209,11 @@ export default async function RegistryProductPage({
                     />
                   </div>
                   <div>
-                    <label className="block mb-1.5 text-xs font-medium text-ash uppercase">
+                    <label htmlFor="section" className="block mb-1.5 text-xs font-medium text-ash uppercase">
                       Type (section)
                     </label>
                     <select
+                      id="section"
                       name="section"
                       defaultValue={product.type}
                       className="w-full"
@@ -222,10 +224,11 @@ export default async function RegistryProductPage({
                     </select>
                   </div>
                   <div>
-                    <label className="block mb-1.5 text-xs font-medium text-ash uppercase">
+                    <label htmlFor="price_paisa" className="block mb-1.5 text-xs font-medium text-ash uppercase">
                       Price (paisa)
                     </label>
                     <input
+                      id="price_paisa"
                       name="price_paisa"
                       defaultValue={String(product.price)}
                       type="number"
