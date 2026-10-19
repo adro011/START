@@ -6,6 +6,7 @@ import {
   REGISTRY_API_UNAUTHORIZED,
   getRegistryApiSession,
 } from "@/lib/registry/api-auth";
+import { booleanishSchema } from "@/lib/registry/validation";
 
 const SectionSchema = z.enum(["men", "women", "kids"]);
 
@@ -19,10 +20,10 @@ const UpdateProductSchema = z.object({
   fabric: z.string().max(500).optional().nullable(),
   care: z.string().max(500).optional().nullable(),
   fit_notes: z.string().max(500).optional().nullable(),
-  is_new: z.coerce.boolean().optional(),
-  is_sale: z.coerce.boolean().optional(),
-  is_featured: z.coerce.boolean().optional(),
-  active: z.coerce.boolean().optional(),
+  is_new: booleanishSchema.optional(),
+  is_sale: booleanishSchema.optional(),
+  is_featured: booleanishSchema.optional(),
+  active: booleanishSchema.optional(),
 });
 
 const idempotencyStore = new Map<string, { status: number; body: unknown }>();

@@ -115,13 +115,48 @@ export async function getRegistryProducts(f: {
   const limit = Math.min(Math.max(1, Number(f.limit ?? MAX_LIMIT)), MAX_LIMIT);
   const offset = (page - 1) * limit;
 
-  const { data, error } = await supabase
+  // Filters run in the DATABASE, before paging. Filtering the fetched page in
+  // JS (the previous behaviour) meant any match past the first page was never
+  // seen and `hasNextPage` was computed from the filtered slice of one page.
+  let query = supabase
     .from("products")
     .select(
       `id, slug, name, section, price_paisa, compare_at_paisa, active, deleted_at, created_at, updated_at,
       product_variants(size),
       product_images(path_thumb, alt, position)`
-    )
+    );
+
+  // status is derived from deleted_at/active; "" = all (matches the UI default).
+  if (f.status === "deleted") {
+    query = query.not("deleted_at", "is", null);
+  } else if (f.status === "inactive") {
+    query = query.is("deleted_at", null).eq("active", false);
+  } else if (f.status === "active") {
+    query = query.is("deleted_at", null).eq("active", true);
+  }
+
+  if (f.type) query = query.eq("section", f.type);
+
+  if (f.q) {
+    // Strip characters that would break PostgREST's `or` grammar.
+    const safe = f.q.replace(/[%,()*]/g, " ").trim();
+    if (safe) query = query.or(`name.ilike.%${safe}%,slug.ilike.%${safe}%`);
+  }
+
+  if (f.size) {
+    // Resolve product ids with a variant of this size first, then keep the
+    // main select's unfiltered variant list (so the card's sizes stay whole).
+    const { data: vrows, error: verror } = await supabase
+      .from("product_variants")
+      .select("product_id")
+      .eq("size", f.size);
+    if (verror) return { products: [], hasNextPage: false, page, limit };
+    const ids = [...new Set((vrows ?? []).map((v) => String((v as { product_id: string }).product_id)))];
+    if (ids.length === 0) return { products: [], hasNextPage: false, page, limit };
+    query = query.in("id", ids);
+  }
+
+  const { data, error } = await query
     .order("created_at", { ascending: false })
     .range(offset, offset + limit); // +1 row to detect next page (bounded query)
 
@@ -129,19 +164,9 @@ export async function getRegistryProducts(f: {
     return { products: [], hasNextPage: false, page, limit };
   }
 
-  let products = (data as unknown as DbProductRow[]).map(mapRow);
-
-  if (f.q) {
-    const q = f.q.toLowerCase().trim();
-    products = products.filter((p) => p.name.toLowerCase().includes(q) || p.slug.toLowerCase().includes(q));
-  }
-  if (f.type) products = products.filter((p) => p.type === f.type);
-  const size = f.size;
-  if (size) products = products.filter((p) => p.sizes.includes(size));
-  if (f.status) products = products.filter((p) => p.status === f.status);
-
-  const hasNextPage = products.length > limit;
-  return { products: products.slice(0, limit), hasNextPage, page, limit };
+  const rows = (data as unknown as DbProductRow[]).map(mapRow);
+  const hasNextPage = rows.length > limit;
+  return { products: rows.slice(0, limit), hasNextPage, page, limit };
 }
 
 export async function getRegistryProduct(id: string): Promise<RegistryProduct | null> {

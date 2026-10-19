@@ -106,20 +106,27 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   // ── 6. Record the payment first (unique tran_id = idempotency line) ───────
-  const { data: paymentRow } = await admin
+  const { data: paymentRow, error: payError } = await admin
     .from("payments")
-    .insert({
-      order_id: o.id,
-      tran_id: tranId,
-      val_id: valId,
-      amount_paisa: paidPaisa,
-      currency,
-      status: "approved",
-      raw: rr,
-    })
+    .upsert(
+      {
+        order_id: o.id,
+        tran_id: tranId,
+        val_id: valId,
+        amount_paisa: paidPaisa,
+        currency,
+        status: "approved",
+        raw: rr,
+      },
+      { onConflict: "tran_id", ignoreDuplicates: true },
+    )
     .select("id");
+  if (payError) {
+    // A genuine write failure (not a replay) — 500 so the gateway retries.
+    return json({ result: "FAILED", reason: "db-error", orderNo, tranId }, 500);
+  }
   if (!paymentRow || paymentRow.length === 0) {
-    // Same tran_id already recorded → replayed delivery.
+    // ON CONFLICT DO NOTHING matched an existing tran_id → replayed delivery.
     return json({ result: "DUPLICATE", orderNo, tranId });
   }
 

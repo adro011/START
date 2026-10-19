@@ -1,5 +1,24 @@
 import { z } from "zod";
 
+/**
+ * Lenient boolean for JSON bodies AND query strings.
+ *
+ * `z.coerce.boolean()` follows JS truthiness, so the STRING "false" — exactly
+ * what `new URLSearchParams().get()` returns — coerces to `true`. That silently
+ * inverts filters such as `?active=false` (returns active rows) and flips
+ * `"active": "false"` bodies to true. This accepts real booleans plus the
+ * strings "true"/"false"/"1"/"0", and passes anything else straight through so
+ * `z.boolean()` still rejects it.
+ */
+export const booleanishSchema = z.preprocess((value) => {
+  if (typeof value === "string") {
+    const s = value.trim().toLowerCase();
+    if (s === "true" || s === "1") return true;
+    if (s === "false" || s === "0") return false;
+  }
+  return value;
+}, z.boolean());
+
 export const registryProductTypeSchema = z.enum([
   "male",
   "female",

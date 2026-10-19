@@ -6,6 +6,7 @@ import {
   REGISTRY_API_UNAUTHORIZED,
   getRegistryApiSession,
 } from "@/lib/registry/api-auth";
+import { booleanishSchema } from "@/lib/registry/validation";
 
 const MAX_LIMIT = 100;
 const DEFAULT_LIMIT = 20;
@@ -16,7 +17,7 @@ const ListQuerySchema = z.object({
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().min(1).max(MAX_LIMIT).default(DEFAULT_LIMIT),
   section: SectionSchema.optional(),
-  active: z.coerce.boolean().optional(),
+  active: booleanishSchema.optional(),
   search: z.string().max(200).optional(),
 });
 
@@ -31,10 +32,10 @@ const CreateProductSchema = z.object({
   fabric: z.string().max(500).optional().nullable(),
   care: z.string().max(500).optional().nullable(),
   fit_notes: z.string().max(500).optional().nullable(),
-  is_new: z.coerce.boolean().default(false),
-  is_sale: z.coerce.boolean().default(false),
-  is_featured: z.coerce.boolean().default(false),
-  active: z.coerce.boolean().default(true),
+  is_new: booleanishSchema.default(false),
+  is_sale: booleanishSchema.default(false),
+  is_featured: booleanishSchema.default(false),
+  active: booleanishSchema.default(true),
 });
 
 const idempotencyStore = new Map<string, { status: number; body: unknown }>();
