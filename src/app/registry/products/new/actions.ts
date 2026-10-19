@@ -44,6 +44,8 @@ export async function saveRegistryProduct(
   const SECTION_BY_TYPE: Record<RegistryProductInput["type"], "men" | "women" | "kids"> = {
     male: "men",
     female: "women",
+    men: "men",
+    women: "women",
     children: "kids",
     others: "kids",
   };

@@ -10,18 +10,12 @@ import { getRegistryDict } from "@/app/registry/registry-dict";
 
 const MAX_IMAGES = 5;
 
-const CLOTHING_SIZES: readonly string[] = Array.from({ length: 13 }, (_, i) => String(36 + i)); // 36..48
+const CLOTHING_SIZES: readonly string[] = ["S", "M", "L", "XL", "XXL"];
 const SHOE_SIZES: readonly string[] = Array.from({ length: 11 }, (_, i) => String(36 + i)); // 36 .. 46
 const AGE_CATEGORIES: readonly string[] = [
-  "(0-4)",
-  "(4-6)",
-  "(6-8)",
-  "(8-10)",
-  "(10-12)",
-  "(12-14)",
-  "(14-16)",
-  "(16-19)",
-  "ADULT",
+  "Boys",
+  "Girls",
+  "Another",
 ];
 
 type TypeValue = "men" | "women" | "children" | "others";
