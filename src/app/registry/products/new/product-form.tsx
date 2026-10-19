@@ -10,13 +10,28 @@ import { getRegistryDict } from "@/app/registry/registry-dict";
 
 const MAX_IMAGES = 5;
 
-const CLOTHING_SIZES: readonly string[] = ["S", "M", "L", "XL", "XXL"];
+const MEN_SIZES: readonly string[] = ["S", "M", "L", "XL", "XXL", "XXXL"];
+const WOMEN_SIZES: readonly string[] = Array.from({ length: 13 }, (_, i) => String(36 + i)); // 36..48
+const CHILDREN_SIZES: readonly string[] = ["XS", "S", "M", "L", "XL"];
 const SHOE_SIZES: readonly string[] = Array.from({ length: 11 }, (_, i) => String(36 + i)); // 36 .. 46
 const AGE_CATEGORIES: readonly string[] = [
   "Boys",
   "Girls",
   "Another",
 ];
+
+function sizesForType(type: TypeValue): readonly string[] {
+  switch (type) {
+    case "men":
+      return MEN_SIZES;
+    case "women":
+      return WOMEN_SIZES;
+    case "children":
+      return CHILDREN_SIZES;
+    case "others":
+      return SHOE_SIZES;
+  }
+}
 
 type TypeValue = "men" | "women" | "children" | "others";
 type StatusValue = "draft" | "published";
@@ -40,7 +55,7 @@ export const registryFormSchema = z.object({
     path: ["ageCategory"],
   })
   .refine((data) => {
-    const allowed = data.type === "others" ? SHOE_SIZES : CLOTHING_SIZES;
+    const allowed = sizesForType(data.type as TypeValue);
     return allowed.includes(data.size);
   }, {
     message: "Choose a valid size for this type.",
@@ -59,7 +74,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
   const [slug, setSlug] = useState("");
   const [type, setType] = useState<TypeValue>("men");
   const [ageCategory, setAgeCategory] = useState("");
-  const [size, setSize] = useState(CLOTHING_SIZES[0]);
+  const [size, setSize] = useState(sizesForType("men")[0]);
   const [description, setDescription] = useState("");
   const [rating, setRating] = useState<number | null>(null);
   const [price, setPrice] = useState("");
@@ -72,11 +87,11 @@ export default function ProductForm({ locale }: { locale: Locale }) {
   const [ok, setOk] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const allowedSizes = type === "others" ? SHOE_SIZES : CLOTHING_SIZES;
+  const allowedSizes = sizesForType(type);
 
   function onTypeChange(value: TypeValue) {
     setType(value);
-    setSize((value === "others" ? SHOE_SIZES : CLOTHING_SIZES)[0]);
+    setSize(sizesForType(value)[0]);
     setAgeCategory("");
     setFieldErrors({});
   }
@@ -146,7 +161,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
         setName("");
         setSlug("");
         setType("men");
-        setSize(CLOTHING_SIZES[0]);
+        setSize(sizesForType("men")[0]);
         setAgeCategory("");
         setDescription("");
         setRating(null);
@@ -281,7 +296,9 @@ export default function ProductForm({ locale }: { locale: Locale }) {
             ? t.hintShoes
             : type === "children"
               ? t.hintChildren
-              : t.hintAdults}
+              : type === "men"
+                ? t.hintMen
+                : t.hintWomen}
         </p>
       </fieldset>
 
