@@ -1,28 +1,49 @@
 /* Shop-registry design system. Scoped to `.reg-scope` (mounted only on
-   /registry/*) so storefront pages are unaffected. Served dark on purpose:
-   staff tools sit on the same black canvas as the storefront but own their
-   chrome, type, spacing and focus independently.
+   /registry/*) so storefront pages are unaffected.
 
-   Accessibility (ui-composition): body text ≥16px, sentence-case inputs (the
-   root forces uppercase for marketing copy — data entry must not shout),
-   WCAG-AA contrast (muted #C7C7C7 ≈ 10.8:1 on #181818, gold text ≈ 10.2:1,
-   black-on-gold buttons ≈ 11.4:1), 44×44px min targets, visible focus ring. */
+   Palette: a dark-teal shell carrying white working surfaces. Inputs, cards
+   and panels are white so numbers, statuses and form fields read like a
+   ledger; the teal shell keeps the staff tool in the same world as the
+   storefront. Gold is remapped to teal inside the scope — the registry no
+   longer uses the marketing accent.
+
+   Accessibility (ui-composition): body text ≥16px, sentence-case data entry,
+   WCAG-AA contrast (teal #0D5B54 on white ≈ 8:1, ink #0A2B28 on white ≈ 14:1,
+   muted #4B6662 on white ≈ 6.2:1, inverse muted #B7D3CF on #06201E ≈ 9:1),
+   44×44px targets, visible focus ring that flips between light and dark. */
 
 .reg-scope {
-  /* Palette */
-  --reg-bg: #000000;
-  --reg-surface: #181818;
-  --reg-surface-2: #111111;
-  --reg-line: rgb(255 255 255 / 0.14);
-  --reg-text: #f5f5f5;
-  --reg-muted: #c7c7c7;
-  --reg-gold: #ffc000;
-  --reg-gold-hover: #e6ad00;
-  --reg-on-gold: #000000;
+  /* Shell */
+  --reg-bg: #06201e;
+  --reg-bg-glow: #0f4c46;
+  --reg-inverse: #f3f9f8;
+  --reg-inverse-muted: #b7d3cf;
 
-  /* Remap the storefront's low-contrast muted token inside registry only:
-     #7D7D7D on #181818 is 4.3:1 (fails AA); #C7C7C7 is 10.5:1. */
-  --color-ash: #c7c7c7;
+  /* Working surfaces */
+  --reg-surface: #ffffff;
+  --reg-surface-muted: #eef5f4;
+  --reg-field: #f7faf9;
+  --reg-line: #c9dcd8;
+  --reg-text: #0a2b28;
+  --reg-muted: #4b6662;
+  --reg-placeholder: #5c7673;
+
+  /* Accents */
+  --reg-accent: #0d5b54;
+  --reg-accent-hover: #0a4741;
+  --reg-danger: #b42318;
+  --reg-success: #0e6b4f;
+  --reg-focus-light: #8fd8cd;
+  --reg-focus: #0d5b54;
+
+  /* Legacy tokens kept so existing .reg-btn-primary/-badge rules stay honest */
+  --reg-gold: var(--reg-accent);
+  --reg-gold-hover: var(--reg-accent-hover);
+  --reg-on-gold: #ffffff;
+
+  /* Tailwind utilities used inside registry (`text-gold`, `bg-gold/10`, …)
+     resolve through this variable — remap them to teal, not storefront gold. */
+  --color-gold: var(--reg-accent);
 
   /* Spacing scale (4px base) */
   --reg-space-1: 0.25rem;
@@ -32,14 +53,16 @@
   --reg-space-5: 1.5rem;
   --reg-space-6: 2rem;
 
-  /* Type: sentence case, legible body size */
   text-transform: none;
   letter-spacing: normal;
+  color-scheme: light;
   font-size: 16px;
   line-height: 1.5;
   min-height: 100dvh;
-  background: var(--reg-bg);
-  color: var(--reg-text);
+  background:
+    radial-gradient(900px 480px at 12% -10%, var(--reg-bg-glow) 0%, transparent 62%),
+    var(--reg-bg);
+  color: var(--reg-inverse);
 }
 
 /* Store chrome belongs to the storefront. Hide it while a registry route is
@@ -53,12 +76,19 @@ body:has(.reg-scope) footer {
   display: none !important;
 }
 
+/* Mobile storefront spacer sits between the hidden announcement bar and
+   <main>; without it the registry starts at the top of the viewport. */
+body:has(.reg-scope) > [class~="h-[60px]"] {
+  display: none !important;
+}
+
 /* ── Typography ───────────────────────────────────────────────────────── */
 .reg-scope h1 {
   font-size: 1.75rem;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0;
+  color: var(--reg-inverse);
 }
 
 .reg-scope .reg-panel h2 {
@@ -72,8 +102,15 @@ body:has(.reg-scope) footer {
 
 /* ── Focus ────────────────────────────────────────────────────────────── */
 .reg-scope :focus-visible {
-  outline: 2px solid var(--reg-gold);
+  outline: 2px solid var(--reg-focus-light);
   outline-offset: 2px;
+}
+
+.reg-scope .reg-card :focus-visible,
+.reg-scope .reg-panel :focus-visible,
+.reg-scope .reg-toolbar :focus-visible,
+.reg-scope .glass :focus-visible {
+  outline-color: var(--reg-focus);
 }
 
 /* ── Controls ─────────────────────────────────────────────────────────── */
@@ -85,7 +122,7 @@ body:has(.reg-scope) footer {
   min-height: 44px;
   padding: 0 var(--reg-space-4);
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1;
@@ -95,14 +132,27 @@ body:has(.reg-scope) footer {
 }
 
 .reg-scope .reg-btn-primary {
-  background: var(--reg-gold);
+  background: var(--reg-accent);
   color: var(--reg-on-gold);
 }
 
 .reg-scope .reg-btn-primary:hover {
-  background: var(--reg-gold-hover);
+  background: var(--reg-accent-hover);
 }
 
+/* For page-level actions that sit on the teal shell (Add product, Save). */
+.reg-scope .reg-btn-inverse {
+  border-color: var(--reg-surface);
+  background: var(--reg-surface);
+  color: var(--reg-accent);
+}
+
+.reg-scope .reg-btn-inverse:hover {
+  border-color: var(--reg-surface-muted);
+  background: var(--reg-surface-muted);
+}
+
+/* Default ghost assumes a white surface. */
 .reg-scope .reg-btn-ghost {
   border-color: var(--reg-line);
   background: transparent;
@@ -110,44 +160,69 @@ body:has(.reg-scope) footer {
 }
 
 .reg-scope .reg-btn-ghost:hover {
+  background: var(--reg-surface-muted);
+}
+
+/* Ghost for the teal shell / sticky header. */
+.reg-scope .reg-btn-outline-light {
+  border-color: rgb(255 255 255 / 0.28);
+  background: transparent;
+  color: var(--reg-inverse);
+}
+
+.reg-scope .reg-btn-outline-light:hover {
+  border-color: rgb(255 255 255 / 0.48);
   background: rgb(255 255 255 / 0.08);
 }
 
 .reg-scope .reg-btn-danger {
-  border-color: rgb(248 113 113 / 0.4);
+  border-color: rgb(180 35 24 / 0.35);
   background: transparent;
-  color: #f87171;
+  color: var(--reg-danger);
 }
 
 .reg-scope .reg-btn-danger:hover {
-  background: rgb(248 113 113 / 0.1);
+  background: #fdf2f2;
+}
+
+.reg-scope .reg-btn-danger-light {
+  border-color: rgb(252 165 165 / 0.45);
+  background: transparent;
+  color: #fca5a5;
+}
+
+.reg-scope .reg-btn-danger-light:hover {
+  background: rgb(248 113 113 / 0.12);
 }
 
 .reg-scope .reg-btn-success {
-  border-color: rgb(52 211 153 / 0.4);
+  border-color: rgb(14 107 79 / 0.35);
   background: transparent;
-  color: #34d399;
+  color: var(--reg-success);
 }
 
 .reg-scope .reg-btn-success:hover {
-  background: rgb(52 211 153 / 0.1);
+  background: #eef7f3;
 }
 
-.reg-scope .reg-btn-sm {
-  min-height: 32px;
+.reg-scope .reg-btn-success-light {
+  border-color: rgb(110 231 183 / 0.45);
+  background: transparent;
+  color: #6ee7b7;
+}
+
+.reg-scope .reg-btn-success-light:hover {
+  background: rgb(52 211 153 / 0.12);
+}
+
+.reg-scope .reg-btn-sm,
+.reg-scope .reg-btn-xs {
+  min-height: 44px;
   padding: 0 var(--reg-space-3);
   font-size: 0.75rem;
 }
 
-.reg-scope .reg-btn-xs {
-  min-height: 32px;
-  padding: 0 var(--reg-space-2);
-  font-size: 0.6875rem;
-}
-
-/* Inputs, selects, textareas — sentence case (data entry). The global
-   `.textInput` underline treatment is store marketing chrome; registry owns
-   its own filled fields. */
+/* Inputs, selects, textareas — sentence case (data entry). */
 .reg-scope input:not([type="checkbox"]):not([type="radio"]),
 .reg-scope select,
 .reg-scope textarea {
@@ -156,13 +231,19 @@ body:has(.reg-scope) footer {
   min-height: 44px;
   padding: var(--reg-space-2) var(--reg-space-3);
   border: 1px solid var(--reg-line);
-  border-radius: 4px;
-  background: var(--reg-surface-2);
+  border-radius: 6px;
+  background: var(--reg-field);
   color: var(--reg-text);
   font-size: 1rem;
   line-height: 1.4;
   text-transform: none;
   letter-spacing: normal;
+}
+
+.reg-scope input:not([type="checkbox"]):not([type="radio"]):hover,
+.reg-scope select:hover,
+.reg-scope textarea:hover {
+  border-color: #a9c6c1;
 }
 
 .reg-scope textarea {
@@ -171,7 +252,7 @@ body:has(.reg-scope) footer {
 
 .reg-scope input::placeholder,
 .reg-scope textarea::placeholder {
-  color: var(--reg-muted);
+  color: var(--reg-placeholder);
   text-transform: none;
 }
 
@@ -179,7 +260,7 @@ body:has(.reg-scope) footer {
   width: 1.125rem;
   height: 1.125rem;
   min-height: 0;
-  accent-color: var(--reg-gold);
+  accent-color: var(--reg-accent);
 }
 
 .reg-scope label {
@@ -202,25 +283,69 @@ body:has(.reg-scope) footer {
   cursor: pointer;
 }
 
-/* ── Surfaces & badges ────────────────────────────────────────────────── */
+/* ── Surfaces, toolbar & badges ───────────────────────────────────────── */
 .reg-scope .reg-card {
-  border: 1px solid var(--reg-line);
-  border-radius: 6px;
+  border: 1px solid #d5e4e1;
+  border-radius: 10px;
   background: var(--reg-surface);
+  color: var(--reg-text);
+  box-shadow: 0 10px 24px rgb(2 24 22 / 0.22);
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+@media (hover: hover) {
+  .reg-scope .reg-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 34px rgb(2 24 22 / 0.3);
+  }
 }
 
 .reg-scope .reg-panel {
-  border: 1px solid var(--reg-line);
-  border-radius: 6px;
+  border: 1px solid #d5e4e1;
+  border-radius: 10px;
   background: var(--reg-surface);
+  color: var(--reg-text);
   padding: var(--reg-space-5);
+  box-shadow: 0 8px 20px rgb(2 24 22 / 0.16);
+}
+
+/* A fieldset legend is painted half above the panel edge; give it its own
+   white chip so the top half doesn't fall onto the teal shell. */
+.reg-scope fieldset.reg-panel > legend {
+  position: relative;
+  z-index: 1;
+  margin-bottom: var(--reg-space-2);
+  background: var(--reg-surface);
+  border-radius: 4px;
+  color: var(--reg-accent);
+}
+
+.reg-scope .glass {
+  background: rgb(255 255 255 / 0.94);
+  border-color: rgb(255 255 255 / 0.55);
+  color: var(--reg-text);
+}
+
+.reg-scope .glass .text-steel {
+  color: var(--reg-muted);
+}
+
+/* Search + sort + filters read as one white control ribbon on the teal shell. */
+.reg-scope .reg-toolbar {
+  border: 1px solid #d5e4e1;
+  border-radius: 10px;
+  background: var(--reg-surface);
+  color: var(--reg-text);
+  padding: var(--reg-space-3);
+  box-shadow: 0 8px 20px rgb(2 24 22 / 0.18);
 }
 
 .reg-scope .reg-badge {
   display: inline-block;
+  align-self: flex-start;
   padding: 2px var(--reg-space-2);
   border: 1px solid;
-  border-radius: 3px;
+  border-radius: 4px;
   font-size: 0.6875rem;
   font-weight: 600;
   line-height: 1.4;
@@ -229,21 +354,21 @@ body:has(.reg-scope) footer {
 }
 
 .reg-scope .reg-badge-active {
-  border-color: rgb(255 192 0 / 0.35);
-  background: rgb(255 192 0 / 0.08);
-  color: var(--reg-gold);
+  border-color: #9fc9c2;
+  background: #e4f2ef;
+  color: #0a4b45;
 }
 
 .reg-scope .reg-badge-inactive {
-  border-color: var(--reg-line);
-  background: rgb(255 255 255 / 0.06);
-  color: var(--reg-muted);
+  border-color: #cbddda;
+  background: #edf3f2;
+  color: #4b6662;
 }
 
 .reg-scope .reg-badge-deleted {
-  border-color: rgb(248 113 113 / 0.35);
-  background: rgb(248 113 113 / 0.08);
-  color: #f87171;
+  border-color: #e7b4b0;
+  background: #fcebea;
+  color: #a32017;
 }
 
 /* ── Registry header (sole sticky bar once store chrome is hidden) ────── */
@@ -251,14 +376,35 @@ body:has(.reg-scope) footer {
   position: sticky;
   top: 0;
   z-index: 20;
-  border-bottom: 1px solid var(--reg-line);
-  background: rgb(0 0 0 / 0.85);
-  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  background: rgb(6 32 30 / 0.86);
+  color: var(--reg-inverse);
+  backdrop-filter: blur(14px);
+}
+
+.reg-scope .reg-header .text-ash {
+  color: var(--reg-inverse-muted);
+}
+
+/* Page-level muted text sits on the teal shell; copy inside white working
+   surfaces flips to the dark muted ink. */
+.reg-scope .text-ash {
+  color: var(--reg-inverse-muted);
+}
+
+.reg-scope .reg-card .text-ash,
+.reg-scope .reg-panel .text-ash,
+.reg-scope .reg-toolbar .text-ash,
+.reg-scope .glass .text-ash {
+  color: var(--reg-muted);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .reg-scope * {
     transition: none !important;
+  }
+  .reg-scope .reg-card:hover {
+    transform: none;
   }
 }
 
@@ -274,13 +420,7 @@ body:has(.reg-scope) footer {
 
 /* Form error text helper (e.g. registry login server errors). */
 .reg-scope .reg-input-error {
-  color: #f87171;
+  color: var(--reg-danger);
   font-size: 0.875rem;
   margin-top: var(--reg-space-2);
-}
-
-/* Direct utility override for the muted storefront token (belt-and-braces
-   alongside the variable remap above). */
-.reg-scope .text-ash {
-  color: var(--reg-muted);
 }

@@ -12,17 +12,14 @@ import { requireStaff } from "@/lib/auth";
 import { formatBDT, cn } from "@/lib/format";
 import { registryLogoutAction } from "@/app/registry/login/actions";
 import ConfirmForm from "@/app/registry/confirm-form";
+import { getRegistryDict } from "@/app/registry/registry-dict";
+import { getRegistryLocale } from "@/app/registry/registry-locale";
+import RegistryLanguageSwitch from "@/app/registry/registry-language-switch";
 
 const STATUS_BADGE: Record<string, string> = {
   active: "reg-badge reg-badge-active",
   inactive: "reg-badge reg-badge-inactive",
   deleted: "reg-badge reg-badge-deleted",
-};
-
-const SECTION_LABEL: Record<string, string> = {
-  men: "Men",
-  women: "Women",
-  kids: "Kids",
 };
 
 export default async function RegistryProductPage({
@@ -37,6 +34,8 @@ export default async function RegistryProductPage({
   // Resolve the real path first so an expired session returns here, not to a
   // literal "[id]" target.
   const session = await requireStaff(`/registry/products/${id}`);
+  const locale = await getRegistryLocale();
+  const t = getRegistryDict(locale);
   const product = await getRegistryProduct(id);
   if (!product) notFound();
 
@@ -47,17 +46,20 @@ export default async function RegistryProductPage({
       <header className="reg-header">
         <div className="mx-auto flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Link href="/registry" className="flex items-center gap-2">
-            <span className="font-display font-semibold text-gold tracking-tight">ABRAR</span>
-            <span className="text-xs text-ash uppercase">registry</span>
+            <span className="font-display font-semibold text-white tracking-tight">ABRAR</span>
+            <span className="text-xs text-ash uppercase">{t.registry}</span>
           </Link>
           <div className="ml-auto flex items-center gap-2 text-xs text-ash">
-            <span>{session.user.email}{session.isDev ? " · dev" : ""}</span>
+            <RegistryLanguageSwitch />
+            <span className="hidden sm:inline">
+              {session.user.email}{session.isDev ? ` · ${t.dev}` : ""}
+            </span>
             <form action={registryLogoutAction}>
               <button
                 type="submit"
-                className="reg-btn reg-btn-ghost reg-btn-xs"
+                className="reg-btn reg-btn-outline-light reg-btn-xs"
               >
-                Sign out
+                {t.signOut}
               </button>
             </form>
           </div>
@@ -71,44 +73,44 @@ export default async function RegistryProductPage({
               href="/registry"
               className="text-xs text-ash hover:underline mb-1 block"
             >
-              ← Back to registry
+              {t.backToRegistry}
             </Link>
-            <h1 className="text-2xl font-semibold tracking-tight">
-              {product.name}
-            </h1>
-            <p className="text-sm text-ash">
-              {product.slug} · {product.createdAt.slice(0, 10)}
-            </p>
+              <h1 className="text-2xl font-semibold tracking-tight">
+                {product.name}
+              </h1>
+              <p className="text-sm text-ash">
+                {product.slug} · {product.createdAt.slice(0, 10)}
+              </p>
           </div>
           <div className="flex gap-2">
             <Link
               href="/registry/products/new"
-              className="reg-btn reg-btn-primary"
+              className="reg-btn reg-btn-inverse"
             >
-              + Add new product
+              + {t.addProduct}
             </Link>
             {isDeleted ? (
               <form action={restoreProduct as unknown as RegistryFormAction} className="flex-1">
                 <input name="id" value={product.id} hidden />
                 <button
                   type="submit"
-                  className="reg-btn reg-btn-success"
+                  className="reg-btn reg-btn-success-light"
                 >
-                  Restore
+                  {t.restore}
                 </button>
               </form>
             ) : (
               <ConfirmForm
                 action={softDeleteProduct}
-                message={`Soft delete “${product.name}"?`}
+                message={t.deleteConfirm(product.name)}
                 className="flex-1"
               >
                 <input name="id" value={product.id} hidden />
                 <button
                   type="submit"
-                  className="reg-btn reg-btn-danger"
+                  className="reg-btn reg-btn-danger-light"
                 >
-                  Soft delete
+                  {t.softDelete}
                 </button>
               </ConfirmForm>
             )}
@@ -137,7 +139,7 @@ export default async function RegistryProductPage({
                     sizes="140px"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-gold/30 text-[20px]">
+                  <div className="flex h-full items-center justify-center text-white/25 text-[20px]">
                     {i + 1}
                   </div>
                 )}
@@ -149,21 +151,21 @@ export default async function RegistryProductPage({
           <div className="lg:col-span-3 space-y-6">
             <section className="reg-panel">
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-ash">
-                Details
+                {t.details}
               </h2>
               <dl className="grid gap-2 sm:grid-cols-2 text-sm">
                 <div className="col-span-full flex items-center gap-3">
-                  <span className="font-medium text-smoke">Type</span>
+                  <span className="font-medium text-ash">{t.type}</span>
                   <span className={cn(STATUS_BADGE[product.status])}>
-                    {SECTION_LABEL[product.type] ?? product.type}
+                    {(t.types as Record<string, string>)[product.type] ?? product.type}
                   </span>
                 </div>
                 <div className="col-span-full flex items-center gap-3">
-                  <span className="font-medium text-smoke">Sizes</span>
+                  <span className="font-medium text-ash">{t.sizes}</span>
                   <span className="text-ash">{product.sizes.join(", ") || "—"}</span>
                 </div>
                 <div className="col-span-full flex items-center gap-3">
-                  <span className="font-medium text-smoke">Price</span>
+                  <span className="font-medium text-ash">{t.priceShort}</span>
                   <span className="text-gold font-medium">{formatBDT(product.price)}</span>
                   {product.compareAt != null && product.compareAt > product.price && (
                     <span className="text-[12px] text-ash line-through">
@@ -172,18 +174,19 @@ export default async function RegistryProductPage({
                   )}
                 </div>
                 <div className="col-span-full flex items-center gap-3">
-                  <span className="font-medium text-smoke">Status</span>
+                  <span className="font-medium text-ash">{t.status}</span>
                   <span
                     className={cn(STATUS_BADGE[product.status])}
                   >
-                    {product.status.charAt(0).toUpperCase() + product.status.slice(1)}
+                    {t.statuses[product.status as keyof typeof t.statuses] ??
+                      product.status.charAt(0).toUpperCase() + product.status.slice(1)}
                   </span>
                   {product.deletedAt && (
-                    <span className="text-[11px] text-ash">· deleted {product.deletedAt.slice(0, 10)}</span>
+                    <span className="text-[11px] text-ash">· {t.statuses.deleted} {product.deletedAt.slice(0, 10)}</span>
                   )}
                 </div>
                 <div className="col-span-full flex items-center gap-3">
-                  <span className="font-medium text-smoke">Updated</span>
+                  <span className="font-medium text-ash">{t.updated}</span>
                   <span className="text-ash">{product.updatedAt.slice(0, 10)}</span>
                 </div>
               </dl>
@@ -193,12 +196,12 @@ export default async function RegistryProductPage({
               <form action={updateRegistryProduct as unknown as RegistryFormAction} className="space-y-4">
                 <input name="id" value={product.id} hidden />
                 <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-ash">
-                  Edit
+                  {t.editTitle}
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-3">
                   <div className="col-span-full sm:col-span-2">
                     <label htmlFor="name" className="block mb-1.5 text-xs font-medium text-ash uppercase">
-                      Name
+                      {t.name}
                     </label>
                     <input
                       id="name"
@@ -210,7 +213,7 @@ export default async function RegistryProductPage({
                   </div>
                   <div>
                     <label htmlFor="section" className="block mb-1.5 text-xs font-medium text-ash uppercase">
-                      Type (section)
+                      {t.typeSection}
                     </label>
                     <select
                       id="section"
@@ -218,14 +221,14 @@ export default async function RegistryProductPage({
                       defaultValue={product.type}
                       className="w-full"
                     >
-                      <option value="men">Men</option>
-                      <option value="women">Women</option>
-                      <option value="kids">Kids</option>
+                      <option value="men">{t.types.men}</option>
+                      <option value="women">{t.types.women}</option>
+                      <option value="kids">{t.types.kids}</option>
                     </select>
                   </div>
                   <div>
                     <label htmlFor="price_paisa" className="block mb-1.5 text-xs font-medium text-ash uppercase">
-                      Price (paisa)
+                      {t.pricePaisa}
                     </label>
                     <input
                       id="price_paisa"
@@ -244,9 +247,9 @@ export default async function RegistryProductPage({
                         name="active"
                         type="checkbox"
                         defaultChecked={product.active}
-                        className="rounded border-white/15 bg-black text-gold focus:ring-gold"
+                        className="rounded border-[#c9dcd8] bg-white text-gold focus:ring-gold"
                       />
-                      Active
+                      {t.activeLabel}
                     </label>
                   </div>
                 </div>
@@ -255,7 +258,7 @@ export default async function RegistryProductPage({
                     type="submit"
                     className="reg-btn reg-btn-primary"
                   >
-                    Save changes
+                    {t.saveChanges}
                   </button>
                 </div>
               </form>
@@ -264,8 +267,8 @@ export default async function RegistryProductPage({
         </div>
 
         {sp.saved === "1" && (
-          <p className="mt-4 rounded border border-emerald-500/30 bg-emerald-900/20 px-3 py-2 text-xs text-emerald-400">
-            Saved.
+          <p className="mt-4 rounded border border-emerald-600/30 bg-emerald-50 px-3 py-2 text-xs text-emerald-800">
+            {t.saved}
           </p>
         )}
       </div>

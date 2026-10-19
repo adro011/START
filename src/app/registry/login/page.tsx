@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SITE } from "@/config/site";
 import LoginClient from "./login-client";
+import { getRegistryLocale } from "@/app/registry/registry-locale";
 
 // Root layout appends `· ${SITE.name}`, so keep the brand out of this title.
 export const metadata: Metadata = {
@@ -19,7 +20,8 @@ export default async function RegistryLoginPage({
   const rawNext = pick(sp.next) ?? "/registry";
   const next = rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/registry";
   const error = pick(sp.error);
+  const locale = await getRegistryLocale();
 
   // NOTE: App Router searchParams are already decoded — never decode again.
-  return <LoginClient next={next} error={error} />;
+  return <LoginClient next={next} error={error} locale={locale} />;
 }

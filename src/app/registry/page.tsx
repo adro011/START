@@ -10,12 +10,9 @@ import { requireStaff } from "@/lib/auth";
 import { formatBDT, cn } from "@/lib/format";
 import { registryLogoutAction } from "@/app/registry/login/actions";
 import ConfirmForm from "./confirm-form";
-
-const STATUS_LABEL: Record<RegistryStatus, string> = {
-  active: "Active",
-  inactive: "Inactive",
-  deleted: "Deleted",
-};
+import { getRegistryDict, type RegistryDict } from "./registry-dict";
+import { getRegistryLocale } from "./registry-locale";
+import RegistryLanguageSwitch from "./registry-language-switch";
 
 const STATUS_BADGE: Record<RegistryStatus, string> = {
   active: "reg-badge-active",
@@ -31,6 +28,8 @@ export default async function RegistryPage({
   searchParams?: Promise<Record<string, string | undefined>>;
 }) {
   const session = await requireStaff("/registry");
+  const locale = await getRegistryLocale();
+  const t = getRegistryDict(locale);
   const sp = (await searchParams) ?? {};
   const q = (sp.q ?? "").trim();
   const type = sp.type ?? "";
@@ -53,14 +52,17 @@ export default async function RegistryPage({
       <header className="reg-header">
         <div className="mx-auto flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Link href="/registry" className="flex items-center gap-2">
-            <span className="font-display font-semibold text-gold tracking-tight">ABRAR</span>
-            <span className="text-xs text-ash uppercase">registry</span>
+            <span className="font-display font-semibold text-white tracking-tight">ABRAR</span>
+            <span className="text-xs text-ash uppercase">{t.registry}</span>
           </Link>
           <div className="ml-auto flex items-center gap-2 text-xs text-ash">
-            <span>{session.user.email}{session.isDev ? " · dev" : ""}</span>
+            <RegistryLanguageSwitch />
+            <span className="hidden sm:inline">
+              {session.user.email}{session.isDev ? ` · ${t.dev}` : ""}
+            </span>
             <form action={registryLogoutAction}>
-              <button type="submit" className="reg-btn reg-btn-ghost reg-btn-xs">
-                Sign out
+              <button type="submit" className="reg-btn reg-btn-outline-light reg-btn-xs">
+                {t.signOut}
               </button>
             </form>
           </div>
@@ -70,44 +72,42 @@ export default async function RegistryPage({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Registry products</h1>
-            <p className="text-sm text-ash">
-              {products.length} listed · soft-delete (deleted_at) · max {limit}/page
-            </p>
+            <h1 className="text-2xl font-semibold tracking-tight">{t.productsTitle}</h1>
+            <p className="text-sm text-ash">{t.listedSummary(products.length, limit)}</p>
           </div>
-          <Link href="/registry/products/new" className="reg-btn reg-btn-primary">
-            + Add new product
+          <Link href="/registry/products/new" className="reg-btn reg-btn-inverse">
+            + {t.addProduct}
           </Link>
         </div>
 
-        <form method="get" className="flex flex-wrap gap-2 items-end mb-6">
+        <form method="get" className="reg-toolbar flex flex-wrap gap-2 items-end mb-6">
           <div className="min-w-52 flex-1">
             <input
               name="q"
               defaultValue={q}
-              placeholder="Search name or slug…"
-              aria-label="Search products"
+              placeholder={t.searchPlaceholder}
+              aria-label={t.searchAria}
               className="w-full"
             />
           </div>
           <select
             name="type"
             defaultValue={type}
-            aria-label="Filter by type"
+            aria-label={t.typeAria}
             className="max-w-40"
           >
-            <option value="">All types</option>
-            <option value="men">Men</option>
-            <option value="women">Women</option>
-            <option value="kids">Kids</option>
+            <option value="">{t.allTypes}</option>
+            <option value="men">{t.types.men}</option>
+            <option value="women">{t.types.women}</option>
+            <option value="kids">{t.types.kids}</option>
           </select>
           <select
             name="size"
             defaultValue={size}
-            aria-label="Filter by size"
+            aria-label={t.sizeAria}
             className="max-w-32"
           >
-            <option value="">All sizes</option>
+            <option value="">{t.allSizes}</option>
             {SIZES.map((s) => (
               <option key={s} value={s}>
                 {s}
@@ -117,48 +117,48 @@ export default async function RegistryPage({
           <select
             name="status"
             defaultValue={status}
-            aria-label="Filter by status"
+            aria-label={t.statusAria}
             className="max-w-40"
           >
-            <option value="">All statuses</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="deleted">Deleted</option>
+            <option value="">{t.statusAll}</option>
+            <option value="active">{t.statuses.active}</option>
+            <option value="inactive">{t.statuses.inactive}</option>
+            <option value="deleted">{t.statuses.deleted}</option>
           </select>
-          <button type="submit" className="reg-btn reg-btn-ghost">
-            Filter
+          <button type="submit" className="reg-btn reg-btn-primary">
+            {t.filter}
           </button>
           {(q || type || size || status) && (
             <Link href="/registry" className="reg-btn reg-btn-ghost">
-              Clear
+              {t.clear}
             </Link>
           )}
         </form>
 
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {products.map((p) => (
-            <RegistryCard key={p.id} product={p} deleteAction={softDeleteProduct} />
+            <RegistryCard key={p.id} product={p} deleteAction={softDeleteProduct} t={t} />
           ))}
           {products.length === 0 && (
             <div className="reg-card col-span-full px-6 py-12 text-center">
-              <p className="text-ash">No products match the current filters.</p>
+              <p className="text-ash">{t.noResults}</p>
             </div>
           )}
         </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-sm">
           <p className="text-ash">
-            Page {page} {hasNextPage ? "· more results" : "· last page"}
+            {t.pageSummary(page, !hasNextPage)}
           </p>
           <div className="flex gap-2">
             {page > 1 && (
-              <Link href={pageUrl(page - 1)} className="reg-btn reg-btn-ghost reg-btn-sm">
-                ← Prev
+              <Link href={pageUrl(page - 1)} className="reg-btn reg-btn-outline-light reg-btn-sm">
+                {t.prev}
               </Link>
             )}
             {hasNextPage && (
-              <Link href={pageUrl(page + 1)} className="reg-btn reg-btn-ghost reg-btn-sm">
-                Next →
+              <Link href={pageUrl(page + 1)} className="reg-btn reg-btn-outline-light reg-btn-sm">
+                {t.next}
               </Link>
             )}
           </div>
@@ -171,13 +171,18 @@ export default async function RegistryPage({
 function RegistryCard({
   product,
   deleteAction,
+  t,
 }: {
   product: RegistryProduct;
   deleteAction: (formData: FormData) => unknown;
+  t: RegistryDict;
 }) {
-  const label = STATUS_LABEL[product.status];
+  const label = t.statuses[product.status];
   const badge = STATUS_BADGE[product.status];
   const size = product.sizes[0] ?? "—";
+  const typeLabel =
+    (t.types as Record<string, string>)[product.type] ??
+    product.type.charAt(0).toUpperCase() + product.type.slice(1);
 
   return (
     <article className="reg-card p-3 flex flex-col h-full">
@@ -192,16 +197,16 @@ function RegistryCard({
             sizes="(max-width: 640px) 100vw, 200px"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-gold/30 text-[24px]">
+          <div className="flex h-full items-center justify-center text-white/25 text-[24px]">
             {product.type.slice(0, 1).toUpperCase()}
           </div>
         )}
         <span className="absolute top-2 left-2 rounded border border-white/20 bg-black/60 px-2 py-0.5 text-[10px] font-medium text-smoke">
-          {product.type.charAt(0).toUpperCase() + product.type.slice(1)}
+          {typeLabel}
         </span>
       </div>
       <div className="flex-1 flex flex-col gap-1">
-        <h3 className="line-clamp-1 font-medium text-sm text-smoke">{product.name}</h3>
+        <h3 className="line-clamp-1 font-medium text-sm text-[#0a2b28]">{product.name}</h3>
         <p className="flex items-center gap-1 text-[10px] text-ash">
           <span>{size}</span>{product.sizes.length > 1 && ` +${product.sizes.length - 1}`}
         </p>
@@ -217,11 +222,11 @@ function RegistryCard({
           href={`/registry/products/${product.id}`}
           className="reg-btn reg-btn-ghost reg-btn-xs flex-1 text-center"
         >
-          Edit
+          {t.edit}
         </Link>
         <ConfirmForm
           action={deleteAction}
-          message={`Soft delete “${product.name}"?`}
+          message={t.deleteConfirm(product.name)}
           className="flex-1"
         >
           <input name="id" value={product.id} hidden />
@@ -229,7 +234,7 @@ function RegistryCard({
             type="submit"
             className="reg-btn reg-btn-danger reg-btn-xs flex-1 text-center"
           >
-            Delete
+            {t.delete}
           </button>
         </ConfirmForm>
       </div>

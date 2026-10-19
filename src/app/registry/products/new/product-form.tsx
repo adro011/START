@@ -5,6 +5,8 @@ import { useState, type FormEvent } from "react";
 import { z } from "zod";
 import { saveRegistryProduct } from "./actions";
 import { cn } from "@/lib/format";
+import type { Locale } from "@/lib/dictionary";
+import { getRegistryDict } from "@/app/registry/registry-dict";
 
 const MAX_IMAGES = 5;
 
@@ -24,13 +26,6 @@ const AGE_CATEGORIES: readonly string[] = [
 
 type TypeValue = "male" | "female" | "children" | "others";
 type StatusValue = "draft" | "published";
-
-const TYPE_LABELS: Record<TypeValue, string> = {
-  male: "Men",
-  female: "Women",
-  children: "Children",
-  others: "Others (new arrivals)",
-};
 
 const INPUT = "w-full";
 
@@ -58,7 +53,14 @@ export const registryFormSchema = z.object({
     path: ["size"],
   });
 
-export default function ProductForm() {
+export default function ProductForm({ locale }: { locale: Locale }) {
+  const t = getRegistryDict(locale);
+  const typeLabels: Record<TypeValue, string> = {
+    male: t.types.male,
+    female: t.types.female,
+    children: t.types.children,
+    others: t.types.others,
+  };
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [type, setType] = useState<TypeValue>("male");
@@ -88,7 +90,7 @@ export default function ProductForm() {
   function addFiles(fileList: FileList | null) {
     if (!fileList) return;
     if (files.length + fileList.length > MAX_IMAGES) {
-      setError(`Maximum ${MAX_IMAGES} images per product.`);
+      setError(t.imageLimit);
       return;
     }
     setError("");
@@ -146,7 +148,7 @@ export default function ProductForm() {
       }
       const result = await saveRegistryProduct(parsed.data);
       if (result.ok) {
-        setOk("Product saved.");
+        setOk(t.productSaved);
         setName("");
         setSlug("");
         setType("male");
@@ -171,22 +173,22 @@ export default function ProductForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       {error ? (
-        <p role="alert" className="rounded border border-red-700/50 bg-red-700/10 px-4 py-3 text-sm text-red-700">
+        <p role="alert" className="rounded border border-red-600/30 bg-red-50 px-4 py-3 text-sm text-red-800">
           {error}
         </p>
       ) : null}
       {ok ? (
-        <p role="status" className="rounded border border-gold/50 bg-gold/10 px-4 py-3 text-sm text-gold">
+        <p role="status" className="rounded border border-gold/40 bg-gold/10 px-4 py-3 text-sm text-gold">
           {ok}
         </p>
       ) : null}
 
       <fieldset className="reg-panel">
-        <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">Product basics</legend>
+        <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">{t.basics}</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <label htmlFor="name" className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">
-              Product name
+            <label htmlFor="name" className="block text-xs text-ash tracking-wider">
+              {t.productName}
             </label>
             <input
               id="name"
@@ -195,14 +197,14 @@ export default function ProductForm() {
               required
               minLength={2}
               maxLength={120}
-              placeholder="e.g. Cotton Panjabi"
+              placeholder={t.productNamePlaceholder}
               className={INPUT}
             />
             {fieldError("name") && <p role="alert" className="reg-input-error">{fieldError("name")}</p>}
           </div>
           <div className="space-y-2">
-            <label htmlFor="slug" className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">
-              Slug
+            <label htmlFor="slug" className="block text-xs text-ash tracking-wider">
+              {t.slug}
             </label>
             <input
               id="slug"
@@ -211,20 +213,20 @@ export default function ProductForm() {
               required
               pattern="[a-z0-9-]+"
               maxLength={100}
-              placeholder="cotton-panjabi"
+              placeholder={t.slugPlaceholder}
               className={INPUT}
             />
             {fieldError("slug") && <p role="alert" className="reg-input-error">{fieldError("slug")}</p>}
           </div>
           <div className="space-y-2 col-span-2">
-            <label className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">Type</label>
-            <div className="flex gap-3">
-              {(Object.entries(TYPE_LABELS) as [TypeValue, string][]).map(([value, label]) => (
+            <label className="block text-xs text-ash tracking-wider">{t.type}</label>
+            <div className="flex flex-wrap gap-3">
+              {(Object.entries(typeLabels) as [TypeValue, string][]).map(([value, label]) => (
                 <label
                   key={value}
                   className={cn(
-                    "flex items-center gap-2 cursor-pointer rounded border px-3 py-2 text-sm hover:bg-white/5",
-                    type === value ? "border-gold bg-white/5" : "border-white/15",
+                    "flex items-center gap-2 cursor-pointer rounded border px-3 py-2 text-sm hover:bg-[#f2f7f6]",
+                    type === value ? "border-gold bg-[#eaf4f2]" : "border-[#c9dcd8]",
                   )}
                 >
                   <input
@@ -245,18 +247,18 @@ export default function ProductForm() {
       </fieldset>
 
       <fieldset className="reg-panel">
-        <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">Size & age</legend>
+        <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">{t.sizeAge}</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           {type === "children" ? (
             <div className="space-y-2">
-              <label htmlFor="ageCategory" className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">Age category</label>
+              <label htmlFor="ageCategory" className="block text-xs text-ash tracking-wider">{t.ageCategory}</label>
               <select
                 id="ageCategory"
                 value={ageCategory}
                 onChange={(e) => setAgeCategory(e.target.value)}
                 className={INPUT}
               >
-                <option disabled value="">Select age range</option>
+                <option disabled value="">{t.selectAge}</option>
                 {AGE_CATEGORIES.map((c) => (
                   <option key={c} value={c}>
                     {c}
@@ -269,7 +271,7 @@ export default function ProductForm() {
             </div>
           ) : null}
           <div className="space-y-2">
-            <label htmlFor="size" className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">Size</label>
+            <label htmlFor="size" className="block text-xs text-ash tracking-wider">{t.size}</label>
             <select id="size" value={size} onChange={(e) => setSize(e.target.value)} className={INPUT}>
               {allowedSizes.map((s) => (
                 <option key={s} value={s}>
@@ -282,19 +284,19 @@ export default function ProductForm() {
         </div>
         <p className="mt-2 text-xs text-ash">
           {type === "others"
-            ? "New arrivals use shoe sizes 36–46."
+            ? t.hintShoes
             : type === "children"
-              ? "Children use clothing sizes S–XXXL with an age category."
-              : "Men / adults use clothing sizes S–XXXL."}
+              ? t.hintChildren
+              : t.hintAdults}
         </p>
       </fieldset>
 
       <fieldset className="reg-panel">
-        <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">Details & review</legend>
+        <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">{t.detailsReview}</legend>
         <div className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="description" className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">
-              Product description
+            <label htmlFor="description" className="block text-xs text-ash tracking-wider">
+              {t.productDescription}
             </label>
             <textarea
               id="description"
@@ -304,7 +306,7 @@ export default function ProductForm() {
               minLength={10}
               maxLength={2000}
               rows={4}
-              placeholder="Fabric, fit, care, story…"
+              placeholder={t.descriptionPlaceholder}
               className={INPUT}
             />
             {fieldError("description") && (
@@ -312,10 +314,10 @@ export default function ProductForm() {
             )}
           </div>
           <div className="space-y-2">
-            <label className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">Review rating</label>
+            <label className="block text-xs text-ash tracking-wider">{t.rating}</label>
             <div
               role="radiogroup"
-              aria-label="Review rating (1-5 stars)"
+              aria-label={t.ratingAria}
               className="flex gap-1"
             >
               {[1, 2, 3, 4, 5].map((star) => (
@@ -335,26 +337,26 @@ export default function ProductForm() {
                   <span
                     className={cn(
                       "text-2xl transition-colors",
-                      star <= (rating ?? 0) ? "text-gold" : "text-white/20",
+                      star <= (rating ?? 0) ? "text-gold" : "text-[#6b8582]",
                       "hover:text-gold",
                     )}
                   >
-                    ★
+                    �
                   </span>
                 </label>
               ))}
             </div>
-            <p className="text-xs text-ash">Optional 5-star review rating.</p>
+            <p className="text-xs text-ash">{t.ratingHint}</p>
           </div>
         </div>
       </fieldset>
 
       <fieldset className="reg-panel">
-        <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">Price & status</legend>
+        <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">{t.priceStatus}</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <label htmlFor="price" className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">
-              Price (BDT)
+            <label htmlFor="price" className="block text-xs text-ash tracking-wider">
+              {t.price}
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-ash">৳</span>
@@ -371,14 +373,14 @@ export default function ProductForm() {
             {fieldError("price") && <p role="alert" className="reg-input-error">{fieldError("price")}</p>}
           </div>
           <div className="space-y-2">
-            <label className="block text-xs text-[#F5F5F5]/80 uppercase tracking-wider">Status</label>
-            <div className="flex gap-3">
+            <label className="block text-xs text-ash tracking-wider">{t.status}</label>
+            <div className="flex flex-wrap gap-3">
               {(["draft", "published"] as StatusValue[]).map((value) => (
                 <label
                   key={value}
                   className={cn(
-                    "flex items-center gap-2 cursor-pointer rounded border px-3 py-2 text-sm hover:bg-white/5",
-                    status === value ? "border-gold bg-white/5" : "border-white/15",
+                    "flex items-center gap-2 cursor-pointer rounded border px-3 py-2 text-sm hover:bg-[#f2f7f6]",
+                    status === value ? "border-gold bg-[#eaf4f2]" : "border-[#c9dcd8]",
                   )}
                 >
                   <input
@@ -389,7 +391,7 @@ export default function ProductForm() {
                     onChange={() => setStatus(value)}
                     className="text-gold"
                   />
-                  {value.charAt(0).toUpperCase() + value.slice(1)}
+                  {t.statusOptions[value]}
                 </label>
               ))}
             </div>
@@ -399,7 +401,7 @@ export default function ProductForm() {
 
       <fieldset className="reg-panel">
         <legend className="px-2 text-xs font-semibold text-gold uppercase tracking-wider">
-          Product images (max {MAX_IMAGES})
+          {t.imagesTitle}
         </legend>
         <div
           onDrop={onDrop}
@@ -408,11 +410,11 @@ export default function ProductForm() {
           onDragLeave={() => setIsDragActive(false)}
           className={cn(
             "flex flex-col items-center gap-3 rounded border-2 p-6 text-center transition-colors duration-200",
-            isDragActive ? "border-gold bg-white/5" : "border-dashed border-white/15 hover:border-white/30",
+            isDragActive ? "border-gold bg-[#eaf4f2]" : "border-dashed border-[#c9dcd8] hover:border-[#9fc9c2]",
           )}
         >
-          <p className="text-sm text-[#F5F5F5]/80">
-            {isDragActive ? "Drop images here" : "Drag & drop or click to select images"}
+          <p className="text-sm text-ash">
+            {isDragActive ? t.dropActive : t.dropIdle}
           </p>
           <input
             type="file"
@@ -426,19 +428,19 @@ export default function ProductForm() {
           <label
             htmlFor="images"
             className={cn(
-              "rounded bg-white/10 px-4 py-2 text-sm uppercase tracking-wider transition-colors",
-              files.length >= 5 ? "opacity-50 cursor-not-allowed" : "text-gold hover:text-gold-dark cursor-pointer",
+              "rounded bg-[#eaf4f2] px-4 py-2 text-sm uppercase tracking-wider transition-colors",
+              files.length >= 5 ? "opacity-50 cursor-not-allowed" : "text-gold hover:text-[#0a4741] cursor-pointer",
             )}
           >
-            {files.length >= 5 ? "Limit reached (5)" : "Select images"}
+            {files.length >= 5 ? t.limitReached : t.selectImages}
           </label>
           <p className="text-xs text-ash">
-            JPG / PNG / WebP &middot; max {MAX_IMAGES} per product &middot; previews below
+            {t.imageHint}
           </p>
         </div>
         <ul className="grid gap-3 sm:grid-cols-3">
           {previews.map((url, index) => (
-            <li key={index} className="relative rounded border border-white/15 overflow-hidden">
+            <li key={index} className="relative rounded border border-[#c9dcd8] overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element -- client-side preview of a locally selected file */}
               <img src={url} alt="" className="aspect-[4/5] w-full object-cover" />
               <button
@@ -446,7 +448,7 @@ export default function ProductForm() {
                 onClick={() => removeImage(index)}
                 className="absolute right-1 top-1 reg-btn reg-btn-danger reg-btn-xs"
               >
-                Remove
+                {t.remove}
               </button>
               <p className="mt-1 text-xs text-ash truncate" title={files[index].name}>
                 {files[index].name}
@@ -454,22 +456,22 @@ export default function ProductForm() {
             </li>
           ))}
         </ul>
-        {files.length === 0 && <p className="mt-2 text-xs text-ash">No images yet.</p>}
+        {files.length === 0 && <p className="mt-2 text-xs text-ash">{t.noImages}</p>}
       </fieldset>
 
       <div className="flex gap-3 pt-4">
         <button
           type="submit"
           disabled={saving}
-          className="reg-btn reg-btn-primary disabled:opacity-60 disabled:cursor-not-allowed"
+          className="reg-btn reg-btn-inverse disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {saving ? "Saving…" : "Save product"}
+          {saving ? t.saving : t.saveProduct}
         </button>
         <Link
           href="/"
-          className="reg-btn reg-btn-ghost"
+          className="reg-btn reg-btn-outline-light"
         >
-          Cancel
+          {t.cancel}
         </Link>
       </div>
     </form>
