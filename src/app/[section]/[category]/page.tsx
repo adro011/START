@@ -122,7 +122,7 @@ export default async function CategoryPage({
           <SortSelect />
         </Suspense>
       </div>
-      <div className="mt-4 grid gap-6 lg:grid-cols-[240px_1fr]">
+      <div className="mt-4 grid gap-6 lg:grid-cols-[240px_1fr] lg:items-start">
         <Suspense>
           <Filters categories={cats} sizes={["S", "M", "L", "XL"]} bounds={priceBounds(allProducts)} />
         </Suspense>

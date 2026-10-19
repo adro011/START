@@ -41,10 +41,17 @@ export default function SmoothScroll() {
     };
     document.addEventListener("visibilitychange", onVis);
 
+    // One-time relayout measure after late-loading images/fonts settle, so
+    // Lenis' scroll bounds match the final page height (mirrors the
+    // ScrollTrigger.refresh()-after-load pattern).
+    const onLoad = () => lenis.resize();
+    window.addEventListener("load", onLoad, { once: true });
+
     document.documentElement.classList.add("lenis");
     return () => {
       cancelAnimationFrame(raf);
       document.removeEventListener("visibilitychange", onVis);
+      window.removeEventListener("load", onLoad);
       lenis.destroy();
       document.documentElement.classList.remove("lenis");
       delete (window as unknown as { __lenis?: Lenis }).__lenis;

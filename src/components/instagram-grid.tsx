@@ -27,7 +27,7 @@ export default function InstagramGrid({
   href?: string;
 }) {
   return (
-    <section aria-label="Instagram feed" className="cv mx-auto max-w-[1280px] px-4 py-16 sm:px-6">
+    <section aria-label="Instagram feed" className="cv mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] py-16">
       <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
         <div>
           <p className="kicker text-blush">On the feed</p>

@@ -75,7 +75,7 @@ export default function Filters({
   }
 
   return (
-    <div className="space-y-5 rounded-xl border p-4 text-sm lg:sticky lg:top-20">
+    <div className="filter-sidebar space-y-5 rounded-xl border p-4 text-sm lg:sticky lg:top-[6.5rem] lg:h-fit lg:max-h-[calc(100dvh-7.5rem)] lg:self-start lg:overflow-y-auto lg:overscroll-contain">
       <div>
         <p className="mb-2 font-semibold">Category</p>
         <div className="flex flex-wrap gap-1.5">

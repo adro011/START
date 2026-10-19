@@ -205,7 +205,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="overflow-clip">
+    <div className="overflow-x-hidden">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_JSON_LD) }} />
       {/* ── Gucci-style cover: full-viewport slow-zoom portrait, grade, giant wordmark ── */}
@@ -222,16 +222,23 @@ export default async function HomePage() {
           />
         </div>
         <div aria-hidden="true" className="grade-cine absolute inset-0" />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
         <div aria-hidden="true" className="paper-grain absolute inset-0 opacity-60" />
 
         <div className="relative mx-auto max-w-[1100px] px-6 pt-16 pb-24">
-          <p className="cover-eyebrow hero-text-rise text-[#F2CCC3]" style={{ animationDelay: "150ms" }}>
+          <p
+            className="cover-eyebrow hero-text-rise text-white [text-shadow:0_2px_14px_rgba(0,0,0,0.6)]"
+            style={{ animationDelay: "150ms", letterSpacing: "0.2em" }}
+          >
             New Collection — Eid ’26 Edit
           </p>
           <h1 className="cover-title hero-text-rise mt-5 uppercase" style={{ animationDelay: "300ms" }}>
             ABRAR
           </h1>
-          <p className="hero-text-rise mt-5 text-[13px] font-medium tracking-[0.32em] text-white/75 uppercase" style={{ animationDelay: "450ms" }}>
+          <p
+            className="hero-text-rise mt-5 text-[13px] font-medium tracking-[0.2em] text-white uppercase [text-shadow:0_2px_14px_rgba(0,0,0,0.6)]"
+            style={{ animationDelay: "450ms" }}
+          >
             Connecting Consumer through Digital media
           </p>
           <div className="hero-text-rise mt-9 flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: "600ms" }}>
@@ -265,7 +272,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── Cinematic hero: 100dvh, split-type entrance, depth orbs ── */}
-      <section aria-label="Shop by section" className="relative bg-black text-[#FBF6F3]">
+      <section aria-label="Shop by section" className="relative w-full bg-black text-[#FBF6F3]">
         {/* ambient orbs */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="drift absolute -top-24 -left-24 h-[420px] w-[420px] rounded-full bg-[#D5573B]/20 blur-[120px]" />
@@ -273,7 +280,7 @@ export default async function HomePage() {
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black to-transparent" />
         </div>
 
-        <div className="relative mx-auto max-w-[1440px] px-3 pt-3 sm:px-4">
+        <div className="relative mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] pt-3">
           {/* eyebrow */}
           <div className="flex items-center justify-between px-1 pt-4 pb-3 sm:px-2">
             <p className="text-[12px] font-semibold tracking-[0.12em] text-[#F2CCC3]/90 uppercase">Connecting Consumer through Digital media</p>
@@ -287,17 +294,19 @@ export default async function HomePage() {
                 href={h.href}
                 data-cursor="Explore"
                 style={{ animationDelay: `${120 + i * 110}ms`, background: h.bg }}
-                className="hero-enter hero-panel group relative flex-1 overflow-hidden transition-[flex-grow] duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] md:hover:flex-[1.75]"
+                className="hero-enter hero-panel group relative flex-1 transition-[flex-grow] duration-[600ms] [transition-timing-function:cubic-bezier(0.2,0.8,0.2,1)] md:hover:flex-[1.75]"
               >
-                    <Image
-                  src={h.img}
-                  alt={`${h.title} collection`}
-                  fill
-                  loading="lazy"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover object-center opacity-100 transition-all duration-700 group-hover:scale-[1.03]"
-                />
-                <span className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/40 to-black/10" aria-hidden="true" />
+                <span aria-hidden="true" className="absolute inset-0 overflow-hidden">
+                  <Image
+                    src={h.img}
+                    alt={`${h.title} collection`}
+                    fill
+                    loading="lazy"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover object-center opacity-100 transition-all duration-700 group-hover:scale-[1.03]"
+                  />
+                  <span className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/40 to-black/10" />
+                </span>
                 {/* index */}
                 <span aria-hidden="true" className="text-ghost absolute top-5 right-6 font-semibold text-[40px] tracking-tight sm:text-[48px]" style={{ fontFamily: "'Cormorant Garamond','Playfair Display',serif" }}>
                   {h.index}
@@ -307,7 +316,10 @@ export default async function HomePage() {
                     className="hero-text-rise block leading-[0.92] tracking-[0.01em]"
                     style={{ animationDelay: `${200 + i * 110}ms` }}
                   >
-                    <span className="block text-[clamp(2.75rem,6vw,6rem)] font-medium text-white uppercase" style={{ fontFamily: "'Cormorant Garamond','Playfair Display',Georgia,serif" }}>
+                    <span
+                      className="block whitespace-nowrap text-[clamp(2rem,4.5vw,4.5rem)] font-medium text-white uppercase [text-shadow:0_2px_14px_rgba(0,0,0,0.6)]"
+                      style={{ fontFamily: "'Cormorant Garamond','Playfair Display',Georgia,serif" }}
+                    >
                       {h.title}
                     </span>
                   </span>
@@ -347,7 +359,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── Brand statement ─────────────────────────── */}
-      <section aria-label="House statement" className="mx-auto max-w-[1280px] px-4 pt-16 pb-4 sm:px-6">
+      <section aria-label="House statement" className="mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] pt-16 pb-4">
         <Reveal>
           <p className="kicker text-blush">The house of Abrar</p>
           <p className="display-xl mt-4 max-w-[16ch] text-[#F5F5F5]">
@@ -357,7 +369,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── New arrivals rail ────────────────────────── */}
-      <section aria-label="New arrivals" className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6">
+      <section aria-label="New arrivals" className="mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] py-12">
         <SectionHeading
           kicker="Just landed — small batches"
           title="New arrivals"
@@ -365,7 +377,7 @@ export default async function HomePage() {
           href="/new-arrivals"
         />
         {arrivals.length > 0 ? (
-          <div className="rail -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6">
+          <div className="rail -mx-[clamp(16px,4vw,64px)] flex snap-x snap-mandatory gap-5 overflow-x-auto px-[clamp(16px,4vw,64px)] pb-4">
             {arrivals.slice(0, 10).map((p, i) => (
               <Reveal
                 key={p.slug}
@@ -385,19 +397,20 @@ export default async function HomePage() {
       </section>
 
       {/* ── Shop by category: editorial brutalism ───── */}
-      <section aria-label="Shop by category" className="cv border-y border-[#172121]/10 bg-[#F2CCC3]/30">
-        <div className="mx-auto max-w-[1280px] px-4 py-16 sm:px-6">
+      <section aria-label="Shop by category" className="cv w-full border-y border-white/10 bg-[#0a0a0a]">
+        <div className="mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] py-16">
           <SectionHeading
             kicker="Find your lane"
             title="Shop by category"
             copy="Three sections, one thread: clothes that respect the craft."
+            dark
           />
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
             {tiles.map((t, i) => (
               <Reveal
                 key={t.href + t.name}
                 delay={(i % 3) * 80}
-                className="lift group relative overflow-hidden border border-[#172121]/10 bg-[#172121] px-6 py-10 sm:py-14"
+                className="lift group relative overflow-hidden border border-white/10 bg-[#172121] px-6 py-8 sm:py-10"
               >
                 <Link href={t.href} className="block" data-cursor="Open">
                   {t.img && (
@@ -405,10 +418,10 @@ export default async function HomePage() {
                       src={t.img}
                       alt={`${t.name} collection`}
                       width={400}
-                      height={242}
-                      className="mb-3 block h-48 w-full object-cover object-center opacity-90 transition-all duration-700 group-hover:opacity-100"
+                      height={533}
+                      className="mb-4 block aspect-[3/4] w-full object-cover object-center opacity-90 transition-all duration-700 group-hover:opacity-100"
                       loading="lazy"
-                      sizes="(max-width: 768px) 100vw, 33vw"
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                     />
                   )}
                   <span aria-hidden="true" className="text-ghost pointer-events-none absolute -right-2 -bottom-6 text-[96px] leading-none font-semibold">
@@ -416,7 +429,7 @@ export default async function HomePage() {
                   </span>
                   <span className="kicker text-[#F2CCC3]/70">0{i + 1} — Explore</span>
                   <span
-                    className="mt-2 block text-[28px] leading-tight font-medium text-white sm:text-[36px]"
+                    className="mt-2 block text-[28px] leading-tight font-medium break-words text-white sm:text-[32px]"
                     style={{ fontFamily: "'Cormorant Garamond', serif" }}
                   >
                     {t.name}
@@ -432,7 +445,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── Occasion journey ─────────────────────────── */}
-      <section aria-label="Shop by occasion" className="cv mx-auto max-w-[1280px] px-4 py-16 sm:px-6">
+      <section aria-label="Shop by occasion" className="cv mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] py-16">
         <SectionHeading
           kicker="Dress for the day"
           title="Shop by occasion"
@@ -480,7 +493,7 @@ export default async function HomePage() {
           <div className="absolute top-0 left-1/4 h-[360px] w-[520px] rounded-full bg-[#D5573B]/25 blur-[130px]" />
           <div className="absolute right-0 bottom-0 h-[280px] w-[380px] rounded-full bg-[#7D451B]/30 blur-[110px]" />
         </div>
-        <div className="relative mx-auto max-w-[1280px] px-4 py-16 sm:px-6">
+        <div className="relative mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] py-16">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
@@ -522,7 +535,7 @@ export default async function HomePage() {
           aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-br from-[#F2CCC3] via-[#FBF6F3] to-[#7E9181]/40 bg-[length:200%_200%] md:bg-fixed"
         />
-        <div className="relative mx-auto grid max-w-[1280px] gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1.2fr_1fr] md:items-center">
+        <div className="relative mx-auto grid w-full max-w-[1400px] gap-10 px-[clamp(16px,4vw,64px)] py-20 md:grid-cols-[1.2fr_1fr] md:items-center">
           <Reveal>
             <div>
               <p className="kicker text-[#172121]">Woven, not rushed</p>
@@ -574,7 +587,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── Testimonials ─────────────────────────────── */}
-      <section aria-label="Customer words" className="cv mx-auto max-w-[1280px] px-4 py-16 sm:px-6">
+      <section aria-label="Customer words" className="cv mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] py-16">
         <SectionHeading kicker="Worn & loved" title="Word on the street" />
         <div className="grid gap-4 md:grid-cols-3">
           {TESTIMONIALS.map((t, i) => (
@@ -595,8 +608,8 @@ export default async function HomePage() {
       </section>
 
       {/* ── Trust row ────────────────────────────────── */}
-      <section aria-label="Why shop with us" className="cv border-y border-[#172121]/10 bg-[#FBF6F3]">
-        <div className="mx-auto grid max-w-[1280px] gap-8 px-4 py-12 sm:grid-cols-3 sm:px-6">
+      <section aria-label="Why shop with us" className="cv w-full border-y border-[#172121]/10 bg-[#FBF6F3]">
+        <div className="mx-auto grid w-full max-w-[1400px] gap-8 px-[clamp(16px,4vw,64px)] py-12 sm:grid-cols-3">
           {[
             ["Cash on delivery", "Pay at your door, anywhere in Bangladesh.", "৳"],
             ["7-day exchange", "Wrong size? We swap it fast, no drama.", "↺"],
@@ -621,7 +634,7 @@ export default async function HomePage() {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           <div className="absolute top-1/2 left-1/2 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#D5573B]/18 blur-[140px]" />
         </div>
-        <div className="relative mx-auto max-w-[1280px] px-4 py-20 sm:px-6">
+        <div className="relative mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] py-20">
           <Reveal variant="scale">
             <p className="kicker text-blush">The letter — 10% off first order</p>
             <p className="display-xl mx-auto mt-3 max-w-[14ch]">

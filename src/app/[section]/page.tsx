@@ -99,7 +99,7 @@ export default async function SectionPage({
         <Link href="/sale" className={`shrink-0 rounded-full border px-3 py-1 text-xs ${section === "sale" ? "bg-gold text-black" : "text-gold"}`}>Sale</Link>
       </div>
 
-      <div className="mt-4 grid gap-6 lg:grid-cols-[240px_1fr]">
+      <div className="mt-4 grid gap-6 lg:grid-cols-[240px_1fr] lg:items-start">
         <Suspense>
           <Filters categories={cats.slice(0, 18)} sizes={sizes} bounds={priceBounds(allProducts)} />
         </Suspense>

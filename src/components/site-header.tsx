@@ -79,18 +79,19 @@ export function SiteHeader() {
 <Link
             href="/"
             aria-label={`${SITE.name} \u2014 home`}
-            className="flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+            className="relative isolate flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
           >
+            <span aria-hidden="true" className="brand-halo" />
             <Image
               src="/hero/icons/icon-192.png"
               alt={`${SITE.name} logo`}
               width={56}
               height={56}
-              className="h-14 w-14 object-contain"
+              className="brand-mark-glow h-14 w-14 object-contain"
               priority
             />
             <span
-              className="text-[22px] font-semibold tracking-[0.06em] whitespace-nowrap text-[#F5F5F5] uppercase sm:text-[25px]"
+              className="brand-word-glow text-[22px] font-semibold tracking-[0.06em] whitespace-nowrap text-[#F5F5F5] uppercase sm:text-[25px]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
               {SITE.name}
