@@ -1,16 +1,16 @@
-/* Shop-registry design system. Scoped to `.reg-scope` (mounted only on
+﻿/* Shop-registry design system. Scoped to `.reg-scope` (mounted only on
    /registry/*) so storefront pages are unaffected.
 
    Palette: a dark-teal shell carrying white working surfaces. Inputs, cards
    and panels are white so numbers, statuses and form fields read like a
    ledger; the teal shell keeps the staff tool in the same world as the
-   storefront. Gold is remapped to teal inside the scope — the registry no
+   storefront. Gold is remapped to teal inside the scope â€” the registry no
    longer uses the marketing accent.
 
-   Accessibility (ui-composition): body text ≥16px, sentence-case data entry,
-   WCAG-AA contrast (teal #0D5B54 on white ≈ 8:1, ink #0A2B28 on white ≈ 14:1,
-   muted #4B6662 on white ≈ 6.2:1, inverse muted #B7D3CF on #06201E ≈ 9:1),
-   44×44px targets, visible focus ring that flips between light and dark. */
+   Accessibility (ui-composition): body text â‰¥16px, sentence-case data entry,
+   WCAG-AA contrast (teal #0D5B54 on white â‰ˆ 8:1, ink #0A2B28 on white â‰ˆ 14:1,
+   muted #4B6662 on white â‰ˆ 6.2:1, inverse muted #B7D3CF on #06201E â‰ˆ 9:1),
+   44Ã—44px targets, visible focus ring that flips between light and dark. */
 
 .reg-scope {
   /* Shell */
@@ -23,7 +23,9 @@
   --reg-surface: #ffffff;
   --reg-surface-muted: #eef5f4;
   --reg-field: #f7faf9;
-  --reg-line: #c9dcd8;
+  /* Field borders are the only boundary cue against the near-white fields,
+     so they must clear 3:1 against white (WCAG 1.4.11). */
+  --reg-line: #6f8a85;
   --reg-text: #0a2b28;
   --reg-muted: #4b6662;
   --reg-placeholder: #5c7673;
@@ -36,13 +38,11 @@
   --reg-focus-light: #8fd8cd;
   --reg-focus: #0d5b54;
 
-  /* Legacy tokens kept so existing .reg-btn-primary/-badge rules stay honest */
-  --reg-gold: var(--reg-accent);
-  --reg-gold-hover: var(--reg-accent-hover);
+  /* Consumed by .reg-btn-primary's text colour. */
   --reg-on-gold: #ffffff;
 
-  /* Tailwind utilities used inside registry (`text-gold`, `bg-gold/10`, …)
-     resolve through this variable — remap them to teal, not storefront gold. */
+  /* Tailwind utilities used inside registry (`text-gold`, `bg-gold/10`, â€¦)
+     resolve through this variable â€” remap them to teal, not storefront gold. */
   --color-gold: var(--reg-accent);
 
   /* Spacing scale (4px base) */
@@ -51,12 +51,11 @@
   --reg-space-3: 0.75rem;
   --reg-space-4: 1rem;
   --reg-space-5: 1.5rem;
-  --reg-space-6: 2rem;
 
   text-transform: none;
   letter-spacing: normal;
   color-scheme: light;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.5;
   min-height: 100dvh;
   background:
@@ -67,7 +66,7 @@
 
 /* Store chrome belongs to the storefront. Hide it while a registry route is
    mounted so the registry header is the only sticky element. `:has()` keeps
-   this to registry pages — the storefront never matches `.reg-scope`. */
+   this to registry pages â€” the storefront never matches `.reg-scope`. */
 body:has(.reg-scope) .site-header,
 body:has(.reg-scope) [aria-label="Announcements"],
 body:has(.reg-scope) .grain,
@@ -82,7 +81,7 @@ body:has(.reg-scope) > [class~="h-[60px]"] {
   display: none !important;
 }
 
-/* ── Typography ───────────────────────────────────────────────────────── */
+/* â”€â”€ Typography â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .reg-scope h1 {
   font-size: 1.75rem;
   font-weight: 600;
@@ -100,7 +99,7 @@ body:has(.reg-scope) > [class~="h-[60px]"] {
   color: var(--reg-muted);
 }
 
-/* ── Focus ────────────────────────────────────────────────────────────── */
+/* â”€â”€ Focus â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .reg-scope :focus-visible {
   outline: 2px solid var(--reg-focus-light);
   outline-offset: 2px;
@@ -113,7 +112,27 @@ body:has(.reg-scope) > [class~="h-[60px]"] {
   outline-color: var(--reg-focus);
 }
 
-/* ── Controls ─────────────────────────────────────────────────────────── */
+/* The language pill paints its own ring from --color-gold, which is remapped
+   to teal inside .reg-scope â€” invisible on the teal shell. Keep it light. */
+.reg-scope .lang-input:focus-visible ~ .lang-pill {
+  outline-color: var(--reg-focus-light);
+}
+
+/* sr-only inputs (rating radios, file picker) move focus to a hidden node;
+   surface the ring on the visible label/container instead. */
+.reg-scope label:has(> input[type="radio"]:focus-visible),
+.reg-scope label:has(> input[type="checkbox"]:focus-visible) {
+  outline: 2px solid var(--reg-focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.reg-scope :has(> input#images:focus-visible) {
+  outline: 2px solid var(--reg-focus);
+  outline-offset: 2px;
+}
+
+/* â”€â”€ Controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .reg-scope .reg-btn {
   display: inline-flex;
   align-items: center;
@@ -126,6 +145,7 @@ body:has(.reg-scope) > [class~="h-[60px]"] {
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1;
+  white-space: nowrap;
   cursor: pointer;
   transition: background-color 0.15s ease, border-color 0.15s ease,
     color 0.15s ease;
@@ -222,7 +242,7 @@ body:has(.reg-scope) > [class~="h-[60px]"] {
   font-size: 0.75rem;
 }
 
-/* Inputs, selects, textareas — sentence case (data entry). */
+/* Inputs, selects, textareas â€” sentence case (data entry). */
 .reg-scope input:not([type="checkbox"]):not([type="radio"]),
 .reg-scope select,
 .reg-scope textarea {
@@ -243,7 +263,7 @@ body:has(.reg-scope) > [class~="h-[60px]"] {
 .reg-scope input:not([type="checkbox"]):not([type="radio"]):hover,
 .reg-scope select:hover,
 .reg-scope textarea:hover {
-  border-color: #a9c6c1;
+  border-color: #4f6f6b;
 }
 
 .reg-scope textarea {
@@ -283,7 +303,7 @@ body:has(.reg-scope) > [class~="h-[60px]"] {
   cursor: pointer;
 }
 
-/* ── Surfaces, toolbar & badges ───────────────────────────────────────── */
+/* â”€â”€ Surfaces, toolbar & badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .reg-scope .reg-card {
   border: 1px solid #d5e4e1;
   border-radius: 10px;
@@ -354,13 +374,13 @@ body:has(.reg-scope) > [class~="h-[60px]"] {
 }
 
 .reg-scope .reg-badge-active {
-  border-color: #9fc9c2;
+  border-color: #4f6f6b;
   background: #e4f2ef;
   color: #0a4b45;
 }
 
 .reg-scope .reg-badge-inactive {
-  border-color: #cbddda;
+  border-color: #6f8a85;
   background: #edf3f2;
   color: #4b6662;
 }
@@ -371,7 +391,7 @@ body:has(.reg-scope) > [class~="h-[60px]"] {
   color: #a32017;
 }
 
-/* ── Registry header (sole sticky bar once store chrome is hidden) ────── */
+/* â”€â”€ Registry header (sole sticky bar once store chrome is hidden) â”€â”€â”€â”€â”€â”€ */
 .reg-scope .reg-header {
   position: sticky;
   top: 0;
@@ -408,7 +428,7 @@ body:has(.reg-scope) > [class~="h-[60px]"] {
   }
 }
 
-/* ── Reduced motion: magnetic pull is transform-driven — pin buttons/links
+/* â”€â”€ Reduced motion: magnetic pull is transform-driven â€” pin buttons/links
    to identity so cursor-tracking transforms never move interactive targets.
    Scoped to button/a (not `*`) so sticky headers keep their transforms. */
 @media (prefers-reduced-motion: reduce) {

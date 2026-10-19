@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
@@ -143,7 +143,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
       if (!parsed.success) {
         const flat = parsed.error.flatten().fieldErrors;
         setFieldErrors(flat);
-        setError(Object.values(flat).flat().join(" · "));
+        setError(Object.values(flat).flat().join(" Â· "));
         return;
       }
       const result = await saveRegistryProduct(parsed.data);
@@ -219,14 +219,14 @@ export default function ProductForm({ locale }: { locale: Locale }) {
             {fieldError("slug") && <p role="alert" className="reg-input-error">{fieldError("slug")}</p>}
           </div>
           <div className="space-y-2 col-span-2">
-            <label className="block text-xs text-ash tracking-wider">{t.type}</label>
-            <div className="flex flex-wrap gap-3">
+            <label className="block text-xs text-ash tracking-wider" id="type-group-label">{t.type}</label>
+            <div className="flex flex-wrap gap-3" role="radiogroup" aria-labelledby="type-group-label">
               {(Object.entries(typeLabels) as [TypeValue, string][]).map(([value, label]) => (
                 <label
                   key={value}
                   className={cn(
                     "flex items-center gap-2 cursor-pointer rounded border px-3 py-2 text-sm hover:bg-[#f2f7f6]",
-                    type === value ? "border-gold bg-[#eaf4f2]" : "border-[#c9dcd8]",
+                    type === value ? "border-gold bg-[#eaf4f2]" : "border-[color:var(--reg-line)]",
                   )}
                 >
                   <input
@@ -324,7 +324,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
                 <label
                   key={star}
                   className="cursor-pointer group"
-                  title={`${star} star${star === 1 ? "" : "s"}`}
+                  title={t.ratingStar(star)}
                 >
                   <input
                     type="radio"
@@ -341,7 +341,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
                       "hover:text-gold",
                     )}
                   >
-                    �
+                    â˜…
                   </span>
                 </label>
               ))}
@@ -359,7 +359,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
               {t.price}
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-ash">৳</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-ash">à§³</span>
               <input
                 id="price"
                 value={price}
@@ -373,14 +373,14 @@ export default function ProductForm({ locale }: { locale: Locale }) {
             {fieldError("price") && <p role="alert" className="reg-input-error">{fieldError("price")}</p>}
           </div>
           <div className="space-y-2">
-            <label className="block text-xs text-ash tracking-wider">{t.status}</label>
-            <div className="flex flex-wrap gap-3">
+            <label className="block text-xs text-ash tracking-wider" id="status-group-label">{t.status}</label>
+            <div className="flex flex-wrap gap-3" role="radiogroup" aria-labelledby="status-group-label">
               {(["draft", "published"] as StatusValue[]).map((value) => (
                 <label
                   key={value}
                   className={cn(
                     "flex items-center gap-2 cursor-pointer rounded border px-3 py-2 text-sm hover:bg-[#f2f7f6]",
-                    status === value ? "border-gold bg-[#eaf4f2]" : "border-[#c9dcd8]",
+                    status === value ? "border-gold bg-[#eaf4f2]" : "border-[color:var(--reg-line)]",
                   )}
                 >
                   <input
@@ -410,7 +410,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
           onDragLeave={() => setIsDragActive(false)}
           className={cn(
             "flex flex-col items-center gap-3 rounded border-2 p-6 text-center transition-colors duration-200",
-            isDragActive ? "border-gold bg-[#eaf4f2]" : "border-dashed border-[#c9dcd8] hover:border-[#9fc9c2]",
+            isDragActive ? "border-gold bg-[#eaf4f2]" : "border-dashed border-[color:var(--reg-line)] hover:border-[#4f6f6b]",
           )}
         >
           <p className="text-sm text-ash">
@@ -440,7 +440,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
         </div>
         <ul className="grid gap-3 sm:grid-cols-3">
           {previews.map((url, index) => (
-            <li key={index} className="relative rounded border border-[#c9dcd8] overflow-hidden">
+            <li key={index} className="relative rounded border border-[color:var(--reg-line)] overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element -- client-side preview of a locally selected file */}
               <img src={url} alt="" className="aspect-[4/5] w-full object-cover" />
               <button

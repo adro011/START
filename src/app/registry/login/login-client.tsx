@@ -100,11 +100,11 @@ export default function RegistryLoginClient({
   }, []);
 
   return (
-    <main className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-[#06201e] text-[#F3F9F8] lg:flex-row">
+    <div className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-[#06201e] text-[#F3F9F8] lg:flex-row">
       <div className="absolute right-4 top-4 z-30 sm:right-6 sm:top-6">
         <LanguageSwitch locale={locale} />
       </div>
-      {/* �� Left editorial panel �� */}
+      {/* ── Left editorial panel ── */}
       <section
         aria-label={t.brandStory}
         className="relative flex min-h-[42dvh] flex-col justify-end overflow-hidden bg-[#0b3531] px-6 pt-24 pb-10 text-[#FBF6F3] sm:px-10 lg:min-h-[100dvh] lg:w-[46%] lg:px-12 lg:pb-14"
@@ -113,7 +113,7 @@ export default function RegistryLoginClient({
         <div aria-hidden="true" className="drift-2 pointer-events-none absolute right-[-80px] bottom-[-60px] h-80 w-80 rounded-full bg-[#2f8d82]/30 blur-3xl" />
         <span aria-hidden="true" className="text-ghost pointer-events-none absolute top-8 right-6 hidden font-semibold select-none sm:block lg:top-12 lg:right-10"
           style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(5rem,10vw,9rem)", lineHeight: 1 }}>
-          �
+          Æ
         </span>
 
         <p className="login-rise kicker text-[#9adbd2]/80" style={{ animationDelay: "60ms" }}>
@@ -124,7 +124,7 @@ export default function RegistryLoginClient({
           style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(2.6rem,6vw,5rem)", lineHeight: 0.95, letterSpacing: "-0.015em" }}
           aria-label={t.shopRegistry}
         >
-          {locale === "bn" ? `${t.shopRegistry}.` : splitChars("Shop registry.")}
+          {locale === "bn" ? `${t.shopRegistry}.` : splitChars(`${t.shopRegistry}.`)}
         </h1>
         <p className="login-rise mt-4 max-w-md text-[16px] leading-relaxed text-[#FBF6F3]/75 sm:text-[17px]" style={{ animationDelay: "420ms" }}>
           {t.staffParagraph}
@@ -138,7 +138,7 @@ export default function RegistryLoginClient({
         </div>
       </section>
 
-      {/* �� Right registry sign-in panel �� */}
+      {/* ── Right registry sign-in panel ── */}
       <section aria-label={t.signInPanel} className="relative flex flex-1 items-center justify-center px-5 py-10 sm:px-10 lg:px-14">
         <div className="glass lift w-full max-w-[440px] rounded-2xl p-6 shadow-[0_24px_70px_rgba(23,33,33,0.14)] sm:p-8">
           <div key="registry">
@@ -163,7 +163,7 @@ export default function RegistryLoginClient({
               <div>
                 <label className="block">
                   <span className="text-sm font-medium">{t.password}</span>
-                  <input name="password" type="password" required autoComplete="current-password" placeholder="��������"
+                  <input name="password" type="password" required autoComplete="current-password" placeholder={t.passwordPlaceholder}
                     className="w-full" />
                 </label>
               </div>
@@ -183,13 +183,13 @@ export default function RegistryLoginClient({
         </div>
       </section>
 
-      {/* �� Smooth curtain transition �� */}
+      {/* ── Smooth curtain transition ── */}
       {leaving ? (
         <div aria-hidden="true" className={`login-curtain ${!leaving.label ? "login-curtain-hold" : ""}`}>
           <p className="kicker text-[#9adbd2]/70">{t.tagline}</p>
           <p className="mt-2 font-medium tracking-tight text-[#FBF6F3]"
             style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(2rem,6vw,3.6rem)" }}>
-            {leaving.label}�
+            {leaving.label}…
           </p>
           <span className="mt-6 block h-px w-44 overflow-hidden bg-white/15">
             <span className="login-bar block h-full w-full origin-left bg-[#7FD1C7]" />
@@ -203,7 +203,7 @@ export default function RegistryLoginClient({
         @keyframes login-rise{from{opacity:0;transform:translate3d(0,26px,0)}to{opacity:1;transform:none}}
         .login-shake{animation:login-shake 450ms ${EASE} both}
         @keyframes login-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
-        .login-curtain{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#172121;animation:login-curtain-in 620ms ${EASE} both;will-change:transform,opacity}
+        .login-curtain{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0b3531;animation:login-curtain-in 620ms ${EASE} both;will-change:transform,opacity}
         .login-curtain-hold{animation:login-curtain-hold 450ms ${EASE} both}
         @keyframes login-curtain-in{from{opacity:0;transform:translate3d(0,4%,0)}to{opacity:1;transform:none}}
         @keyframes login-curtain-hold{from{opacity:0}to{opacity:1}}
@@ -212,9 +212,10 @@ export default function RegistryLoginClient({
         .magnetic{will-change:transform}
         @media (prefers-reduced-motion: reduce){
           .login-ch,.login-rise,.login-bar{animation:none;opacity:1;transform:none}
-          .login-curtain{display:none}
+          .login-shake{animation:none}
+          .login-curtain{animation:none;display:none}
         }
       `}</style>
-    </main>
+    </div>
   );
 }

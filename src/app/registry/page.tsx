@@ -206,7 +206,7 @@ function RegistryCard({
         </span>
       </div>
       <div className="flex-1 flex flex-col gap-1">
-        <h3 className="line-clamp-1 font-medium text-sm text-[#0a2b28]">{product.name}</h3>
+        <h2 className="line-clamp-1 font-medium text-sm text-[#0a2b28]">{product.name}</h2>
         <p className="flex items-center gap-1 text-[10px] text-ash">
           <span>{size}</span>{product.sizes.length > 1 && ` +${product.sizes.length - 1}`}
         </p>

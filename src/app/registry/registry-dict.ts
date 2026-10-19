@@ -65,6 +65,7 @@ const en = {
   sizes: "Sizes",
   priceShort: "Price",
   updated: "Updated",
+  imageViewAlt: (n: number) => `Product image ${n}`,
 
   newTitle: "New product entry",
   newBlurb:
@@ -88,6 +89,7 @@ const en = {
   descriptionPlaceholder: "Fabric, fit, care, story…",
   rating: "Review rating",
   ratingAria: "Review rating (1-5 stars)",
+  ratingStar: (star: number) => `${star} star${star === 1 ? "" : "s"}`,
   ratingHint: "Optional 5-star review rating.",
   priceStatus: "Price & status",
   price: "Price (BDT)",
@@ -123,6 +125,7 @@ const en = {
   username: "Registry username",
   usernamePlaceholder: "Email or full name",
   password: "Registry password",
+  passwordPlaceholder: "••••••••",
   openRegistry: "Open registry →",
   staffNote: "Staff accounts are issued by the store owner",
   backToCustomerLogin: "← Back to customer login",
@@ -189,6 +192,7 @@ const bn: typeof en = {
   sizes: "সাইজ",
   priceShort: "মূল্য",
   updated: "সর্বশেষ হালনাগাদ",
+  imageViewAlt: (n) => `পণ্যের ছবি ${n}`,
 
   newTitle: "নতুন পণ্য এন্ট্রি",
   newBlurb:
@@ -212,6 +216,7 @@ const bn: typeof en = {
   descriptionPlaceholder: "কাপড়, ফিট, যত্ন, গল্প…",
   rating: "রিভিউ রেটিং",
   ratingAria: "রিভিউ রেটিং (১–৫ তারা)",
+  ratingStar: (star) => `${star} তারা`,
   ratingHint: "ঐচ্ছিক ৫-স্টার রিভিউ রেটিং।",
   priceStatus: "মূল্য ও স্ট্যাটাস",
   price: "মূল্য (টাকা)",
@@ -247,6 +252,7 @@ const bn: typeof en = {
   username: "রেজিস্ট্রি ইউজারনেম",
   usernamePlaceholder: "ইমেইল বা পূর্ণ নাম",
   password: "রেজিস্ট্রি পাসওয়ার্ড",
+  passwordPlaceholder: "••••••••",
   openRegistry: "রেজিস্ট্রি খুলুন →",
   staffNote: "স্টাফ অ্যাকাউন্ট শুধু স্টোর মালিক তৈরি করেন",
   backToCustomerLogin: "← কাস্টমার লগ ইন-এ ফিরুন",

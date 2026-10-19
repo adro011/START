@@ -247,7 +247,7 @@ export default async function RegistryProductPage({
                         name="active"
                         type="checkbox"
                         defaultChecked={product.active}
-                        className="rounded border-[#c9dcd8] bg-white text-gold focus:ring-gold"
+                        className="rounded border-[color:var(--reg-line)] bg-white text-gold focus:ring-gold"
                       />
                       {t.activeLabel}
                     </label>
