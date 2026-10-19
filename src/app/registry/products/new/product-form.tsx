@@ -143,7 +143,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
       if (!parsed.success) {
         const flat = parsed.error.flatten().fieldErrors;
         setFieldErrors(flat);
-        setError(Object.values(flat).flat().join(" Â· "));
+        setError(Object.values(flat).flat().join(" · "));
         return;
       }
       const result = await saveRegistryProduct(parsed.data);
@@ -341,7 +341,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
                       "hover:text-gold",
                     )}
                   >
-                    â˜…
+                    ★
                   </span>
                 </label>
               ))}
@@ -359,7 +359,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
               {t.price}
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-ash">à§³</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-ash">৳</span>
               <input
                 id="price"
                 value={price}

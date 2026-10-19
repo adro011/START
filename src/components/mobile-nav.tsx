@@ -280,7 +280,10 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                       <li>
                         <Link
                           href="/new-arrivals"
-                          onClick={() => setOpen(false)}
+                          onClick={(e) => {
+                            setOpen(false);
+                            hardNav("/new-arrivals")(e);
+                          }}
                           className="block py-1.5 text-[14px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                         >
                           {d.nav_new}
@@ -289,7 +292,10 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                       <li>
                         <Link
                           href="/sale"
-                          onClick={() => setOpen(false)}
+                          onClick={(e) => {
+                            setOpen(false);
+                            hardNav("/sale")(e);
+                          }}
                           className="block py-1.5 text-[14px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                         >
                           {d.nav_sale}
@@ -302,7 +308,10 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
             ))}
             <Link
               href="/stories"
-              onClick={() => setOpen(false)}
+              onClick={(e) => {
+                setOpen(false);
+                hardNav("/stories")(e);
+              }}
               className="block py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
             >
               {d.nav_stories}
