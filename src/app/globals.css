@@ -880,7 +880,7 @@ html.lenis body {
   to { transform: translateX(-50%); }
 }
 .marquee-lux {
-  animation: marquee-lux 26s linear infinite;
+  animation: marquee-lux 58s linear infinite;
   will-change: transform;
 }
 .marquee-lux:hover {

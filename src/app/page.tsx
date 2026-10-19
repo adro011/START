@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -133,6 +134,14 @@ const HERO = [
     bg: "linear-gradient(150deg,#000000 0%,#000000 40%,#1a1a1a 75%,#FFC000 100%)",
   },
 ] as const;
+
+const MARQUEE = [
+  "Promising Quality",
+  "Delivery throughout Bangladesh",
+  "Beauty, Elegance and Simplicity",
+] as const;
+
+const MARQUEE_STRIP = [...MARQUEE, ...MARQUEE, ...MARQUEE];
 
 const OCCASIONS = [
   { name: "Eid", copy: "Moonlit whites & golds", href: "/women?occasion=eid", img: "/library/photo-album/EID.jpg" },
@@ -304,10 +313,12 @@ export default async function HomePage() {
           <div className="marquee-lux flex w-max gap-10 pr-10 text-[12px] font-semibold tracking-[0.14em] text-[#F2CCC3]/90 uppercase">
             {Array.from({ length: 2 }).map((_, k) => (
               <span key={k} className="flex gap-10 whitespace-nowrap" aria-hidden={k === 1}>
-                <span>Handcrafted in Bangladesh</span><span aria-hidden="true" className="text-[#D5573B]">✦</span>
-                <span>Free 7-day exchange</span><span aria-hidden="true" className="text-[#D5573B]">✦</span>
-                <span>Cash on delivery nationwide</span><span aria-hidden="true" className="text-[#D5573B]">✦</span>
-                <span>Small batches — when it’s gone, it’s gone</span><span aria-hidden="true" className="text-[#D5573B]">✦</span>
+                {MARQUEE_STRIP.map((m, i) => (
+                  <Fragment key={`${m}-${i}`}>
+                    <span>{m}</span>
+                    <span aria-hidden="true" className="text-[#D5573B]">✦</span>
+                  </Fragment>
+                ))}
               </span>
             ))}
           </div>
