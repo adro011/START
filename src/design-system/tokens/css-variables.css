@@ -1,0 +1,170 @@
+:root {
+  --color-primary-gold: #FFC000;
+  --color-primary-gold-hover: #917300;
+  --color-primary-gold-text: #FFCE3E;
+
+  --color-neutral-white: #FFFFFF;
+  --color-neutral-smoke: #F5F5F5;
+  --color-neutral-near-white: #F8F8F8;
+  --color-neutral-mist: #E6E6E6;
+  --color-neutral-ash: #7D7D7D;
+  --color-neutral-steel: #969696;
+  --color-neutral-slate: #666666;
+  --color-neutral-iron: #555555;
+  --color-neutral-graphite: #494949;
+  --color-neutral-shadow: #313131;
+  --color-neutral-dark-iron: #181818;
+  --color-neutral-charcoal: #202020;
+  --color-neutral-absolute-black: #000000;
+
+  --color-accent-cyan: #29ABE2;
+  --color-accent-link-blue: #3860BE;
+  --color-accent-teal-action: #1EAEDB;
+
+  --color-semantic-success: #1EAEDB;
+  --color-semantic-error: #FF3B30;
+  --color-semantic-warning: #FF9500;
+  --color-semantic-info: #29ABE2;
+
+  --color-surface-level0: #000000;
+  --color-surface-level1: #181818;
+  --color-surface-level2: #202020;
+  --color-surface-level3: rgba(0,0,0,0.7);
+  --color-surface-level4: rgba(0,0,0,0.5);
+  --color-surface-level5: rgba(0,0,0,0.25);
+
+  --color-border-primary: rgba(255,255,255,0.5);
+  --color-border-secondary: #202020;
+  --color-border-focus: #000000;
+
+  --color-overlay-dark: rgba(0,0,0,0.7);
+  --color-overlay-medium: rgba(0,0,0,0.5);
+  --color-overlay-light: rgba(0,0,0,0.25);
+
+  --font-family-display: "LamboType", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-ui: "LamboType", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-fallback: "Open Sans", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: SF Mono, Monaco, "Courier New", monospace;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semi-bold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  --font-size-hero: clamp(54px, 12vw, 120px);
+  --font-size-display2: clamp(40px, 8vw, 80px);
+  --font-size-display3: clamp(32px, 6vw, 54px);
+  --font-size-display4: clamp(28px, 5vw, 40px);
+  --font-size-feature: clamp(20px, 3vw, 27px);
+  --font-size-card-title: clamp(18px, 2.5vw, 24px);
+  --font-size-body-large: clamp(16px, 2vw, 18px);
+  --font-size-body: clamp(14px, 1.5vw, 16px);
+  --font-size-body-small: clamp(12px, 1vw, 14px);
+  --font-size-button-large: clamp(14px, 1.5vw, 16px);
+  --font-size-button: clamp(12px, 1.2vw, 14.4px);
+  --font-size-button-small: clamp(11px, 1vw, 13px);
+  --font-size-caption: clamp(11px, 1vw, 14px);
+  --font-size-label: clamp(10px, 0.8vw, 12px);
+  --font-size-micro: clamp(8px, 0.6vw, 10px);
+
+  --line-height-tight: 0.92;
+  --line-height-display: 1.13;
+  --line-height-display-loose: 1.19;
+  --line-height-feature: 1.37;
+  --line-height-body: 1.5;
+  --line-height-body-loose: 1.56;
+  --line-height-button: 1.0;
+  --line-height-caption: 1.14;
+  --line-height-label: 1.83;
+  --line-height-micro: 1.0;
+
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.01em;
+  --letter-spacing-wider: 0.014em;
+  --letter-spacing-widest: 0.02em;
+  --letter-spacing-caption: -0.03em;
+  --letter-spacing-label: 0.08em;
+  --letter-spacing-micro: 0.0225em;
+  --letter-spacing-button: 0.014em;
+  --letter-spacing-button-small: 0.02em;
+
+  --border-radius-none: 0;
+  --border-radius-hairline: 1px;
+  --border-radius-subtle: 2px;
+  --border-radius-badge: 2px;
+  --border-radius-switch: 20px;
+  --border-radius-card: 0;
+  --border-radius-button: 0;
+  --border-radius-container: 0;
+  --border-radius-image: 0;
+
+  --shadow-none: none;
+  --shadow-overlay: 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-elevation1: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-elevation2: 0 8px 48px rgba(0,0,0,0.5);
+  --shadow-elevation3: 0 16px 64px rgba(0,0,0,0.6);
+  --shadow-focus: 0 0 0 2px #000000, 0 0 0 4px #FFC000;
+  --shadow-gold-glow: 0 0 32px rgba(255, 192, 0, 0.3);
+  --shadow-cyan-glow: 0 0 24px rgba(41, 171, 226, 0.25);
+
+  --space-0: 0px;
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 5px;
+  --space-4: 8px;
+  --space-5: 10px;
+  --space-6: 12px;
+  --space-7: 15px;
+  --space-8: 16px;
+  --space-9: 20px;
+  --space-10: 24px;
+  --space-11: 32px;
+  --space-12: 40px;
+  --space-13: 48px;
+  --space-14: 56px;
+
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-standard: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+  --duration-slowest: 800ms;
+  --duration-hero: 1200ms;
+
+  --easing-linear: linear;
+  --easing-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --easing-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-lamborghini: cubic-bezier(0.22, 1, 0.36, 1);
+  --easing-sharp: cubic-bezier(0.4, 0, 0.6, 1);
+  --easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --stagger-tight: 0.04s;
+  --stagger-standard: 0.08s;
+  --stagger-loose: 0.12s;
+  --stagger-section: 0.16s;
+
+  --breakpoint-mobile-s: 320px;
+  --breakpoint-mobile: 425px;
+  --breakpoint-mobile-l: 576px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-tablet-l: 1024px;
+  --breakpoint-desktop: 1280px;
+  --breakpoint-desktop-l: 1440px;
+  --breakpoint-wide: 1600px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast: 0ms;
+    --duration-standard: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+    --duration-slowest: 0ms;
+    --duration-hero: 0ms;
+  }
+}
