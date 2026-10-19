@@ -7,7 +7,7 @@ import { SITE } from "@/config/site";
 import { CATEGORIES } from "@/lib/catalog";
 import { getDict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/dictionary";
-import { cn } from "../lib/format";
+import { cn, hardNav } from "../lib/format";
 
 function sectionLinks(): { key: string; label: string; href: string }[] {
   try {
@@ -131,6 +131,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
               {"href" in t && t.href ? (
                 <Link
                   href={t.href}
+                  onClick={hardNav(t.href as string)}
                    className="flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] active:text-gold"
                 >
                   <Icon d={t.icon} label={t.label} />
@@ -228,7 +229,10 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                 <div className="flex items-center">
                   <Link
                     href={s.href}
-                    onClick={() => setOpen(false)}
+                    onClick={(e) => {
+                      setOpen(false);
+                      hardNav(s.href)(e);
+                    }}
                     className="flex-1 py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
                   >
                     {s.label}

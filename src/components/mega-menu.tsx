@@ -5,7 +5,7 @@ import Link from "next/link";
 import { CATEGORIES } from "@/lib/catalog";
 import { getDict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/dictionary";
-import { cn } from "../lib/format";
+import { cn, hardNav } from "../lib/format";
 
 type MenuLink = { label: string; href: string };
 type MenuGroup = { heading: string; href?: string; links: MenuLink[] };
@@ -250,7 +250,10 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
               href={s.href}
               aria-expanded={openKey === s.key}
               aria-haspopup="true"
-              onClick={() => setOpenKey(null)}
+              onClick={(e) => {
+                setOpenKey(null);
+                hardNav(s.href)(e);
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Escape") setOpenKey(null);
               }}
@@ -290,6 +293,7 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
           >
             <Link
               href={l.href}
+              onClick={hardNav(l.href)}
               className={cn(
                 "block px-5 py-3 text-[13px] font-medium tracking-[0.14em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] motion-reduce:transition-none",
                 "hot" in l && l.hot

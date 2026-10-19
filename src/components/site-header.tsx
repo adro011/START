@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/store/cart";
 import { SITE } from "@/config/site";
+import { hardNav } from "@/lib/format";
 import { getDict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/dictionary";
 import { MegaMenu } from "./mega-menu";
@@ -76,8 +77,9 @@ export function SiteHeader() {
     <>
       <header className="site-header sticky top-0 z-50 border-b border-white/15 bg-black">
         <div className="mx-auto grid max-w-[1440px] grid-cols-[auto_1fr] items-center gap-2 py-4 pl-2 pr-4 sm:pl-3 sm:pr-6">
-<Link
+          <Link
             href="/"
+            onClick={hardNav("/")}
             aria-label={`${SITE.name} \u2014 home`}
             className="relative isolate flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
           >
