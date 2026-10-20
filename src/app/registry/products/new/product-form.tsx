@@ -12,37 +12,47 @@ const MAX_IMAGES = 5;
 
 const MEN_SIZES: readonly string[] = ["S", "M", "L", "XL", "XXL", "XXXL"];
 const WOMEN_SIZES: readonly string[] = Array.from({ length: 13 }, (_, i) => String(36 + i)); // 36..48
-const CHILDREN_SIZES: readonly string[] = ["XS", "S", "M", "L", "XL"];
-const SHOE_SIZES: readonly string[] = Array.from({ length: 11 }, (_, i) => String(36 + i)); // 36 .. 46
-const AGE_CATEGORIES: readonly string[] = [
-  "Boys",
-  "Girls",
-  "Another",
+const BOY_SIZES: readonly string[] = ["S", "M", "L", "XL", "XXL", "XXXL"];
+const GIRL_SIZES: readonly string[] = ["S", "M", "L", "XL", "XXL", "XXXL"];
+const CHILDREN_AGE_SIZES: readonly string[] = Array.from({ length: 13 }, (_, i) => String(36 + i)); // 36..48 (optional)
+const NEW_ARRIVAL_SIZES: readonly string[] = Array.from({ length: 11 }, (_, i) => String(36 + i)); // 36 .. 46
+
+const CHILD_GENDER_CATEGORIES: readonly string[] = ["Boys", "Girls"];
+const CHILD_AGE_RANGES: readonly string[] = [
+  "(1-2)", "(3-4)", "(5-6)", "(7-8)", "(9-10)", "(11-12)", "(13-14)", "(15-16)", "(17-18)",
 ];
 
-function sizesForType(type: TypeValue): readonly string[] {
+type ChildGender = "Boys" | "Girls";
+type TypeValue = "men" | "women" | "children" | "new-arrivals";
+type StatusValue = "draft" | "published";
+
+function sizesForType(type: TypeValue, childGender?: ChildGender): readonly string[] {
   switch (type) {
     case "men":
       return MEN_SIZES;
     case "women":
       return WOMEN_SIZES;
     case "children":
-      return CHILDREN_SIZES;
-    case "others":
-      return SHOE_SIZES;
+      if (childGender === "Boys") return BOY_SIZES;
+      if (childGender === "Girls") return GIRL_SIZES;
+      return CHILDREN_AGE_SIZES; // "Another" fallback
+    case "new-arrivals":
+      return NEW_ARRIVAL_SIZES;
   }
 }
 
-type TypeValue = "men" | "women" | "children" | "others";
-type StatusValue = "draft" | "published";
+function isChildGender(category: string): category is ChildGender {
+  return category === "Boys" || category === "Girls";
+}
 
 const INPUT = "w-full";
 
 export const registryFormSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters.").max(120),
   slug: z.string().trim().min(2, "Slug is required.").max(100).regex(/^[a-z0-9-]+$/, "Lowercase letters, numbers and hyphens only."),
-  type: z.enum(["men", "women", "children", "others"] as [string, ...string[]]),
-  ageCategory: z.enum(AGE_CATEGORIES as [string, ...string[]]).optional(),
+  type: z.enum(["men", "women", "children", "new-arrivals"] as [string, ...string[]]),
+  ageCategory: z.enum([...CHILD_GENDER_CATEGORIES, ...CHILD_AGE_RANGES] as [string, ...string[]]).optional(),
+  childGender: z.enum(CHILD_GENDER_CATEGORIES as [string, ...string[]]).optional(),
   size: z.string(),
   description: z.string().trim().min(10, "Description must be at least 10 characters.").max(2000),
   rating: z.coerce.number().int().min(1).max(5).optional().nullable(),
@@ -55,7 +65,29 @@ export const registryFormSchema = z.object({
     path: ["ageCategory"],
   })
   .refine((data) => {
-    const allowed = sizesForType(data.type as TypeValue);
+    if (data.type === "children") {
+      const childGender = data.childGender as ChildGender | undefined;
+      const ageCategory = data.ageCategory ?? "";
+      if (childGender && isChildGender(ageCategory)) {
+        // Boys/Girls selected - size is required
+        return data.size.length > 0;
+      }
+      // For age ranges or "Another", size is still required
+      return data.size.length > 0;
+    }
+    return true;
+  }, {
+    message: "Size is required.",
+    path: ["size"],
+  })
+  .refine((data) => {
+    if (data.type === "children" && data.childGender) {
+      const childGender = data.childGender as ChildGender;
+      const allowed = sizesForType("children", childGender);
+      return allowed.includes(data.size);
+    }
+    const type = data.type as TypeValue;
+    const allowed = sizesForType(type);
     return allowed.includes(data.size);
   }, {
     message: "Choose a valid size for this type.",
@@ -68,12 +100,13 @@ export default function ProductForm({ locale }: { locale: Locale }) {
     men: t.types.men,
     women: t.types.women,
     children: t.types.children,
-    others: t.types.others,
+    "new-arrivals": t.types["new-arrivals"],
   };
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [type, setType] = useState<TypeValue>("men");
   const [ageCategory, setAgeCategory] = useState("");
+  const [childGender, setChildGender] = useState<ChildGender | "">("Boys");
   const [size, setSize] = useState(sizesForType("men")[0]);
   const [description, setDescription] = useState("");
   const [rating, setRating] = useState<number | null>(null);
@@ -87,12 +120,31 @@ export default function ProductForm({ locale }: { locale: Locale }) {
   const [ok, setOk] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const allowedSizes = sizesForType(type);
+  const allowedSizes = type === "children" && childGender ? sizesForType("children", childGender) : sizesForType(type);
 
   function onTypeChange(value: TypeValue) {
     setType(value);
     setSize(sizesForType(value)[0]);
     setAgeCategory("");
+    setChildGender("Boys" as ChildGender);
+    setFieldErrors({});
+  }
+
+  function onChildGenderChange(gender: ChildGender) {
+    setChildGender(gender);
+    setSize(sizesForType("children", gender)[0]);
+    setAgeCategory("");
+    setFieldErrors({});
+  }
+
+  function onAgeCategoryChange(value: string) {
+    setAgeCategory(value);
+    if (type === "children" && isChildGender(value)) {
+      setChildGender(value);
+      setSize(sizesForType("children", value)[0]);
+    } else if (type === "children") {
+      setSize(sizesForType("children")[0]);
+    }
     setFieldErrors({});
   }
 
@@ -142,6 +194,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
         slug,
         type,
         ageCategory: type === "children" ? ageCategory : undefined,
+        childGender: type === "children" ? (childGender as ChildGender | undefined) : undefined,
         size,
         description,
         rating,
@@ -161,6 +214,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
         setName("");
         setSlug("");
         setType("men");
+        setChildGender("Boys" as ChildGender);
         setSize(sizesForType("men")[0]);
         setAgeCategory("");
         setDescription("");
@@ -243,7 +297,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
                     name="type"
                     value={value}
                     checked={type === value}
-                    onChange={() => onTypeChange(value)}
+                    onChange={() => onTypeChange(value as TypeValue)}
                     className="text-gold"
                   />
                   {label}
@@ -260,17 +314,39 @@ export default function ProductForm({ locale }: { locale: Locale }) {
         <div className="grid gap-4 sm:grid-cols-2">
           {type === "children" ? (
             <div className="space-y-2">
+              <label className="block text-xs text-ash tracking-wider">{t.childGender}</label>
+              <div className="flex flex-wrap gap-3" role="radiogroup">
+                {CHILD_GENDER_CATEGORIES.map((gender) => (
+                  <label
+                    key={gender}
+                    className={cn(
+                      "flex items-center gap-2 cursor-pointer rounded border px-3 py-2 text-sm hover:bg-[#f2f7f6]",
+                      childGender === gender ? "border-gold bg-[#eaf4f2]" : "border-[color:var(--reg-line)]",
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="childGender"
+                      value={gender}
+                      checked={childGender === gender}
+                      onChange={() => onChildGenderChange(gender as ChildGender)}
+                      className="text-gold"
+                    />
+                    {gender}
+                  </label>
+                ))}
+              </div>
               <label htmlFor="ageCategory" className="block text-xs text-ash tracking-wider">{t.ageCategory}</label>
               <select
                 id="ageCategory"
                 value={ageCategory}
-                onChange={(e) => setAgeCategory(e.target.value)}
+                onChange={(e) => onAgeCategoryChange(e.target.value)}
                 className={INPUT}
               >
                 <option disabled value="">{t.selectAge}</option>
-                {AGE_CATEGORIES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
+                {CHILD_AGE_RANGES.map((range) => (
+                  <option key={range} value={range}>
+                    {range}
                   </option>
                 ))}
               </select>
@@ -292,10 +368,14 @@ export default function ProductForm({ locale }: { locale: Locale }) {
           </div>
         </div>
         <p className="mt-2 text-xs text-ash">
-          {type === "others"
+          {type === "new-arrivals"
             ? t.hintShoes
             : type === "children"
-              ? t.hintChildren
+              ? childGender
+                ? childGender === "Boys"
+                  ? t.hintBoys
+                  : t.hintGirls
+                : t.hintChildrenAge
               : type === "men"
                 ? t.hintMen
                 : t.hintWomen}

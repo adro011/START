@@ -2,16 +2,26 @@
 
 import { useEffect } from "react";
 
-/**
- * Previously reloaded the whole page on every tab-visibility change. That
- * re-ran the app mid-session and snapped scroll back to the top of the hero
- * whenever the tab regained focus (alt-tab, notification, OS focus flap).
- * Reload-on-return is gone; the component stays as a no-op mount so layout
- * wiring is unchanged.
- */
+const PRODUCTION_HOSTNAMES = [
+  "abrar-exclusive.shop",
+  "www.abrar-exclusive.shop",
+];
+
 export function TabRefresh() {
   useEffect(() => {
-    // Intentionally empty — do not reload or touch scroll position here.
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== "visible") return;
+      const hostname = window.location.hostname.toLowerCase();
+      if (!PRODUCTION_HOSTNAMES.some((h) => h.toLowerCase() === hostname)) return;
+      if (sessionStorage.getItem("tab-reloaded") === "1") return;
+      sessionStorage.setItem("tab-reloaded", "1");
+      window.location.reload();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
   return null;
 }

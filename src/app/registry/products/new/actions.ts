@@ -41,13 +41,13 @@ export async function saveRegistryProduct(
     return { ok: false, error: "Supabase is not configured in this environment." };
   }
 
-  const SECTION_BY_TYPE: Record<RegistryProductInput["type"], "men" | "women" | "kids"> = {
+  const SECTION_BY_TYPE: Record<RegistryProductInput["type"], "men" | "women" | "kids" | "new-arrivals"> = {
     male: "men",
     female: "women",
     men: "men",
     women: "women",
     children: "kids",
-    others: "kids",
+    "new-arrivals": "new-arrivals",
   };
 
   let productId: string | null = null;

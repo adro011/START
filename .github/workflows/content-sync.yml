@@ -1,0 +1,84 @@
+name: Content Sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Daily at 03:00 UTC — exports DB content to GitHub
+    - cron: "0 3 * * *"
+  push:
+    paths:
+      - "supabase/migrations/**"
+      - "scripts/content-export.mjs"
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    name: Export Content to GitHub
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_REPO: ${{ github.repository }}
+      GITHUB_BRANCH: ${{ github.ref_name }}
+      GITHUB_CONTENT_PATH: content
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./brand-store
+
+      - name: Export content to JSON
+        run: node scripts/content-export.mjs --output-dir=content
+        working-directory: ./brand-store
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(content): automated export $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+
+  import:
+    name: Import Content from GitHub (manual only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.import == 'true'
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./brand-store
+
+      - name: Import content from JSON
+        run: node scripts/content-import.mjs --input=content/content-export.json
+        working-directory: ./brand-store

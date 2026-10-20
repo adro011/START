@@ -3,6 +3,16 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import gsap from "gsap";
+import { Flip } from "gsap/Flip";
+
+gsap.registerPlugin(Flip);
+
+declare global {
+  interface Window {
+    __timelines: Record<string, gsap.core.Timeline>;
+  }
+}
 
 export type HeroPanelItem = {
   key: string;
@@ -13,27 +23,6 @@ export type HeroPanelItem = {
   bg: string;
 };
 
-type Vec = { v: number; vel: number };
-type Spring = Vec & { f: Vec };
-type PanelState = {
-  g: Spring;
-  a: Spring;
-  t: Spring;
-  d: Spring;
-  x: Spring;
-  y: Spring;
-  sx: Spring;
-  sy: Spring;
-  on: boolean;
-};
-
-/**
- * Cinematic three-panel hero driven by a single JS spring engine.
- * Hover expands a panel (siblings dim), the cursor drives a parallax +
- * sheen, a click zooms a panel full-width, Esc / Back collapses it, and
- * keyboard focus mirrors hover. All motion is transform/opacity/flex-grow
- * only, driven by CSS variables the engine writes per frame.
- */
 export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[] }) {
   const router = useRouter();
 
@@ -42,199 +31,165 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
   const backRef = useRef<HTMLButtonElement>(null);
   const panelRefs = useRef<Array<HTMLAnchorElement | null>>([]);
   const bgRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
-    const rootMaybe = rootRef.current;
-    const shellMaybe = shellRef.current;
-    if (!rootMaybe || !shellMaybe) return;
-    const root = rootMaybe;
-    const shell = shellMaybe;
+    const root = rootRef.current;
+    const shell = shellRef.current;
     const panelEls = panelRefs.current.filter(Boolean) as HTMLAnchorElement[];
     const bgEls = bgRefs.current.filter(Boolean) as HTMLSpanElement[];
     const backEl = backRef.current;
     const N = panelEls.length;
-    if (N === 0) return;
+    if (!root || !shell || N === 0) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
     const narrow = window.matchMedia("(max-width: 768px)");
 
-    // Settle time (1 = original, bigger = slower). A panel settles in ~0.6 s.
-    const SLOW = 0.27;
-    const BASE: Record<string, number> = { grow: 0.7, img: 0.85, txt: 1.05, dim: 0.9, par: 0.55, sheen: 0.4 };
-    const TIME: Record<string, number> = {};
-    for (const k in BASE) TIME[k] = BASE[k] * SLOW;
-
     const REST = 1 / N;
     const ON = 0.54;
     const OFF = (1 - ON) / (N - 1);
-    const MAX = 24; // parallax px
+    const MAX_PARALLAX = 24;
+    const STAGGER = 0.08;
+    const ENTRY_DURATION = 0.6;
 
     let hoverIdx = -1;
     let px = 0;
     let py = 0;
     let hasPointer = false;
-    let running = false;
-    let last = 0;
-    let dtS = 1 / 60;
-    let raf = 0;
     let zoomed = false;
     let lastExpanded: HTMLAnchorElement | null = null;
 
-    const spring = (v: number): Spring => ({ v, vel: 0, f: { v, vel: 0 } });
-    const st: PanelState[] = panelEls.map(() => ({
-      g: spring(REST),
-      a: spring(0),
-      t: spring(0),
-      d: spring(0),
-      x: spring(0),
-      y: spring(0),
-      sx: spring(50),
-      sy: spring(50),
-      on: false,
-    }));
-
-    const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
-
-    function step(o: Vec, target: number, time: number, dt: number) {
-      const w = 2 / time;
-      const x = w * dt;
-      const e = 1 / (1 + x + 0.48 * x * x + 0.235 * x * x * x);
-      const c = o.v - target;
-      const tmp = (o.vel + w * c) * dt;
-      o.vel = (o.vel - w * tmp) * e;
-      o.v = target + (c + tmp) * e;
-    }
-
-    // Two chained springs: soft start AND stop.
-    function sd(o: Spring, target: number, time: number, dt: number) {
-      if (reduced.matches) time = 0.08; // reduced motion: quick but NOT instant
-      step(o.f, target, time * 0.6, dt);
-      step(o, o.f.v, time, dt);
-    }
-
-    function busy(o: Spring, target: number, eps: number) {
-      return Math.abs(o.v - target) > eps || Math.abs(o.vel) > eps || Math.abs(o.f.vel) > eps;
-    }
-
-    function frame(now: number) {
-      const raw = clamp((now - last) / 1000, 0.001, 0.05);
-      last = now;
-      dtS += (raw - dtS) * 0.2;
-      const dt = dtS;
-
-      const zoomedNow = zoomed;
-      const anyHover = hoverIdx >= 0 && !zoomedNow;
-      const still = !hasPointer || zoomedNow || reduced.matches;
-
+    const getRects = () => {
       const cr = shell.getBoundingClientRect();
-      const W = cr.width;
-      const H = cr.height;
+      return panelEls.map((panel, i) => {
+        const s = panel.style.flexGrow || "0";
+        const grow = parseFloat(s);
+        const span = (Math.max(grow, REST) / (N * REST)) * (narrow.matches ? cr.height : cr.width);
+        const cursor = panelEls.slice(0, i).reduce((acc, p) => {
+          const g = parseFloat(p.style.flexGrow || "0");
+          return acc + (Math.max(g, REST) / (N * REST)) * (narrow.matches ? cr.height : cr.width);
+        }, 0);
+        return narrow.matches
+          ? { left: 0, top: cursor, width: cr.width, height: span }
+          : { left: cursor, top: 0, width: span, height: cr.height };
+      });
+    };
+
+    const createEntranceTimeline = () => {
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+
+      panelEls.forEach((panel, i) => {
+        tl.fromTo(
+          panel,
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, duration: ENTRY_DURATION },
+          i * STAGGER
+        );
+        if (bgEls[i]) {
+          tl.fromTo(
+            bgEls[i],
+            { scale: 1.1 },
+            { scale: 1, duration: ENTRY_DURATION },
+            i * STAGGER
+          );
+        }
+      });
+
+      return tl;
+    };
+
+    const entranceTl = createEntranceTimeline();
+    timelineRef.current = entranceTl;
+
+    if (typeof window !== "undefined") {
+      window.__timelines = window.__timelines || {};
+      window.__timelines["hero-panels"] = entranceTl;
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        entranceTl.pause();
+      } else {
+        entranceTl.resume();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    entranceTl.play();
+
+    const updatePanelStates = (targetHoverIdx: number, isZoomed: boolean, expandedEl: HTMLAnchorElement | null) => {
+      panelEls.forEach((panel, i) => {
+        const isExp = isZoomed && panel === expandedEl;
+        const isHov = !isZoomed && targetHoverIdx >= 0 && i === targetHoverIdx;
+        const tg = isZoomed ? (isExp ? 1 : 0) : targetHoverIdx >= 0 ? (isHov ? ON : OFF) : REST;
+        const ta = isHov || isExp ? 1 : 0;
+        const td = targetHoverIdx >= 0 && !isHov && !isZoomed ? 1 : 0;
+
+        gsap.to(panel, { flexGrow: Math.max(0, tg), duration: 0.4, ease: "power3.out", overwrite: "auto" });
+        panel.style.setProperty("--a", ta.toString());
+        panel.style.setProperty("--t", ta.toString());
+        panel.style.setProperty("--d", td.toString());
+
+        const on = ta === 1;
+        panel.classList.toggle("is-active", on);
+
+        if (isZoomed) {
+          panel.classList.toggle("is-expanded", isExp);
+        }
+      });
+
+      root.classList.toggle("is-zoomed", isZoomed);
+    };
+
+    const quickX = gsap.quickTo(panelEls, "x", { duration: 0.4, ease: "power3" });
+    const quickY = gsap.quickTo(panelEls, "y", { duration: 0.4, ease: "power3" });
+
+    let parallaxRaf = 0;
+    const animateParallax = () => {
+      if (!hasPointer || zoomed || reduced.matches) return;
+      const rects = getRects();
+      const cr = shell.getBoundingClientRect();
       const ox = px - cr.left;
       const oy = py - cr.top;
 
-      let total = 0;
-      st.forEach((q) => {
-        total += Math.max(q.g.v, 0.0001);
-      });
+      panelEls.forEach((_panel, i) => {
+        const r = rects[i];
+        if (r.width <= 1 || r.height <= 1) return;
+        const tx = -Math.max(-1, Math.min(1, (ox - (r.left + r.width / 2)) / (r.width / 2))) * MAX_PARALLAX;
+        const ty = -Math.max(-1, Math.min(1, (oy - (r.top + r.height / 2)) / (r.height / 2))) * MAX_PARALLAX;
+        const tsx = Math.max(0, Math.min(1, (ox - r.left) / r.width)) * 100;
+        const tsy = Math.max(0, Math.min(1, (oy - r.top) / r.height)) * 100;
 
-      let cursor = 0;
-      let again = false;
-
-      panelEls.forEach((panel, i) => {
-        const s = st[i];
-        const span = (Math.max(s.g.v, 0) / total) * (narrow.matches ? H : W);
-        const r = narrow.matches
-          ? { left: 0, top: cursor, width: W, height: span }
-          : { left: cursor, top: 0, width: span, height: H };
-        cursor += span;
-
-        const isExp = zoomedNow && panel === lastExpanded;
-        const isHov = anyHover && i === hoverIdx;
-        const tg = zoomedNow ? (isExp ? 1 : 0) : anyHover ? (isHov ? ON : OFF) : REST;
-        const ta = isHov || isExp ? 1 : 0;
-        const td = anyHover && !isHov ? 1 : 0;
-
-        let tx = 0;
-        let ty = 0;
-        let tsx = 50;
-        let tsy = 50;
-        if (!still && r.width > 1 && r.height > 1) {
-          tx = -clamp((ox - (r.left + r.width / 2)) / (r.width / 2), -1, 1) * MAX;
-          ty = -clamp((oy - (r.top + r.height / 2)) / (r.height / 2), -1, 1) * MAX;
-          tsx = clamp((ox - r.left) / r.width, 0, 1) * 100;
-          tsy = clamp((oy - r.top) / r.height, 0, 1) * 100;
-        }
-
-        sd(s.g, tg, TIME.grow, dt);
-        sd(s.a, ta, TIME.img, dt);
-        sd(s.t, ta, TIME.txt, dt);
-        sd(s.d, td, TIME.dim, dt);
-        sd(s.x, tx, TIME.par, dt);
-        sd(s.y, ty, TIME.par, dt);
-        sd(s.sx, tsx, TIME.sheen, dt);
-        sd(s.sy, tsy, TIME.sheen, dt);
-
-        panel.style.flexGrow = Math.max(0, s.g.v).toFixed(6);
-        panel.style.setProperty("--a", clamp(s.a.v, 0, 1).toFixed(4));
-        panel.style.setProperty("--t", clamp(s.t.v, 0, 1).toFixed(4));
-        panel.style.setProperty("--d", clamp(s.d.v, 0, 1).toFixed(4));
-        panel.style.setProperty("--sx", s.sx.v.toFixed(1) + "%");
-        panel.style.setProperty("--sy", s.sy.v.toFixed(1) + "%");
+        quickX(tx);
+        quickY(ty);
+        panelEls[i].style.setProperty("--sx", `${tsx.toFixed(1)}%`);
+        panelEls[i].style.setProperty("--sy", `${tsy.toFixed(1)}%`);
 
         const bg = bgEls[i];
-        if (bg) bg.style.transform = `translate3d(${s.x.v.toFixed(2)}px,${s.y.v.toFixed(2)}px,0)`;
-
-        const on = ta === 1;
-        if (on !== s.on) {
-          s.on = on;
-          panel.classList.toggle("is-active", on);
-        }
-
-        if (
-          busy(s.g, tg, 0.0005) ||
-          busy(s.a, ta, 0.002) ||
-          busy(s.t, ta, 0.002) ||
-          busy(s.d, td, 0.002) ||
-          busy(s.x, tx, 0.05) ||
-          busy(s.y, ty, 0.05) ||
-          busy(s.sx, tsx, 0.2) ||
-          busy(s.sy, tsy, 0.2)
-        ) {
-          again = true;
-        }
+        if (bg) bg.style.transform = `translate3d(${tx.toFixed(2)}px,${ty.toFixed(2)}px,0)`;
       });
 
-      if (again) raf = requestAnimationFrame(frame);
-      else running = false;
-    }
+      parallaxRaf = requestAnimationFrame(animateParallax);
+    };
 
-    function start() {
-      if (running) return;
-      running = true;
-      last = performance.now();
-      raf = requestAnimationFrame(frame);
-    }
-
-    function expand(el: HTMLAnchorElement, fromKeyboard: boolean) {
+    const expand = (el: HTMLAnchorElement, fromKeyboard: boolean) => {
       if (zoomed && el.classList.contains("is-expanded")) return;
-      panelEls.forEach((p) => p.classList.toggle("is-expanded", p === el));
-      root.classList.add("is-zoomed");
-      zoomed = true;
       lastExpanded = el;
+      zoomed = true;
+      updatePanelStates(-1, true, el);
       if (fromKeyboard) backEl?.focus();
-      start();
-    }
+    };
 
-    function collapse(fromKeyboard: boolean) {
-      panelEls.forEach((p) => p.classList.remove("is-expanded"));
-      root.classList.remove("is-zoomed");
+    const collapse = (fromKeyboard: boolean) => {
+      const wasExpanded = lastExpanded;
       zoomed = false;
-      if (fromKeyboard && lastExpanded) lastExpanded.focus();
-      start();
-    }
+      lastExpanded = null;
+      updatePanelStates(-1, false, null);
+      if (fromKeyboard && wasExpanded) wasExpanded.focus();
+    };
 
-    function activate(i: number, fromKeyboard: boolean) {
+    const activate = (i: number, fromKeyboard: boolean) => {
       const el = panelEls[i];
       if (!el) return;
       if (zoomed) {
@@ -242,14 +197,14 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
         return;
       }
       expand(el, fromKeyboard);
-    }
+    };
 
     const offs: Array<() => void> = [];
 
     panelEls.forEach((p, i) => {
       const onEnter = () => {
         hoverIdx = i;
-        start();
+        updatePanelStates(i, false, null);
       };
       const onClick = (e: MouseEvent) => {
         e.preventDefault();
@@ -263,12 +218,12 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
       };
       const onFocus = () => {
         hoverIdx = i;
-        start();
+        updatePanelStates(i, false, null);
       };
       const onBlur = () => {
         if (hoverIdx === i) {
           hoverIdx = -1;
-          start();
+          updatePanelStates(-1, false, null);
         }
       };
 
@@ -289,14 +244,21 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
 
     const onPointerLeave = () => {
       hoverIdx = -1;
-      start();
+      hasPointer = false;
+      parallaxStarted = false;
+      if (parallaxRaf) cancelAnimationFrame(parallaxRaf);
+      updatePanelStates(-1, false, null);
     };
+    let parallaxStarted = false;
     const onPointerMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
       px = e.clientX;
       py = e.clientY;
       hasPointer = true;
-      start();
+      if (!zoomed && !reduced.matches && !parallaxStarted) {
+        parallaxStarted = true;
+        requestAnimationFrame(animateParallax);
+      }
     };
     const onDocKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && zoomed) collapse(true);
@@ -319,17 +281,20 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
       if (backEl) backEl.removeEventListener("click", onBack);
     });
 
-    start();
-
     return () => {
-      running = false;
-      if (raf) cancelAnimationFrame(raf);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (parallaxRaf) cancelAnimationFrame(parallaxRaf);
+      parallaxStarted = false;
+      entranceTl.kill();
+      if (typeof window !== "undefined" && window.__timelines) {
+        delete window.__timelines["hero-panels"];
+      }
       offs.forEach((off) => off());
     };
   }, [panels, router]);
 
   return (
-    <div ref={rootRef} className="hp relative w-full">
+    <div ref={rootRef} className="hp relative w-full" data-composition-id="hero-panels" data-duration="3">
       <div ref={shellRef} className="hp__shell flex w-full">
         {panels.map((h, i) => (
           <a
@@ -340,7 +305,7 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
             }}
             data-cursor="Explore"
             className="hp__panel hero-enter group relative"
-            style={{ animationDelay: `${120 + i * 110}ms`, background: h.bg }}
+            style={{ background: h.bg }}
           >
             <span
               ref={(el) => {
