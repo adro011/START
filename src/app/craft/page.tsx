@@ -43,7 +43,7 @@ export default function CraftPage() {
             ["Silk & endi", "Dry clean or gentle hand wash. Cool iron inside-out."],
             ["Muslin & jamdani", "The heirloom shelf. Dry clean only, store rolled."],
           ].map(([t, b]) => (
-            <div key={t} className="bg-[#F2CCC3]/50 p-6">
+            <div key={t} className="bg-[#F2CCC3]/50 p-6 text-[#172121]">
               <h3 className="text-sm font-semibold uppercase tracking-[0.16em]">{t}</h3>
               <p className="mt-2 text-[0.95rem] leading-relaxed text-[#172121]/80">{b}</p>
             </div>
