@@ -14,6 +14,11 @@ supabase/.temp/
 # Build / dev temp artifacts (generated, never commit)
 .temp/
 
+# Debug/redirect capture artifacts from local runs — never commit
+output*.txt
+stdout.txt
+stderr.txt
+
 # Local source-image library (multi-MB originals; compressed outputs live in public/)
 library/
 
