@@ -11,8 +11,6 @@ import { CartDrawer } from "../components/cart-drawer";
 import SearchPalette from "../components/search-palette";
 import { SwRegister } from "../components/sw-register";
 import { TabRefresh } from "../components/tab-refresh";
-import { getThemeTokenMap } from "@/lib/site-content";
-import { buildThemeCss, DEFAULT_TOKENS } from "@/lib/site-content-utils";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
@@ -54,9 +52,6 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   // Locale cookie drives <html lang> + footer dictionary (header reads it client-side).
   const locale = (await cookies()).get("locale")?.value === "bn" ? "bn" : "en";
-  // Theme tokens → inline CSS vars (fail-open: defaults if DB unavailable)
-  const tokens = await getThemeTokenMap();
-  const themeCss = buildThemeCss(Object.keys(tokens).length ? tokens : DEFAULT_TOKENS);
   return (
     <html lang={locale} className="overflow-x-clip">
       <head>
@@ -71,7 +66,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
-        <style dangerouslySetInnerHTML={{ __html: themeCss }} />
       </head>
       <body
         className="overflow-x-clip bg-[#000000] text-[#F5F5F5] antialiased"
