@@ -3,12 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=20"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "next dev",
+    "predev": "node scripts/sync-content.mjs",
     "build": "next build",
+    "prebuild": "node scripts/sync-content.mjs",
     "start": "next start",
+    "content": "node scripts/sync-content.mjs",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

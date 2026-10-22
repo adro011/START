@@ -52,13 +52,13 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
         <div className="textInputWrapper min-w-52 flex-1">
           <input name="q" defaultValue={sp.q ?? ''} placeholder="Search name or slug…" aria-label="Search products" className="textInput w-full py-2 px-3 placeholder:text-ash outline-none" />
         </div>
-        <select name="section" defaultValue={section} aria-label="Filter by section" className="rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2">
+        <select name="section" defaultValue={section} aria-label="Filter by section" className="rounded border border-white/15 bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-3 py-2">
           <option value="">All sections</option>
           <option value="men">Men</option>
           <option value="women">Women</option>
           <option value="kids">Kids</option>
         </select>
-        <select name="status" defaultValue={status} aria-label="Filter by status" className="rounded border border-white/15 bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2">
+        <select name="status" defaultValue={status} aria-label="Filter by status" className="rounded border border-white/15 bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-3 py-2">
           <option value="all">All</option>
           <option value="active">Published</option>
           <option value="draft">Draft</option>
@@ -69,7 +69,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
       <div className="overflow-x-auto rounded-lg border border-white/15">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead>
-            <tr className="bg-[#202020] text-xs uppercase tracking-wider text-ash">
+            <tr className="bg-[var(--color-charcoal)] text-xs uppercase tracking-wider text-ash">
               <th className="px-3 py-2">Product</th><th className="px-3 py-2">Section</th><th className="px-3 py-2">Price</th><th className="px-3 py-2">Status</th><th className="px-3 py-2">Actions</th>
             </tr>
           </thead>

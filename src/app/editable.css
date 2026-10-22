@@ -1,0 +1,92 @@
+/* ══════════════════════════════════════════════════════════════════════
+   EDITABLE DESIGN BRIDGE
+   Every variable below is emitted by <ThemeStyle /> from content/*.txt.
+   Do not hardcode design values here — edit the matching content file:
+     content/theme.txt · content/design/*.txt · content/motion/*.txt
+   This file only WIRES those values onto the live DOM.
+   ══════════════════════════════════════════════════════════════════════ */
+
+html {
+  color-scheme: dark;
+  scroll-behavior: var(--scroll-behavior, smooth);
+}
+
+body {
+  background-color: var(--bg-page, #000);
+  background-image: var(--bg-image-page, none);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  font-family: var(--font-display);
+}
+
+/* ── Surfaces ────────────────────────────────────────────────────────── */
+.site-header {
+  background-color: var(--bg-header, #000);
+  background-image: var(--bg-image-header, none);
+  background-size: cover;
+  background-position: center;
+  z-index: var(--z-header);
+}
+
+footer {
+  background-color: var(--bg-footer, #0d0d0d);
+  background-image: var(--bg-image-footer, none);
+  background-size: cover;
+  background-position: center;
+}
+
+[data-spotlight-section] {
+  background-color: var(--bg-section, #000);
+}
+
+#abrar-loader {
+  background-color: var(--bg-page, #000);
+  background-image: var(--bg-image-loader, none);
+  background-size: cover;
+  background-position: center;
+  z-index: var(--z-loader);
+}
+
+.grain {
+  opacity: var(--grain-opacity, 0.05);
+  z-index: var(--z-grain);
+}
+
+/* ── Motion ──────────────────────────────────────────────────────────── */
+.hero-enter,
+.hero-text-rise {
+  animation-duration: var(--dur-hero, 900ms);
+  animation-timing-function: var(--ease-enter, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.reveal {
+  transition-duration: var(--dur-slow, 600ms);
+  transition-timing-function: var(--ease-lux, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.lift {
+  transition:
+    transform var(--dur-slow, 600ms) var(--ease-lux, cubic-bezier(0.22, 1, 0.36, 1)),
+    box-shadow var(--dur-slow, 600ms) var(--ease-lux, cubic-bezier(0.22, 1, 0.36, 1)),
+    border-color var(--dur-base, 350ms) var(--ease-standard, ease);
+}
+
+.kicker {
+  letter-spacing: var(--tracking-kicker, 0.22em);
+}
+
+/* ── Geometry ────────────────────────────────────────────────────────── */
+.cursor-ring {
+  width: var(--fx-cursor-size, 40px);
+  height: var(--fx-cursor-size, 40px);
+  border-radius: var(--radius-pill, 999px);
+  z-index: var(--z-cursor);
+}
+
+input,
+select,
+textarea {
+  min-height: var(--input-height, 44px);
+}

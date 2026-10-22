@@ -26,7 +26,7 @@ export default function WishlistPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-6">
       <nav className="text-xs text-ash" aria-label="Breadcrumb">
-        <Link href="/account" className="underline">Account</Link> / <span className="text-[#F5F5F5]">Wishlist</span>
+        <Link href="/account" className="underline">Account</Link> / <span className="text-[var(--color-smoke)]">Wishlist</span>
       </nav>
       <h1 className="mt-2 text-2xl font-semibold">Wishlist ({slugs.length})</h1>
       {products.length === 0 ? (

@@ -1,0 +1,27 @@
+# ── ABOUT PAGE ─────────────────────────────────────────────────────────
+# Content for /about. Tokens {name} / {tagline} / {email} / {phone} are
+# replaced automatically with the values from content/site.txt.
+
+eyebrow = Our story
+title = A heritage label, made for everyday Bangladesh.
+intro = {name} started with a simple frustration: festive wear that only comes out twice a year. So we cut panjabis, sharees, tunics and kids' sets you can wear to Eid, weddings — and ordinary Tuesdays. {tagline}
+
+value.1.title = Honest cloth
+value.1.body = Cotton, silk, muslin and jamdani from mills and weavers we know by name. Fabric, fit and care notes on every product.
+value.2.title = Fair prices in BDT
+value.2.body = Clear ৳ pricing, no inflated discounts. COD across Bangladesh and bKash/Nagad/cards via SSLCommerz.
+value.3.title = Easy exchange
+value.3.body = Wrong size? Exchange within 7 days — no interrogation. Details on our Shipping & Returns page.
+
+stat.1.value = 3
+stat.1.label = sections — Men, Women, Kids
+stat.2.value = 64
+stat.2.label = districts served with COD
+stat.3.value = 7 days
+stat.3.label = easy size exchange
+
+hello.title = Come say hello
+hello.body = Questions about fit, fabric or delivery to your district? Write to {email} or call {phone}.
+cta.craft = Our craft
+cta.journal = Journal
+cta.contact = Contact

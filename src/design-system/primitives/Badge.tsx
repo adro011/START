@@ -27,10 +27,10 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
     );
 
     const variantStyles = {
-      default: "bg-[#969696] text-[#FFFFFF]",
-      gold: "bg-[#FFC000] text-[#000000]",
+      default: "bg-[var(--color-steel)] text-[#FFFFFF]",
+      gold: "bg-[var(--color-gold)] text-[var(--color-black)]",
       cyan: "bg-[#29ABE2] text-[#FFFFFF]",
-      gray: "bg-[#494949] text-[#F5F5F5]",
+      gray: "bg-[var(--color-graphite)] text-[var(--color-smoke)]",
       outline: "bg-transparent text-[#FFFFFF] border border-[#FFFFFF]/50",
     };
 

@@ -7,7 +7,7 @@ export default function AddressesPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-6">
       <nav className="text-xs text-ash" aria-label="Breadcrumb">
-        <Link href="/account" className="underline">Account</Link> / <span className="text-[#F5F5F5]">Addresses</span>
+        <Link href="/account" className="underline">Account</Link> / <span className="text-[var(--color-smoke)]">Addresses</span>
       </nav>
       <h1 className="mt-2 text-2xl font-semibold">Addresses</h1>
       <p className="mt-1 text-sm text-ash">

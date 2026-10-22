@@ -1,0 +1,90 @@
+# ── SIZE GUIDES PAGE ───────────────────────────────────────────────────
+# Content for /size-guides. Token {email} / {phone} are replaced automatically.
+# Each table is stored cell-by-cell (head.1..N then row.<r>.<c>) so every
+# number is individually editable.
+
+eyebrow = Help · Size guides
+title = Measure once, wear for years.
+intro = All measurements in inches. Measure over light clothing and compare with your best-fitting garment. Between sizes? Size up for panjabis and festive wear, down for fitted shirts and tops. Questions? Write to {email}.
+
+men.title = Men — Panjabi / Kurta / Shirts
+men.note = Size = chest. Length measured shoulder to hem.
+men.head.1 = Size
+men.head.2 = Chest
+men.head.3 = Length
+men.head.4 = Sleeve
+men.head.5 = Shoulder
+men.row.1.1 = 38 (M)
+men.row.1.2 = 38
+men.row.1.3 = 42
+men.row.1.4 = 24
+men.row.1.5 = 17.5
+men.row.2.1 = 40 (L)
+men.row.2.2 = 40
+men.row.2.3 = 43
+men.row.2.4 = 24.5
+men.row.2.5 = 18
+men.row.3.1 = 42 (XL)
+men.row.3.2 = 42
+men.row.3.3 = 44
+men.row.3.4 = 25
+men.row.3.5 = 18.5
+men.row.4.1 = 44 (XXL)
+men.row.4.2 = 44
+men.row.4.3 = 45
+men.row.4.4 = 25.5
+men.row.4.5 = 19
+
+women.title = Women — Tunic / 3-Pcs / Tops
+women.note = Tops run relaxed; sharees are one-size with fall/pico done.
+women.head.1 = Size
+women.head.2 = Bust
+women.head.3 = Waist
+women.head.4 = Hip
+women.head.5 = Length
+women.row.1.1 = S (36)
+women.row.1.2 = 36
+women.row.1.3 = 30
+women.row.1.4 = 38
+women.row.1.5 = 42
+women.row.2.1 = M (38)
+women.row.2.2 = 38
+women.row.2.3 = 32
+women.row.2.4 = 40
+women.row.2.5 = 43
+women.row.3.1 = L (40)
+women.row.3.2 = 40
+women.row.3.3 = 34
+women.row.3.4 = 42
+women.row.3.5 = 44
+women.row.4.1 = XL (42)
+women.row.4.2 = 42
+women.row.4.3 = 36
+women.row.4.4 = 44
+women.row.4.5 = 44
+
+kids.title = Kids (by age)
+kids.note = Kids grow fast — when in doubt, take the bigger size.
+kids.head.1 = Age
+kids.head.2 = Chest
+kids.head.3 = Length
+kids.head.4 = Waist (bottoms)
+kids.row.1.1 = 4–5 yrs
+kids.row.1.2 = 26
+kids.row.1.3 = 26
+kids.row.1.4 = 22
+kids.row.2.1 = 6–7 yrs
+kids.row.2.2 = 28
+kids.row.2.3 = 28
+kids.row.2.4 = 23
+kids.row.3.1 = 8–9 yrs
+kids.row.3.2 = 30
+kids.row.3.3 = 31
+kids.row.3.4 = 24
+kids.row.4.1 = 10–11 yrs
+kids.row.4.2 = 32
+kids.row.4.3 = 34
+kids.row.4.4 = 25
+
+help.title = Still unsure?
+help.body = Send your chest/length + the product name to {phone} (WhatsApp) and we'll confirm your size before you order. Exchanges are free within 7 days — see Shipping & Returns.

@@ -10,7 +10,7 @@ import { cn } from "@/lib/format";
 const RECENT_KEY = "brand-search-recent";
 
 const RING =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]";
 
 function subsequenceMatch(needle: string, haystack: string): boolean {
   const n = needle.toLowerCase().replace(/\s+/g, "");
@@ -200,7 +200,7 @@ export default function SearchPalette() {
     >
       <div
         ref={panelRef}
-        className="mt-16 w-full max-w-lg overflow-hidden rounded-xl bg-[#181818] text-[#F5F5F5] shadow-2xl"
+        className="mt-16 w-full max-w-lg overflow-hidden rounded-xl bg-[var(--color-dark-iron)] text-[var(--color-smoke)] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <form

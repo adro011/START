@@ -7,8 +7,7 @@ const NAV = [
   { href: '/admin/orders', label: 'Orders' },
   { href: '/admin/coupons', label: 'Coupons' },
   { href: '/admin/categories', label: 'Categories' },
-  { href: '/admin/sections', label: 'Sections' },
-  { href: '/admin/theme', label: 'Theme' },
+  { href: '/admin/registrations', label: 'Registrations' },
   { href: '/admin/settings', label: 'Settings' },
 ];
 
@@ -17,7 +16,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const session = await requireAdmin('/admin');
 
   return (
-    <div className="min-h-screen bg-[#181818] text-[#F5F5F5]">
+    <div className="min-h-screen bg-[var(--color-dark-iron)] text-[var(--color-smoke)]">
       <header className="sticky top-0 z-20 border-b border-white/15 bg-black text-white md:hidden">
         <div className="flex items-center justify-between px-4 py-3">
           <Link href="/admin" className="text-sm font-semibold tracking-wide">ADMIN</Link>
@@ -33,12 +32,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </header>
 
       <div className="mx-auto flex w-full max-w-7xl gap-0 md:gap-6 md:px-6 md:py-6">
-        <aside className="sticky top-6 hidden h-fit w-56 shrink-0 rounded-lg border border-white/15 bg-[#181818] p-3 md:block">
+        <aside className="sticky top-6 hidden h-fit w-56 shrink-0 rounded-lg border border-white/15 bg-[var(--color-dark-iron)] p-3 md:block">
           <p className="px-2 text-xs font-semibold uppercase tracking-[0.18em] text-ash">Admin</p>
           <p className="truncate px-2 pb-2 text-xs text-ash">{session.user.email}{session.isDev ? ' · dev' : ''}</p>
           <nav aria-label="Admin" className="flex flex-col gap-1">
             {NAV.map((n) => (
-              <Link key={n.href} href={n.href} className="rounded px-3 py-2 text-sm font-medium text-steel hover:bg-white/10 hover:text-[#F5F5F5]">
+              <Link key={n.href} href={n.href} className="rounded px-3 py-2 text-sm font-medium text-steel hover:bg-white/10 hover:text-[var(--color-smoke)]">
                 {n.label}
               </Link>
             ))}
@@ -46,7 +45,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/" className="mt-3 block rounded px-3 py-2 text-xs text-ash hover:bg-white/10">← View store</Link>
         </aside>
 
-        <main className="min-w-0 flex-1 bg-[#181818] p-4 sm:p-6 md:rounded-lg md:border md:border-white/15">{children}</main>
+        <main className="min-w-0 flex-1 bg-[var(--color-dark-iron)] p-4 sm:p-6 md:rounded-lg md:border md:border-white/15">{children}</main>
       </div>
     </div>
   );

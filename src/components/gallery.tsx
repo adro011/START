@@ -6,7 +6,7 @@ import type { ProductImage } from "@/lib/catalog";
 import { cn } from "@/lib/format";
 
 const RING =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]";
 
 /**
  * Editorial gallery: 2-up grid (last tile spans full width when the count
@@ -88,7 +88,7 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
             aria-label={`Open fullscreen view, image ${i + 1} of ${images.length}: ${img.alt || name}`}
             data-cursor="Zoom"
             className={cn(
-              "group relative block w-full cursor-zoom-in overflow-hidden bg-[#F2CCC3]/40",
+              "group relative block w-full cursor-zoom-in overflow-hidden bg-[var(--color-blush)]/40",
               RING,
               oddLast && i === images.length - 1
                 ? "col-span-2 aspect-[16/10]"
@@ -105,7 +105,7 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
             />
             <span
               aria-hidden="true"
-              className="absolute bottom-3 left-3 bg-[#172121]/70 px-2 py-0.5 text-[11px] font-semibold tracking-[0.2em] text-[#FBF6F3] backdrop-blur-sm"
+              className="absolute bottom-3 left-3 bg-[var(--abrar-ink)]/70 px-2 py-0.5 text-[11px] font-semibold tracking-[0.2em] text-[var(--color-paper)] backdrop-blur-sm"
             >
               {String(i + 1).padStart(2, "0")}
             </span>
@@ -123,7 +123,7 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
           onClick={() => setLightbox(null)}
         >
           <div
-            className="relative aspect-[4/5] w-full max-w-2xl overflow-hidden rounded-xl bg-[#181818]"
+            className="relative aspect-[4/5] w-full max-w-2xl overflow-hidden rounded-xl bg-[var(--color-dark-iron)]"
             onClick={(e) => e.stopPropagation()}
           >
             <Image src={current.src} alt={current.alt || name} fill sizes="100vw" className="object-contain" />

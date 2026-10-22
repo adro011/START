@@ -61,8 +61,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         <h2 className="text-sm font-semibold">Courier + tracking</h2>
         <form action={assignCourier} className="mt-3 grid gap-3 sm:grid-cols-3">
           <input type="hidden" name="orderId" value={order.id} />
-          <label className="block text-sm">Courier<input name="courier" defaultValue={order.courier ?? ''} placeholder="Steadfast / Pathao / RedX" className="textInput mt-1 w-full bg-[#111111] px-3 py-2 text-[#F5F5F5] placeholder:text-ash" /></label>
-          <label className="block text-sm">Tracking no<input name="tracking" defaultValue={order.trackingNo ?? ''} placeholder="SF-…" className="textInput mt-1 w-full bg-[#111111] px-3 py-2 text-[#F5F5F5] placeholder:text-ash" /></label>
+          <label className="block text-sm">Courier<input name="courier" defaultValue={order.courier ?? ''} placeholder="Steadfast / Pathao / RedX" className="textInput mt-1 w-full bg-[#111111] px-3 py-2 text-[var(--color-smoke)] placeholder:text-ash" /></label>
+          <label className="block text-sm">Tracking no<input name="tracking" defaultValue={order.trackingNo ?? ''} placeholder="SF-…" className="textInput mt-1 w-full bg-[#111111] px-3 py-2 text-[var(--color-smoke)] placeholder:text-ash" /></label>
           <div className="flex items-end"><button type="submit" className="rounded bg-gold px-4 py-2 text-sm font-medium text-black hover:bg-gold-dark">Save</button></div>
         </form>
       </section>

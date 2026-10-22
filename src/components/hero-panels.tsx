@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { Flip } from "gsap/Flip";
+import { motionNumber, motionValue } from "@/lib/content";
 
 gsap.registerPlugin(Flip);
 
@@ -47,11 +48,13 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
     const narrow = window.matchMedia("(max-width: 768px)");
 
     const REST = 1 / N;
-    const ON = 0.54;
+    const ON = motionNumber("effects", "hero.zoom", 0.54);
     const OFF = (1 - ON) / (N - 1);
-    const MAX_PARALLAX = 24;
-    const STAGGER = 0.08;
-    const ENTRY_DURATION = 0.6;
+    const MAX_PARALLAX = motionNumber("effects", "hero.parallaxMax", 24);
+    const STAGGER = motionNumber("effects", "hero.stagger", 0.08);
+    const ENTRY_DURATION = motionNumber("effects", "hero.entryDuration", 0.6);
+    const HOVER_DURATION = motionNumber("effects", "hero.hoverDuration", 0.4);
+    const EASE = motionValue("global", "gsap.ease", "power3.out");
 
     let hoverIdx = -1;
     let px = 0;
@@ -77,7 +80,7 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
     };
 
     const createEntranceTimeline = () => {
-      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+      const tl = gsap.timeline({ paused: true, defaults: { ease: EASE } });
 
       panelEls.forEach((panel, i) => {
         tl.fromTo(
@@ -126,7 +129,7 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
         const ta = isHov || isExp ? 1 : 0;
         const td = targetHoverIdx >= 0 && !isHov && !isZoomed ? 1 : 0;
 
-        gsap.to(panel, { flexGrow: Math.max(0, tg), duration: 0.4, ease: "power3.out", overwrite: "auto" });
+        gsap.to(panel, { flexGrow: Math.max(0, tg), duration: HOVER_DURATION, ease: EASE, overwrite: "auto" });
         panel.style.setProperty("--a", ta.toString());
         panel.style.setProperty("--t", ta.toString());
         panel.style.setProperty("--d", td.toString());
@@ -142,8 +145,8 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
       root.classList.toggle("is-zoomed", isZoomed);
     };
 
-    const quickX = gsap.quickTo(panelEls, "x", { duration: 0.4, ease: "power3" });
-    const quickY = gsap.quickTo(panelEls, "y", { duration: 0.4, ease: "power3" });
+    const quickX = gsap.quickTo(panelEls, "x", { duration: HOVER_DURATION, ease: "power3" });
+    const quickY = gsap.quickTo(panelEls, "y", { duration: HOVER_DURATION, ease: "power3" });
 
     let parallaxRaf = 0;
     const animateParallax = () => {
@@ -294,7 +297,16 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
   }, [panels, router]);
 
   return (
-    <div ref={rootRef} className="hp relative w-full" data-composition-id="hero-panels" data-duration="3">
+    <div
+      ref={rootRef}
+      className="hp relative w-full"
+      data-composition-id="hero-panels"
+      data-duration="3"
+      data-particle-id="home.hero.panels"
+      data-particle-type="section"
+      data-particle-label="Hero Split Panels Container"
+      data-editable="true"
+    >
       <div ref={shellRef} className="hp__shell flex w-full">
         {panels.map((h, i) => (
           <a
@@ -306,6 +318,10 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
             data-cursor="Explore"
             className="hp__panel hero-enter group relative"
             style={{ background: h.bg }}
+            data-particle-id={`home.hero.panel.${h.key}`}
+            data-particle-type="card"
+            data-particle-label={`Hero Panel ${h.title}`}
+            data-editable="true"
           >
             <span
               ref={(el) => {
@@ -319,6 +335,10 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
                 className="hp__img object-cover object-center"
+                data-particle-id={`home.hero.panel.${h.key}.image`}
+                data-particle-type="image"
+                data-particle-label={`Hero Panel ${h.title} Portrait Image`}
+                data-editable="true"
               />
             </span>
             <span className="hp__overlay" aria-hidden="true" />
@@ -327,6 +347,10 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
               aria-hidden="true"
               className="hp__num"
               style={{ fontFamily: "'Cormorant Garamond','Playfair Display',serif" }}
+              data-particle-id={`home.hero.panel.${h.key}.number`}
+              data-particle-type="badge"
+              data-particle-label={`Hero Panel ${h.title} Index Number`}
+              data-editable="true"
             >
               {h.index}
             </span>
@@ -334,18 +358,36 @@ export default function HeroPanels({ panels }: { panels: readonly HeroPanelItem[
               <span
                 className="hp__title"
                 style={{ fontFamily: "'Cormorant Garamond','Playfair Display',Georgia,serif" }}
+                data-particle-id={`home.hero.panel.${h.key}.title`}
+                data-particle-type="heading"
+                data-particle-label={`Hero Panel ${h.title} Heading`}
+                data-editable="true"
               >
                 {h.title}
               </span>
               <span aria-hidden="true" className="hp__bar" />
-              <span className="hp__cta">
+              <span
+                className="hp__cta"
+                data-particle-id={`home.hero.panel.${h.key}.cta`}
+                data-particle-type="link"
+                data-particle-label={`Hero Panel Shop ${h.title} CTA`}
+                data-editable="true"
+              >
                 Shop {h.title} <span aria-hidden="true">→</span>
               </span>
             </span>
           </a>
         ))}
       </div>
-      <button ref={backRef} type="button" className="hp__back">
+      <button
+        ref={backRef}
+        type="button"
+        className="hp__back"
+        data-particle-id="home.hero.panels.back"
+        data-particle-type="button"
+        data-particle-label="Hero Panels Collapse Back Button"
+        data-editable="true"
+      >
         <span aria-hidden="true">←</span> Back
       </button>
     </div>

@@ -5,6 +5,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "../lib/format";
+import { motionNumber, motionValue } from "@/lib/content";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -67,13 +68,18 @@ export default function Reveal({
 
     const { from, to } = VARIANT_DEFAULTS[variant];
     const stagger = Number(el.dataset.stagger ?? delay);
+    const distance = motionNumber("effects", "reveal.distance", 24);
+    const fromVars = "y" in from ? { ...from, y: distance } : from;
 
     const tl = gsap.timeline({
       paused: true,
-      defaults: { ease: "power3.out", duration: 0.7 },
+      defaults: {
+        ease: motionValue("global", "gsap.ease", "power3.out"),
+        duration: motionNumber("effects", "reveal.duration", 0.7),
+      },
     });
 
-    tl.fromTo(el, from, {
+    tl.fromTo(el, fromVars, {
       ...to,
       delay: stagger / 1000,
       immediateRender: true,
@@ -84,7 +90,7 @@ export default function Reveal({
 
     ScrollTrigger.create({
       trigger: el,
-      start: "top 88%",
+      start: motionValue("effects", "reveal.start", "top 88%"),
       end: "bottom 12%",
       onEnter: () => tl.play(),
       onLeaveBack: () => tl.reverse(),

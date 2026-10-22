@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motionNumber } from "@/lib/content";
 
 /**
  * Soft cursor ring on product imagery (skill §3.2, plan §5 "Zoom" cursor).
@@ -28,10 +29,11 @@ export default function CursorRing() {
     let y = -100;
     let cx = -100;
     let cy = -100;
+    const lerp = motionNumber("effects", "cursor.lerp", 0.18);
 
     const tick = () => {
-      cx += (x - cx) * 0.18;
-      cy += (y - cy) * 0.18;
+      cx += (x - cx) * lerp;
+      cy += (y - cy) * lerp;
       ring.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0) translate(-50%, -50%)`;
       raf = requestAnimationFrame(tick);
     };

@@ -124,7 +124,7 @@ export const HeroVideo = ({
         playsInline={playsInline}
         className="absolute inset-0 w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/60 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-black)]/60 via-transparent to-transparent" />
     </div>
   );
 };

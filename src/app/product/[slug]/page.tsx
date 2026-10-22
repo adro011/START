@@ -85,7 +85,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           {product.categoryName}
         </Link>
         {" / "}
-        <span aria-current="page" className="text-[#F5F5F5]">{product.name}</span>
+        <span aria-current="page" className="text-[var(--color-smoke)]">{product.name}</span>
       </nav>
 
       <div className="mt-4 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
@@ -95,7 +95,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div className="lg:sticky lg:top-24 lg:self-start">
           <div className="flex flex-wrap items-center gap-2">
             {product.isNew && (
-              <span className="bg-[#172121] px-2.5 py-1 text-[10.5px] font-semibold tracking-[0.16em] text-[#FBF6F3] uppercase">
+              <span className="bg-[var(--abrar-ink)] px-2.5 py-1 text-[10.5px] font-semibold tracking-[0.16em] text-[var(--color-paper)] uppercase">
                 New
               </span>
             )}
@@ -110,7 +110,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </div>
 
           <h1
-            className="mt-2 text-[clamp(1.9rem,4vw,3rem)] leading-[1.02] font-medium tracking-tight text-[#F5F5F5]"
+            className="mt-2 text-[clamp(1.9rem,4vw,3rem)] leading-[1.02] font-medium tracking-tight text-[var(--color-smoke)]"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             {product.name}
@@ -119,7 +119,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <span aria-hidden="true" className="tracking-[0.12em] text-gold">
               {"★".repeat(Math.max(1, Math.round(product.rating)))}
             </span>{" "}
-            <span className="font-semibold text-[#F5F5F5]">{product.rating.toFixed(1)}</span>
+            <span className="font-semibold text-[var(--color-smoke)]">{product.rating.toFixed(1)}</span>
             {" · "}
             <a href="#reviews" className="underline-offset-4 hover:text-clay hover:underline">
               {product.reviewCount} reviews
@@ -147,7 +147,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
           )}
 
-          <div className="mt-5 divide-y divide-[#172121]/10 border-y border-[#172121]/10">
+          <div className="mt-5 divide-y divide-[var(--abrar-ink)]/10 border-y border-[var(--abrar-ink)]/10">
             <details className="group py-4" open>
               <summary className="flex cursor-pointer list-none items-center justify-between text-[14px] font-semibold tracking-[0.06em] uppercase [&::-webkit-details-marker]:hidden">
                 Details

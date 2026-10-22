@@ -1,0 +1,27 @@
+# ── SECTION BACKGROUNDS / OVERLAYS ─────────────────────────────────────
+# The COLOR side of backgrounds. Image paths live in content/assets/backgrounds.txt.
+# Any value here overrides the matching theme color, so you can restyle a
+# single area without touching the global palette.
+#
+# KEY              WHERE IT SHOWS
+# page.color       body background behind everything
+# header.color     header bar
+# footer.color     footer
+# section.color    default homepage section
+# card.color       cards / tiles
+# overlay.color    dark tint over photos
+# overlay.soft     lighter tint
+# gradient.hero    opening section gradient (optional image overlay)
+# gradient.sale    sale section gradient
+# grain.opacity    paper-grain opacity (0 turns it off)
+
+page.color = #000000
+header.color = #000000
+footer.color = #0d0d0d
+section.color = #000000
+card.color = #0d0d0d
+overlay.color = rgba(0,0,0,0.55)
+overlay.soft = rgba(0,0,0,0.30)
+gradient.hero = linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.75))
+gradient.sale = linear-gradient(135deg, rgba(255,192,0,0.12), rgba(0,0,0,0))
+grain.opacity = 0.05

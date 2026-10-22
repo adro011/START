@@ -1,0 +1,23 @@
+# ── CATEGORY / "SHOP BY CATEGORY" IMAGES ───────────────────────────────
+# Used by the category rail and the section landing pages.
+#
+# KEY                 WHERE IT SHOWS
+# <name>.tile         big editorial tile (PNG)
+# <name>.portrait     photo used on cards / hover states (JPG)
+# <name>.icon         small SVG mark
+# <name>.alt          alt text
+
+men.tile = /library/men.png
+men.portrait = /hero/men.jpg
+men.icon = /hero/men.svg
+men.alt = Men's collection
+
+women.tile = /library/women.png
+women.portrait = /hero/women.jpg
+women.icon = /hero/women.svg
+women.alt = Women's collection
+
+kids.tile = /library/children.png
+kids.portrait = /hero/kids.jpg
+kids.icon = /hero/kids.svg
+kids.alt = Children's collection

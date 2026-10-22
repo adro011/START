@@ -1,0 +1,24 @@
+# ── BACKGROUND IMAGES ──────────────────────────────────────────────────
+# Only the IMAGE side of backgrounds. Colors/gradients/overlays live in
+# content/design/backgrounds.txt. Leave a value empty (=) to use a plain color.
+#
+# KEY             WHERE IT SHOWS
+# page.image      fixed texture behind the whole site
+# header.image    header background image
+# footer.image    footer background image
+# cover.image     homepage opening image (also listed in assets/hero.txt)
+# sale.image      sale section background
+# craft.image     craft/story section background
+# loader.image    image inside the full-screen loader (usually empty)
+# grain.image     paper-grain texture (SVG data URI or file path)
+# grain.opacity   0 = off, 0.05 = subtle
+
+page.image =
+header.image =
+footer.image =
+cover.image = /hero/women.jpg
+sale.image =
+craft.image =
+loader.image =
+grain.image =
+grain.opacity = 0.05

@@ -1,0 +1,26 @@
+# ── OUR CRAFT PAGE ─────────────────────────────────────────────────────
+# Content for /craft. Token {name} is replaced automatically.
+
+eyebrow = Our craft
+title = Slow cloth, sharp cutting.
+intro = {name} works with weaving families and small factories across Bangladesh. We design for heat, humidity, rickshaw rides and wedding halls — breathable fabric, modest cuts, colours that survive the wash.
+
+step.1.n = 01
+step.1.title = Cloth first
+step.1.body = We buy cotton, addi, endi, silk and muslin-jamdani from trusted Bangladeshi mills and weaving clusters. Every roll is checked for weave, dye fastness and shrinkage before cutting.
+step.2.n = 02
+step.2.title = Cut with ease
+step.2.body = Relaxed shoulders, real pockets, linings where it matters. Panjabis and kurtas are graded from our Dhaka fit blocks — see Size Guides before you order.
+step.3.n = 03
+step.3.title = Finished by hand
+step.3.body = Buttons, hems and embroidery are finished and pressed by hand. Each piece is checked twice, then packed in plastic-free packaging.
+
+care.1.title = Cotton & blends
+care.1.body = Pre-shrunk, bio-washed. Machine wash cold.
+care.2.title = Silk & endi
+care.2.body = Dry clean or gentle hand wash. Cool iron inside-out.
+care.3.title = Muslin & jamdani
+care.3.body = The heirloom shelf. Dry clean only, store rolled.
+
+cta.size = Find your size
+cta.shipping = Shipping & returns

@@ -1,0 +1,23 @@
+# ── OCCASION IMAGES ────────────────────────────────────────────────────
+# The four "shop by occasion" cards on the homepage.
+#
+# KEY               WHERE IT SHOWS
+# <name>.image      card image (JPG)
+# <name>.alt        alt text
+# <name>.href       where the card links
+
+eid.image = /library/photo-album/EID.jpg
+eid.alt = Eid collection
+eid.href = /women?occasion=eid
+
+wedding.image = /library/photo-album/WEDDING.jpg
+wedding.alt = Wedding collection
+wedding.href = /women?occasion=wedding
+
+everyday.image = /library/photo-album/Everyday.jpg
+everyday.alt = Everyday collection
+everyday.href = /men?occasion=everyday
+
+winter.image = /library/photo-album/WINTER.jpg
+winter.alt = Winter collection
+winter.href = /men?occasion=winter

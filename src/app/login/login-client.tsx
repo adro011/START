@@ -156,11 +156,11 @@ export default function LoginClient({
   );
 
   return (
-    <main className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-black text-[#F5F5F5] lg:flex-row">
+    <main className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-black text-[var(--color-smoke)] lg:flex-row">
       {/* ── Left editorial panel (cinematic, ink) ── */}
       <section
         aria-label="Brand story"
-        className="relative flex min-h-[42dvh] flex-col justify-end overflow-hidden bg-[#172121] px-6 pt-24 pb-10 text-[#FBF6F3] sm:px-10 lg:min-h-[100dvh] lg:w-[46%] lg:px-12 lg:pb-14"
+        className="relative flex min-h-[42dvh] flex-col justify-end overflow-hidden bg-[var(--abrar-ink)] px-6 pt-24 pb-10 text-[var(--color-paper)] sm:px-10 lg:min-h-[100dvh] lg:w-[46%] lg:px-12 lg:pb-14"
       >
         {/* depth orbs (transform-only drift) */}
         <div aria-hidden="true" className="drift pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#D5573B]/25 blur-3xl" />
@@ -171,7 +171,7 @@ export default function LoginClient({
           Æ
         </span>
 
-        <p className="login-rise kicker text-[#F2CCC3]/80" style={{ animationDelay: "60ms" }}>
+        <p className="login-rise kicker text-[var(--color-blush)]/80" style={{ animationDelay: "60ms" }}>
           {SITE.name} · Accounts
         </p>
         <h1
@@ -181,12 +181,12 @@ export default function LoginClient({
         >
           {splitChars(mode === "admin" ? "Shop registry." : "Welcome back.")}
         </h1>
-        <p className="login-rise mt-4 max-w-md text-[16px] leading-relaxed text-[#FBF6F3]/75 sm:text-[17px]" style={{ animationDelay: "420ms" }}>
+        <p className="login-rise mt-4 max-w-md text-[16px] leading-relaxed text-[var(--color-paper)]/75 sm:text-[17px]" style={{ animationDelay: "420ms" }}>
           {mode === "admin"
             ? "Staff entrance — manage products, orders and the storefront. Shoppers, use the accounts panel."
             : "Sign in to track orders, sync your wishlist and check out faster. No email needed for the demo — any username + password works."}
         </p>
-        <div className="login-rise mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-[#FBF6F3]/65" style={{ animationDelay: "520ms" }}>
+        <div className="login-rise mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-[var(--color-paper)]/65" style={{ animationDelay: "520ms" }}>
           <span>COD available</span>
           <span aria-hidden="true" className="h-1 w-1 rounded-full bg-[#D5573B]" />
           <span>Easy exchange</span>
@@ -222,7 +222,7 @@ export default function LoginClient({
                   type="button"
                   onClick={() => signInWithProvider("google")}
                   disabled={oauthBusy !== ""}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-[#181818] px-3 py-2.5 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(23,33,33,0.14)] disabled:opacity-60"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-[var(--color-dark-iron)] px-3 py-2.5 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(23,33,33,0.14)] disabled:opacity-60"
                 >
                   <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true"><path fill="#4285F4" d="M22.6 12.3c0-.8-.1-1.5-.2-2.3H12v4.5h6c-.3 1.4-1.1 2.5-2.3 3.3v2.8h3.7c2.2-2 3.2-4.9 3.2-8.3Z"/><path fill="#34A853" d="M12 23c3.1 0 5.7-1 7.6-2.7l-3.7-2.8c-1 .7-2.4 1.2-3.9 1.2-3 0-5.5-2-6.4-4.7H1.8v2.9C3.7 20.5 7.6 23 12 23Z"/><path fill="#FBBC05" d="M5.6 14c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.5H1.8A11 11 0 0 0 1 11.7c0 1.8.4 3.4 1.2 5l3.4-2.7Z"/><path fill="#EA4335" d="M12 5.3c1.7 0 3.2.6 4.4 1.7l3.3-3.3C17.7 1.9 15.1 1 12 1 7.6 1 3.7 3.5 1.8 6.5l3.8 2.9c.9-2.7 3.4-4.1 6.4-4.1Z"/></svg>
                   {oauthBusy === "google" ? "Connecting…" : "Google"}
@@ -249,18 +249,18 @@ export default function LoginClient({
                   <label className="block">
                     <span className="text-sm font-medium">Username <span className="font-normal text-ash">(anything works)</span></span>
                     <input name="username" required autoComplete="username" placeholder="e.g. demo.shopper"
-                      className="mt-1.5 w-full rounded-xl border-0 bg-[#181818]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash" />
+                      className="mt-1.5 w-full rounded-xl border-0 bg-[var(--color-dark-iron)]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash" />
                   </label>
                 </div>
                 <div className="textInputWrapper">
                   <label className="block">
                     <span className="text-sm font-medium">Password <span className="font-normal text-ash">(no restrictions)</span></span>
                     <input name="password" type="password" required autoComplete="current-password" placeholder="Anything — demo only"
-                      className="mt-1.5 w-full rounded-xl border-0 bg-[#181818]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash" />
+                      className="mt-1.5 w-full rounded-xl border-0 bg-[var(--color-dark-iron)]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash" />
                   </label>
                 </div>
                 <button ref={primaryBtn} type="submit"
-                  className="magnetic w-full rounded-xl bg-gold px-4 py-3 text-sm font-semibold tracking-wide text-black transition-[transform,box-shadow,background] duration-300 hover:bg-gold-dark hover:shadow-[0_16px_36px_rgba(213,87,59,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                  className="magnetic w-full rounded-xl bg-gold px-4 py-3 text-sm font-semibold tracking-wide text-black transition-[transform,box-shadow,background] duration-300 hover:bg-gold-dark hover:shadow-[0_16px_36px_rgba(213,87,59,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                   style={{ transitionTimingFunction: EASE }}>
                   Sign in & continue →
                 </button>
@@ -283,15 +283,15 @@ export default function LoginClient({
                 <label className="block">
                   <span className="text-sm font-medium">Registry username</span>
                   <input name="username" required autoComplete="username" placeholder="aa.adro.09"
-                    className="mt-1.5 w-full rounded-xl border border-white/15 bg-[#181818]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash focus:border-gold focus:ring-2 focus:ring-gold/25" />
+                    className="mt-1.5 w-full rounded-xl border border-white/15 bg-[var(--color-dark-iron)]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash focus:border-gold focus:ring-2 focus:ring-gold/25" />
                 </label>
                 <label className="block">
                   <span className="text-sm font-medium">Registry password</span>
                   <input name="password" type="password" required autoComplete="current-password" placeholder="••••••••"
-                    className="mt-1.5 w-full rounded-xl border border-white/15 bg-[#181818]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash focus:border-gold focus:ring-2 focus:ring-gold/25" />
+                    className="mt-1.5 w-full rounded-xl border border-white/15 bg-[var(--color-dark-iron)]/80 px-3.5 py-2.5 text-[16px] outline-none placeholder:text-ash focus:border-gold focus:ring-2 focus:ring-gold/25" />
                 </label>
                 <button ref={adminBtn} type="submit"
-                  className="magnetic w-full rounded-xl bg-gold px-4 py-3 text-sm font-semibold tracking-wide text-black transition-[transform,box-shadow,background] duration-300 hover:bg-gold-dark hover:shadow-[0_16px_36px_rgba(23,33,33,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                  className="magnetic w-full rounded-xl bg-gold px-4 py-3 text-sm font-semibold tracking-wide text-black transition-[transform,box-shadow,background] duration-300 hover:bg-gold-dark hover:shadow-[0_16px_36px_rgba(23,33,33,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                   style={{ transitionTimingFunction: EASE }}>
                   Open registry →
                 </button>
@@ -327,8 +327,8 @@ export default function LoginClient({
       {/* ── Smooth curtain transition (covers route change, transform-only) ── */}
       {leaving ? (
         <div aria-hidden="true" className={`login-curtain ${leaving.to === "" ? "login-curtain-hold" : ""}`}>
-          <p className="kicker text-[#F2CCC3]/70">Quality · Beauty · Elegance</p>
-          <p className="mt-2 font-medium tracking-tight text-[#FBF6F3]"
+          <p className="kicker text-[var(--color-blush)]/70">Quality · Beauty · Elegance</p>
+          <p className="mt-2 font-medium tracking-tight text-[var(--color-paper)]"
             style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(2rem,6vw,3.6rem)" }}>
             {leaving.label}…
           </p>
@@ -347,7 +347,7 @@ export default function LoginClient({
         @keyframes login-rise{from{opacity:0;transform:translate3d(0,26px,0)}to{opacity:1;transform:none}}
         .login-shake{animation:login-shake 450ms ${EASE} both}
         @keyframes login-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
-        .login-curtain{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#172121;animation:login-curtain-in 620ms ${EASE} both;will-change:transform,opacity}
+        .login-curtain{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--abrar-ink);animation:login-curtain-in 620ms ${EASE} both;will-change:transform,opacity}
         .login-curtain-hold{animation:login-curtain-hold 450ms ${EASE} both}
         @keyframes login-curtain-in{from{opacity:0;transform:translate3d(0,4%,0)}to{opacity:1;transform:none}}
         @keyframes login-curtain-hold{from{opacity:0}to{opacity:1}}

@@ -132,7 +132,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                 <Link
                   href={t.href}
                   onClick={hardNav(t.href as string)}
-                   className="flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] active:text-gold"
+                   className="flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)] active:text-gold"
                 >
                   <Icon d={t.icon} label={t.label} />
                   {t.label}
@@ -141,7 +141,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                 <button
                   type="button"
                   onClick={"action" in t && t.action ? t.action : undefined}
-                  className="flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] active:text-gold"
+                  className="flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)] active:text-gold"
                   aria-label={t.label}
                   aria-expanded={"key" in t && t.key === "shop" ? open : undefined}
                   aria-controls={"key" in t && t.key === "shop" ? "mobile-nav-drawer" : undefined}
@@ -156,7 +156,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
             <button
               type="button"
               onClick={() => setCartOpen(true)}
-              className="relative flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] active:text-gold"
+              className="relative flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)] active:text-gold"
               aria-label={`${d.cart} (${count})`}
             >
               <span className="relative">
@@ -215,7 +215,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
               type="button"
               onClick={() => setOpen(false)}
               aria-label={d.close}
-              className="p-2 text-steel hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+              className="p-2 text-steel hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
             >
               ✕
             </button>
@@ -233,7 +233,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                       setOpen(false);
                       hardNav(s.href)(e);
                     }}
-                    className="flex-1 py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                    className="flex-1 py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                   >
                     {s.label}
                   </Link>
@@ -245,7 +245,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                     onClick={() =>
                       setExpanded(expanded === s.key ? null : s.key)
                     }
-                    className="p-2 text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                    className="p-2 text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                   >
                     <span
                       className={cn(
@@ -272,7 +272,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                         <Link
                           href={s.href}
                           onClick={() => setOpen(false)}
-                          className="block py-1.5 text-[14px] text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                          className="block py-1.5 text-[14px] text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                         >
                           {d.view_all} →
                         </Link>
@@ -284,7 +284,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                             setOpen(false);
                             hardNav("/new-arrivals")(e);
                           }}
-                          className="block py-1.5 text-[14px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                          className="block py-1.5 text-[14px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                         >
                           {d.nav_new}
                         </Link>
@@ -296,7 +296,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                             setOpen(false);
                             hardNav("/sale")(e);
                           }}
-                          className="block py-1.5 text-[14px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                          className="block py-1.5 text-[14px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                         >
                           {d.nav_sale}
                         </Link>
@@ -312,14 +312,14 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                 setOpen(false);
                 hardNav("/stories")(e);
               }}
-              className="block py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+              className="block py-3.5 text-[15px] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
             >
               {d.nav_stories}
             </Link>
             <Link
               href="/account"
               onClick={() => setOpen(false)}
-              className="block py-3.5 text-[15px] font-medium tracking-wide text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+              className="block py-3.5 text-[15px] font-medium tracking-wide text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
             >
               {d.account}
             </Link>

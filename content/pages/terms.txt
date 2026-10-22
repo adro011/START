@@ -1,0 +1,37 @@
+# ── TERMS OF SERVICE PAGE ──────────────────────────────────────────────
+# Content for /terms. Tokens {email} / {phone} are replaced automatically.
+# Body uses the same block model as shipping-returns.txt.
+
+eyebrow = Legal · Terms
+title = Terms of service.
+intro = Short version: pay honestly, give a reachable phone number, and we'll get you well-made clothes with a fair exchange policy.
+updated = October 2026
+
+block.1.kind = h2
+block.1.text = Orders & pricing
+block.2.kind = ul
+block.2.item.1 = All prices are in Bangladeshi Taka (৳, BDT) inclusive of VAT where applicable.
+block.2.item.2 = An order is confirmed when we SMS/confirm it; we may cancel and refund if an item is out of stock or mispriced.
+block.2.item.3 = High-value COD orders may need phone/OTP confirmation before dispatch.
+
+block.3.kind = h2
+block.3.text = Payments
+block.4.kind = p
+block.4.text = Cash on delivery, plus bKash / Nagad / cards via SSLCommerz where enabled. Online payments are verified with the gateway before dispatch; failed or unverified payments are automatically cancelled.
+
+block.5.kind = h2
+block.5.text = Delivery & exchanges
+block.6.kind = p
+block.6.text = Timelines and the 7-day size-exchange policy are on our [Shipping & Returns](/shipping-returns) page and form part of these terms. Risk passes to you on delivery; inspect your parcel on arrival.
+
+block.7.kind = h2
+block.7.text = Acceptable use
+block.8.kind = ul
+block.8.item.1 = Provide accurate contact and address details.
+block.8.item.2 = No fraud, chargeback abuse, or misuse of reviews, coupons and contact forms.
+block.8.item.3 = Product photos and copy are ours — please don't reuse them commercially without permission.
+
+block.9.kind = h2
+block.9.text = Governing law
+block.10.kind = p
+block.10.text = These terms are governed by the laws of Bangladesh. Disputes will first be handled through good-faith support at [our support email](mailto:{email}) ({phone}).

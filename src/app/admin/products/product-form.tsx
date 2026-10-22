@@ -9,7 +9,7 @@ interface ColorOpt { name: string; hex: string; }
 
 const DEFAULT_SIZES = ['S', 'M', 'L', 'XL'];
 const DEFAULT_COLORS: ColorOpt[] = [
-  { name: 'Black', hex: '#172121' },
+  { name: 'Black', hex: 'var(--abrar-ink)' },
   { name: 'Terracotta', hex: '#D5573B' },
 ];
 
@@ -98,22 +98,22 @@ export default function ProductForm({ initial }: { initial?: Record<string, unkn
       <fieldset className="rounded-lg border border-white/15 p-4">
         <legend className="px-1 text-sm font-semibold">Basic</legend>
         <div className="grid gap-3 sm:grid-cols-2">
-          <label className="block text-sm">Name<input value={name} onChange={(e) => setName(e.target.value)} required className="textInput mt-1 w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2" /></label>
-          <label className="block text-sm">Slug<input value={slug} onChange={(e) => setSlug(e.target.value)} required pattern="[a-z0-9-]+" className="textInput mt-1 w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2" /></label>
+          <label className="block text-sm">Name<input value={name} onChange={(e) => setName(e.target.value)} required className="textInput mt-1 w-full bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-3 py-2" /></label>
+          <label className="block text-sm">Slug<input value={slug} onChange={(e) => setSlug(e.target.value)} required pattern="[a-z0-9-]+" className="textInput mt-1 w-full bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-3 py-2" /></label>
           <label className="block text-sm">Section
-            <select value={section} onChange={(e) => setSection(e.target.value)} className="textInput mt-1 w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2">
+            <select value={section} onChange={(e) => setSection(e.target.value)} className="textInput mt-1 w-full bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-3 py-2">
               <option value="men">Men</option><option value="women">Women</option><option value="kids">Kids</option>
             </select>
           </label>
-          <label className="block text-sm">Category slug<input value={category} onChange={(e) => setCategory(e.target.value)} placeholder="panjabi" className="textInput mt-1 w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2" /></label>
+          <label className="block text-sm">Category slug<input value={category} onChange={(e) => setCategory(e.target.value)} placeholder="panjabi" className="textInput mt-1 w-full bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-3 py-2" /></label>
         </div>
       </fieldset>
 
       <fieldset className="rounded-lg border border-white/15 p-4">
         <legend className="px-1 text-sm font-semibold">Pricing & visibility</legend>
         <div className="grid gap-3 sm:grid-cols-3">
-          <label className="block text-sm">Price (paisa)<input value={price} onChange={(e) => setPrice(e.target.value)} inputMode="numeric" required className="textInput mt-1 w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2" /></label>
-          <label className="block text-sm">Compare-at (paisa)<input value={compareAt} onChange={(e) => setCompareAt(e.target.value)} inputMode="numeric" className="textInput mt-1 w-full bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-3 py-2" /></label>
+          <label className="block text-sm">Price (paisa)<input value={price} onChange={(e) => setPrice(e.target.value)} inputMode="numeric" required className="textInput mt-1 w-full bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-3 py-2" /></label>
+          <label className="block text-sm">Compare-at (paisa)<input value={compareAt} onChange={(e) => setCompareAt(e.target.value)} inputMode="numeric" className="textInput mt-1 w-full bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-3 py-2" /></label>
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} /> Published</label>
         </div>
       </fieldset>
@@ -125,7 +125,7 @@ export default function ProductForm({ initial }: { initial?: Record<string, unkn
           {sizes.map((s) => (
             <button key={s} type="button" onClick={() => setSizes(sizes.filter((x) => x !== s))} title={`Remove ${s}`} className="rounded-full bg-white/10 px-2.5 py-1 hover:bg-white/15">{s} ×</button>
           ))}
-          <input value={newSize} onChange={(e) => setNewSize(e.target.value)} placeholder="Add size" className="w-24 textInput bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-2 py-1" />
+          <input value={newSize} onChange={(e) => setNewSize(e.target.value)} placeholder="Add size" className="w-24 textInput bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-2 py-1" />
           <button type="button" onClick={() => { if (newSize.trim()) { setSizes([...sizes, newSize.trim()]); setNewSize(''); } }} className="rounded border border-white/15 px-2 py-1">Add</button>
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
@@ -135,19 +135,19 @@ export default function ProductForm({ initial }: { initial?: Record<string, unkn
               <span className="inline-block h-3 w-3 rounded-full border border-white/15" style={{ background: c.hex }} />{c.name} ×
             </button>
           ))}
-          <input value={newColor} onChange={(e) => setNewColor(e.target.value)} placeholder="Add color" className="w-28 textInput bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-2 py-1" />
+          <input value={newColor} onChange={(e) => setNewColor(e.target.value)} placeholder="Add color" className="w-28 textInput bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-2 py-1" />
           <button type="button" onClick={() => { if (newColor.trim()) { setColors([...colors, { name: newColor.trim(), hex: '#7E9181' }]); setNewColor(''); } }} className="rounded border border-white/15 px-2 py-1">Add</button>
         </div>
         <div className="mt-3 overflow-x-auto">
           <table className="w-full min-w-[480px] border-collapse text-sm">
-            <thead><tr><th className="border border-white/15 bg-[#202020] px-2 py-1.5 text-left">Size ↓ · Color →</th>{colors.map((c) => <th key={c.name} className="border border-white/15 bg-[#202020] px-2 py-1.5">{c.name}</th>)}</tr></thead>
+            <thead><tr><th className="border border-white/15 bg-[var(--color-charcoal)] px-2 py-1.5 text-left">Size ↓ · Color →</th>{colors.map((c) => <th key={c.name} className="border border-white/15 bg-[var(--color-charcoal)] px-2 py-1.5">{c.name}</th>)}</tr></thead>
             <tbody>
               {sizes.map((s) => (
                 <tr key={s}>
                   <th className="border border-white/15 px-2 py-1.5 text-left font-medium">{s}</th>
                   {colors.map((c) => (
                     <td key={c.name} className="border border-white/15 px-2 py-1.5">
-                      <input type="number" min={0} value={stock[key(s, c.name)] ?? ''} onChange={(e) => setStock({ ...stock, [key(s, c.name)]: Number(e.target.value) })} placeholder="0" aria-label={`Stock ${s} ${c.name}`} className="w-20 textInput bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-2 py-1" />
+                      <input type="number" min={0} value={stock[key(s, c.name)] ?? ''} onChange={(e) => setStock({ ...stock, [key(s, c.name)]: Number(e.target.value) })} placeholder="0" aria-label={`Stock ${s} ${c.name}`} className="w-20 textInput bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-2 py-1" />
                     </td>
                   ))}
                 </tr>
@@ -169,7 +169,7 @@ export default function ProductForm({ initial }: { initial?: Record<string, unkn
               <img src={img.url} alt="" className="h-16 w-16 shrink-0 rounded object-cover" />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-xs text-ash">#{idx + 1} · {img.name} · drag to reorder</p>
-                <input value={img.alt} onChange={(e) => setImages(images.map((x) => x.id === img.id ? { ...x, alt: e.target.value } : x))} placeholder="Alt text (required)" aria-label={`Alt for image ${idx + 1}`} className="mt-1 w-full textInput bg-[#111111] text-[#F5F5F5] placeholder:text-ash px-2 py-1 text-sm" />
+                <input value={img.alt} onChange={(e) => setImages(images.map((x) => x.id === img.id ? { ...x, alt: e.target.value } : x))} placeholder="Alt text (required)" aria-label={`Alt for image ${idx + 1}`} className="mt-1 w-full textInput bg-[#111111] text-[var(--color-smoke)] placeholder:text-ash px-2 py-1 text-sm" />
                 <button type="button" onClick={() => setImages(images.filter((x) => x.id !== img.id))} className="mt-1 text-xs text-red-700 hover:underline">Remove</button>
               </div>
             </li>

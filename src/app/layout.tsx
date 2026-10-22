@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
 import "./globals.css";
+import "./editable.css";
 import { SITE } from "@/config/site";
+import { asset, feature, motionValue } from "@/lib/content";
 import { Providers } from "../components/providers";
 import { AnnouncementBar } from "../components/announcement-bar";
 import { SiteHeader } from "../components/site-header";
@@ -11,8 +13,16 @@ import { CartDrawer } from "../components/cart-drawer";
 import SearchPalette from "../components/search-palette";
 import { SwRegister } from "../components/sw-register";
 import { TabRefresh } from "../components/tab-refresh";
+import { ThemeStyle } from "../components/theme-style";
+import { isRegistrationOpen } from "@/lib/registrations";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+
+/** Loader timings are editable in content/motion/effects.txt. */
+const LOADER_MIN_MS =
+  Number.parseInt(motionValue("effects", "loader.minDuration", "400ms"), 10) || 400;
+const LOADER_MAX_MS =
+  Number.parseInt(motionValue("effects", "loader.maxWait", "6000ms"), 10) || 6000;
 
 export const metadata: Metadata = {
   title: {
@@ -25,11 +35,13 @@ export const metadata: Metadata = {
     // Simplified chevron mark for the browser tab (the full framed logo is
     // illegible at 16–32px). The full logo stays as apple-icon.png + PWA icons.
     icon: [
-      { url: "/hero/icons/favicon-16.png", sizes: "16x16", type: "image/png" },
-      { url: "/hero/icons/favicon-32.png", sizes: "32x32", type: "image/png" },
-      { url: "/hero/icons/favicon-48.png", sizes: "48x48", type: "image/png" },
+      { url: asset("brand", "favicon16", "/hero/icons/favicon-16.png"), sizes: "16x16", type: "image/png" },
+      { url: asset("brand", "favicon32", "/hero/icons/favicon-32.png"), sizes: "32x32", type: "image/png" },
+      { url: asset("brand", "favicon48", "/hero/icons/favicon-48.png"), sizes: "48x48", type: "image/png" },
     ],
-    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [
+      { url: asset("brand", "appleIcon", "/apple-icon.png"), sizes: "180x180", type: "image/png" },
+    ],
   },
   openGraph: {
     type: "website",
@@ -40,7 +52,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "var(--color-black)",
 };
 
 /**
@@ -52,6 +64,7 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   // Locale cookie drives <html lang> + footer dictionary (header reads it client-side).
   const locale = (await cookies()).get("locale")?.value === "bn" ? "bn" : "en";
+  const joinEnabled = await isRegistrationOpen();
   return (
     <html lang={locale} className="overflow-x-clip">
       <head>
@@ -67,27 +80,23 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body
-        className="overflow-x-clip bg-[#000000] text-[#F5F5F5] antialiased"
-        style={{
-          fontFamily: "'LamboType', 'Roboto', 'Helvetica Neue', Arial, ui-sans-serif, system-ui, sans-serif",
-          textTransform: "uppercase",
-          letterSpacing: "0.02em",
-        }}
-      >
+      <body className="overflow-x-clip bg-[var(--color-black)] text-[var(--color-smoke)] antialiased">
+        <ThemeStyle />
         {/* Single full-screen brand loader: server-rendered black stage + gold
             ring (#abrar-loader in globals.css). The gate style holds the hero
             entrance at frame 0 until the loader fades. The boot script NEVER
             removes React-owned nodes (that corrupts React's tree and crashes
             the next client-side navigation) — it only sets `data-done` + styles
             on the loader, then waits for hydration (data-mounted). */}
-        <div id="abrar-loader" aria-hidden="true" />
-        <noscript>
-          <style>{"#abrar-loader{display:none}"}</style>
-        </noscript>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){
+        {feature("brandLoader") && (
+          <>
+            <div id="abrar-loader" aria-hidden="true" />
+            <noscript>
+              <style>{"#abrar-loader{display:none}"}</style>
+            </noscript>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `(function(){
   var t0=Date.now(),done=false,root=document.documentElement;
   function hide(el){
     el.setAttribute("data-done","1");
@@ -113,14 +122,16 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     },50);
   }
   function onReady(){
-    setTimeout(function(){whenMounted(finish);},Math.max(0,400-(Date.now()-t0)));
+    setTimeout(function(){whenMounted(finish);},Math.max(0,${LOADER_MIN_MS}-(Date.now()-t0)));
   }
   if(document.readyState==="complete")onReady();
   else window.addEventListener("load",onReady,{once:true});
-  setTimeout(function(){whenMounted(finish);},6000);
+  setTimeout(function(){whenMounted(finish);},${LOADER_MAX_MS});
 })();`,
-          }}
-        />
+              }}
+            />
+          </>
+        )}
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[70] focus:bg-gold focus:px-4 focus:py-2 focus:text-black"
@@ -133,11 +144,11 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <main id="main" className="min-h-[60vh]">
             {children}
           </main>
-          <SiteFooter locale={locale} />
+          <SiteFooter locale={locale} joinEnabled={joinEnabled} />
           <CartDrawer locale={locale} />
-          <SearchPalette />
-          <SwRegister />
-          <TabRefresh />
+          {feature("searchPalette") && <SearchPalette />}
+          {feature("serviceWorker") && <SwRegister />}
+          {feature("tabRefresh") && <TabRefresh />}
         </Providers>
         {/* Paper-grain overlay (`.grain` defined here; foundation owns globals.css).
             Same recipe as plan §4: SVG noise, ~3% opacity, pointer-events none. */}

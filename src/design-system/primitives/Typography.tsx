@@ -162,9 +162,9 @@ export const Text = forwardRef<HTMLParagraphElement, TextProps>(
 
     const colorStyles = {
       primary: "text-[#FFFFFF]",
-      secondary: "text-[#F5F5F5]",
-      muted: "text-[#7D7D7D]",
-      inverse: "text-[#202020]",
+      secondary: "text-[var(--color-smoke)]",
+      muted: "text-[var(--color-ash)]",
+      inverse: "text-[var(--color-charcoal)]",
       accent: "text-[#FFCE3E]",
       cyan: "text-[#29ABE2]",
     };

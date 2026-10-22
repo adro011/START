@@ -86,7 +86,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
         aria-modal="true"
         aria-label={d.cart_dialog_label}
         className={cn(
-          "absolute top-0 right-0 flex h-full w-[92vw] max-w-[420px] flex-col border border-white/15 bg-[#181818] shadow-2xl transition-transform duration-300 motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
+          "absolute top-0 right-0 flex h-full w-[92vw] max-w-[420px] flex-col border border-white/15 bg-[var(--color-dark-iron)] shadow-2xl transition-transform duration-300 motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
@@ -100,7 +100,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
             onClick={close}
             aria-label={d.cart_close}
             tabIndex={open ? 0 : -1}
-            className="p-2 text-steel hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+            className="p-2 text-steel hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
           >
             ✕
           </button>
@@ -137,7 +137,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {items.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
-              <p className="font-display text-[28px] text-[#F5F5F5]">
+              <p className="font-display text-[28px] text-[var(--color-smoke)]">
                 {d.cart_empty_title}
               </p>
               <p className="max-w-[28ch] text-[14px] text-steel">
@@ -147,7 +147,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
                 href="/new-arrivals"
                 onClick={close}
                 tabIndex={open ? 0 : -1}
-                className="mt-2 bg-gold px-6 py-3 text-[12px] font-semibold tracking-[0.14em] text-black uppercase hover:bg-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                className="mt-2 bg-gold px-6 py-3 text-[12px] font-semibold tracking-[0.14em] text-black uppercase hover:bg-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
               >
                 {d.cart_shop_new}
               </Link>
@@ -156,7 +156,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
             <ul className="space-y-4">
               {items.map((l) => (
                 <li key={l.sku} className="flex gap-3">
-                  <div className="relative h-[96px] w-[76px] shrink-0 overflow-hidden bg-[#F2CCC3]/50">
+                  <div className="relative h-[96px] w-[76px] shrink-0 overflow-hidden bg-[var(--color-blush)]/50">
                     {l.image ? (
                       <Image
                         src={l.image}
@@ -189,7 +189,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
                         onClick={() => remove(l.sku)}
                         aria-label={d.cart_remove.replace("{name}", l.name).replace("{size}", l.size)}
                         tabIndex={open ? 0 : -1}
-                        className="p-1 text-[16px] text-steel hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                        className="p-1 text-[16px] text-steel hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                       >
                         ×
                       </button>
@@ -201,7 +201,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
                           onClick={() => setQty(l.sku, l.qty - 1)}
                           aria-label={d.cart_decrease.replace("{name}", l.name).replace("{size}", l.size)}
                           tabIndex={open ? 0 : -1}
-                          className="px-2.5 py-1 text-[15px] hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                          className="px-2.5 py-1 text-[15px] hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                         >
                           −
                         </button>
@@ -213,7 +213,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
                           onClick={() => setQty(l.sku, l.qty + 1)}
                           aria-label={d.cart_increase.replace("{name}", l.name).replace("{size}", l.size)}
                           tabIndex={open ? 0 : -1}
-                          className="px-2.5 py-1 text-[15px] hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                          className="px-2.5 py-1 text-[15px] hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                         >
                           +
                         </button>
@@ -245,7 +245,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
               href="/checkout"
               onClick={close}
               tabIndex={open ? 0 : -1}
-              className="mt-3 block bg-gold py-3.5 text-center text-[13px] font-semibold tracking-[0.16em] text-black uppercase transition-colors hover:bg-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] motion-reduce:transition-none"
+              className="mt-3 block bg-gold py-3.5 text-center text-[13px] font-semibold tracking-[0.16em] text-black uppercase transition-colors hover:bg-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)] motion-reduce:transition-none"
             >
               {d.cart_checkout}
             </Link>
@@ -253,7 +253,7 @@ export function CartDrawer({ locale }: { locale: Locale }) {
               type="button"
               onClick={close}
               tabIndex={open ? 0 : -1}
-              className="mt-2 w-full py-2 text-center text-[13px] font-medium tracking-[0.1em] text-steel uppercase underline-offset-4 hover:text-[#F5F5F5] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+              className="mt-2 w-full py-2 text-center text-[13px] font-medium tracking-[0.1em] text-steel uppercase underline-offset-4 hover:text-[var(--color-smoke)] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
             >
               {d.cart_keep_browsing}
             </button>

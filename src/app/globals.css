@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @import "../design-system/tokens/css-variables.css";
+@import "./micro.css";
 
 @theme {
   /* Lamborghini design system — absolute black dominant, gold as sole accent */
@@ -745,7 +746,7 @@ html.lenis body {
   width: var(--lang-w);
   height: var(--lang-h);
   border-radius: calc(var(--lang-h) / 2);
-  background-color: #ffffff;
+  background-color: var(--color-paper);
   box-shadow:
     inset 0 0 5px 4px rgba(255, 255, 255, 1),
     inset 0 0 20px 1px rgba(0, 0, 0, 0.488),
@@ -878,15 +879,13 @@ html.lenis body {
 
 /* Slow marquee for luxury strip */
 @keyframes marquee-lux {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
 }
 .marquee-lux {
-  animation: marquee-lux 58s linear infinite;
+  animation: marquee-lux var(--abrar-marquee-speed, 58s) linear infinite;
   will-change: transform;
-}
-.marquee-lux:hover {
-  animation-play-state: paused;
+  backface-visibility: hidden;
 }
 
 /* Floating depth orbs */
@@ -1407,3 +1406,230 @@ a:active,
     animation: none !important;
   }
 }
+
+/* =========================================================
+   ABRAR EXCLUSIVE — Scroll-Driven Spotlight Illumination
+   Deep Pitch Black (#010101) -> Vibrant Yellow Radial Spotlight
+   Driven by GSAP ScrollTrigger onUpdate (--illumination: 0..1)
+   ========================================================= */
+:root {
+  --spotlight-base: #010101;
+  --spotlight-core: 255, 248, 150;
+  --spotlight-mid: 255, 230, 0;
+  --spotlight-outer: 255, 185, 0;
+}
+
+[data-spotlight-section] {
+  --illumination: 0;
+  --distance-px: 999px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--spotlight-base, #010101) !important;
+}
+
+[data-spotlight-section]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: calc(var(--illumination, 0) * 0.92);
+  transform: scale(calc(0.76 + 0.30 * var(--illumination, 0)));
+  background:
+    radial-gradient(
+      ellipse 36% 42% at 50% 52%,
+      rgba(var(--spotlight-core, 255, 248, 150), 0.88) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 68% 76% at 50% 52%,
+      rgba(var(--spotlight-mid, 255, 230, 0), 0.62) 0%,
+      rgba(var(--spotlight-outer, 255, 185, 0), 0.30) 48%,
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 100% 100% at 50% 52%,
+      transparent 40%,
+      rgba(1, 1, 1, 0.95) 100%
+    );
+  will-change: opacity, transform;
+}
+
+[data-spotlight-section]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: calc(var(--illumination, 0) * var(--illumination, 0) * 0.78);
+  transform: scale(calc(0.82 + 0.24 * var(--illumination, 0)));
+  background: radial-gradient(
+    ellipse 52% 28% at 50% 52%,
+    rgba(var(--spotlight-core, 255, 248, 150), 0.75) 0%,
+    rgba(var(--spotlight-mid, 255, 230, 0), 0.42) 48%,
+    transparent 100%
+  );
+  filter: blur(24px);
+  will-change: opacity, transform;
+}
+
+[data-spotlight-section] .lift,
+[data-spotlight-section] .card {
+  border-color: rgba(var(--spotlight-mid, 255, 230, 0), calc(0.14 + var(--illumination, 0) * 0.55));
+  box-shadow: 0 0 calc(var(--illumination, 0) * 32px) rgba(var(--spotlight-mid, 255, 230, 0), calc(var(--illumination, 0) * 0.18));
+}
+
+/* =========================================================
+   ABRAR EXCLUSIVE — Particle Architecture & Precision HUD
+   Interactive Particle Inspector & Live Text/Asset Editing
+   ========================================================= */
+[data-particle-inspector-active="true"] [data-particle-id] {
+  transition: outline-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-particle-inspector-active="true"] [data-particle-id]:hover {
+  outline: 1.5px solid #FFD600 !important;
+  outline-offset: 3px;
+  box-shadow: 0 0 18px rgba(255, 214, 0, 0.35), inset 0 0 10px rgba(255, 214, 0, 0.12) !important;
+  cursor: pointer !important;
+}
+
+[data-particle-editing="true"] {
+  outline: 2px solid #FFD600 !important;
+  outline-offset: 4px;
+  box-shadow: 0 0 28px rgba(255, 214, 0, 0.52), inset 0 0 14px rgba(255, 214, 0, 0.18) !important;
+}
+
+/* =========================================================
+   ABRAR EXCLUSIVE — Shop by Occasion cinematic highlight
+   Glow / sweep opacity arrives from OccasionEffects.tsx
+   (--burgundy-glow-opacity, --champagne-sweep-opacity: 0..1)
+   ========================================================= */
+.occasion-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.occasion-section__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.occasion-section__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(1150px, 135%);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(92, 12, 30, 0.6) 0%,
+    rgba(58, 10, 23, 0.32) 44%,
+    transparent 72%
+  );
+  opacity: var(--burgundy-glow-opacity, 0);
+  transform: translate3d(-50%, -50%, 0);
+  transition: opacity 700ms var(--ease-lux);
+  will-change: opacity;
+}
+
+.occasion-section__sweep {
+  position: absolute;
+  top: -30%;
+  left: -40%;
+  width: 38%;
+  height: 160%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 226, 170, 0.14) 42%,
+    rgba(255, 241, 208, 0.24) 50%,
+    rgba(255, 226, 170, 0.14) 58%,
+    transparent 100%
+  );
+  opacity: var(--champagne-sweep-opacity, 0);
+  transform: rotate(9deg) translate3d(0, 0, 0);
+  animation: occasion-sweep 10s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes occasion-sweep {
+  0% {
+    transform: rotate(9deg) translate3d(0, 0, 0);
+  }
+  60%,
+  100% {
+    transform: rotate(9deg) translate3d(360%, 0, 0);
+  }
+}
+
+.occasion-section .occasion-card {
+  isolation: isolate;
+}
+
+.occasion-section .occasion-card::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -55%;
+  z-index: 2;
+  width: 45%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 240, 205, 0.16) 50%,
+    transparent 100%
+  );
+  transform: translate3d(0, 0, 0) skewX(-12deg);
+  opacity: 0;
+  transition: opacity 500ms var(--ease-lux);
+}
+
+.occasion-section .occasion-card.occasion-card--active {
+  border-color: rgba(255, 226, 170, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(255, 226, 170, 0.16),
+    0 26px 60px -32px rgba(0, 0, 0, 0.85),
+    0 0 44px -8px rgba(255, 206, 120, 0.35);
+}
+
+.occasion-section .occasion-card.occasion-card--active::before {
+  opacity: 1;
+  animation: occasion-glint 3.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes occasion-glint {
+  0% {
+    transform: translate3d(0, 0, 0) skewX(-12deg);
+  }
+  60%,
+  100% {
+    transform: translate3d(430%, 0, 0) skewX(-12deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .occasion-section__glow {
+    opacity: 0.35;
+    transition: none;
+  }
+  .occasion-section__sweep,
+  .occasion-section .occasion-card::before {
+    animation: none !important;
+    opacity: 0 !important;
+    transition: none !important;
+  }
+  .occasion-section .occasion-card.occasion-card--active {
+    box-shadow: 0 0 0 1px rgba(255, 226, 170, 0.3);
+  }
+}
+
+

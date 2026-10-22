@@ -1,0 +1,67 @@
+# ── PER-EFFECT ANIMATION SETTINGS ──────────────────────────────────────
+# Fine control per animation. Values are read by the scripts at runtime.
+# Times are in SECONDS for GSAP effects, unless a unit is shown (ms = CSS).
+#
+# HERO PANELS
+# hero.entryDuration     how long each panel takes to appear
+# hero.stagger           delay between panels
+# hero.hoverDuration     how fast panels expand on hover
+# hero.parallaxMax       max pixel drift of panel images (px)
+# hero.zoom              how much the hovered panel grows (0–1)
+#
+# SCROLL REVEALS
+# reveal.duration        fade-up duration
+# reveal.distance        how far content travels (px)
+# reveal.start           ScrollTrigger start position
+# reveal.stagger         delay between stacked items (seconds)
+#
+# PARALLAX / MARQUEE
+# parallax.max           max image drift (px)
+# marquee.speed          duration of one marquee loop
+#
+# LOADER
+# loader.minDuration     minimum time the loader stays (ms)
+# loader.maxWait         hard timeout before it releases (ms)
+#
+# CURSOR / MAGNETIC
+# cursor.lerp            follow softness (0.05 = lazy, 0.3 = tight)
+# cursor.size            ring size (px)
+# magnetic.strength      how strongly buttons pull toward the cursor
+#
+# CATEGORY SHOWCASE
+# category.hoverGrow     grow factor of the hovered tile
+# category.othersGrow    grow factor of the other tiles
+# category.duration      GSAP duration for the hover transition
+#
+# SPOTLIGHT
+# spotlight.maxRadiusFactor   size of the scroll glow (× viewport height)
+# spotlight.minRadius         floor size (px)
+
+hero.entryDuration = 0.6
+hero.stagger = 0.08
+hero.hoverDuration = 0.4
+hero.parallaxMax = 24
+hero.zoom = 0.54
+
+reveal.duration = 0.7
+reveal.distance = 24
+reveal.start = top 88%
+reveal.stagger = 0.08
+
+parallax.max = 24
+marquee.speed = 58s
+
+loader.minDuration = 400ms
+loader.maxWait = 6000ms
+
+cursor.lerp = 0.18
+cursor.size = 40px
+magnetic.strength = 0.35
+smooth.lerp = 0.11
+
+category.hoverGrow = 2.0
+category.othersGrow = 0.85
+category.duration = 1.7
+
+spotlight.maxRadiusFactor = 0.72
+spotlight.minRadius = 460

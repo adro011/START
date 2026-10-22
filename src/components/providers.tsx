@@ -5,6 +5,8 @@ import type { ReactNode } from "react";
 import type { Locale } from "../lib/dictionary";
 import SmoothScroll from "./smooth-scroll";
 import CursorRing from "./cursor-ring";
+import ParticleInspector from "./particle-inspector";
+import { feature } from "@/lib/content";
 
 type LocaleCtx = {
   locale: Locale;
@@ -57,8 +59,9 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <Ctx.Provider value={{ locale, setLocale, mounted }}>
-      <SmoothScroll />
-      <CursorRing />
+      {feature("smoothScroll") && <SmoothScroll />}
+      {feature("cursorRing") && <CursorRing />}
+      {feature("particleInspector") && <ParticleInspector />}
       {children}
     </Ctx.Provider>
   );

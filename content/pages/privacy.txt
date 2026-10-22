@@ -1,0 +1,38 @@
+# ── PRIVACY POLICY PAGE ────────────────────────────────────────────────
+# Content for /privacy. Tokens {email} are replaced automatically.
+# Body uses the same block model as shipping-returns.txt.
+
+eyebrow = Legal · Privacy
+title = Privacy policy.
+intro = We collect the minimum needed to run your order — and never sell your data. Questions: {email}.
+updated = October 2026
+
+block.1.kind = h2
+block.1.text = What we collect
+block.2.kind = ul
+block.2.item.1 = **Orders:** name, phone (+880), address (division → district → area), order items.
+block.2.item.2 = **Accounts:** email, order history, wishlist, addresses you save.
+block.2.item.3 = **Support:** messages you send via contact form, email or WhatsApp.
+block.2.item.4 = **Analytics:** cookie-less page stats (no cross-site tracking).
+
+block.3.kind = h2
+block.3.text = How we use it
+block.4.kind = ul
+block.4.item.1 = To fulfil, deliver and support your orders (including courier + payment partners).
+block.4.item.2 = To prevent fraud — e.g. phone confirmation for high-value COD orders.
+block.4.item.3 = To send order updates. Marketing emails only if you opt in; unsubscribe anytime.
+
+block.5.kind = h2
+block.5.text = Sharing
+block.6.kind = p
+block.6.text = We share order details only with delivery couriers, payment gateways (SSLCommerz / bKash / Nagad where used) and email infrastructure — never with data brokers. We disclose data if required by Bangladeshi law.
+
+block.7.kind = h2
+block.7.text = Your rights
+block.8.kind = p
+block.8.text = Ask for a copy, correction or deletion of your data at [our support email](mailto:{email}). Account deletion removes your profile and addresses; anonymised order records may be kept for accounts and tax purposes.
+
+block.9.kind = h2
+block.9.text = Retention & security
+block.10.kind = p
+block.10.text = Order records are kept as required for business and tax compliance. Access is role-based; payments are processed by PCI-compliant gateways — we never see or store your card or mobile-banking PIN.

@@ -68,10 +68,10 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
     ref
   ) => {
     const variantStyles = {
-      default: "bg-[#000000]",
-      dark: "bg-[#000000]",
-      light: "bg-[#F8F8F8] text-[#202020]",
-      hero: "bg-[#000000] relative overflow-hidden",
+      default: "bg-[var(--color-black)]",
+      dark: "bg-[var(--color-black)]",
+      light: "bg-[#F8F8F8] text-[var(--color-charcoal)]",
+      hero: "bg-[var(--color-black)] relative overflow-hidden",
     };
 
     const paddingStyles = {

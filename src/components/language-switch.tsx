@@ -11,7 +11,7 @@ import type { Locale } from "@/lib/dictionary";
  *
  * Geometry (`.lang-toggle` in globals.css) reproduces the Uiverse toggle:
  * 30px-radius glass pill, inset highlight/shadow stack, chrome-gradient knob
- * recoloured to `#FFC000 → #917300`, and the mirrored
+ * recoloured to `var(--color-gold) → #917300`, and the mirrored
  * `perspective(100px) rotateX/rotateY` hover.
  *
  * Persists to the `locale` cookie then reloads — the server reads that cookie

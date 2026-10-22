@@ -27,38 +27,40 @@ export default function InstagramGrid({
   href?: string;
 }) {
   return (
-    <section aria-label="Instagram feed" className="cv mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] py-16">
-      <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
-        <div>
-          <p className="kicker text-blush">On the feed</p>
-          <h2 className="display-xl mt-3">{title}</h2>
-          <p className="mt-3 max-w-[48ch] text-[15px] leading-relaxed text-white/65">{caption}</p>
-        </div>
-        <Reveal>
-          <Link
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-3 border border-white/25 px-6 py-3.5 text-[12px] font-semibold tracking-[0.18em] uppercase text-white transition-all duration-300 hover:bg-white hover:text-[#172121]"
-          >
-            Follow on Instagram <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-          </Link>
-        </Reveal>
-      </div>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-        {IMAGES.map((src, i) => (
-          <Reveal key={src + i} delay={i * 40} className="group relative aspect-square overflow-hidden border border-[#172121]/10">
-            <Image
-              src={src}
-              alt="Abrar Exclusive product"
-              fill
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-              className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/30" />
+    <section data-spotlight-section aria-label="Instagram feed" className="cv w-full py-16">
+      <div data-spotlight-target className="mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)]">
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="kicker text-gold">On the feed</p>
+            <h2 className="display-xl mt-3">{title}</h2>
+            <p className="mt-3 max-w-[48ch] text-[15px] leading-relaxed text-white/65">{caption}</p>
+          </div>
+          <Reveal>
+            <Link
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-3 border border-white/25 px-6 py-3.5 text-[12px] font-semibold tracking-[0.18em] uppercase text-white transition-all duration-300 hover:bg-gold hover:border-gold hover:text-black"
+            >
+              Follow on Instagram <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+            </Link>
           </Reveal>
-        ))}
+        </div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          {IMAGES.map((src, i) => (
+            <Reveal key={src + i} delay={i * 40} className="lift group relative aspect-square overflow-hidden border border-white/10">
+              <Image
+                src={src}
+                alt="Abrar Exclusive product"
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/30" />
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );

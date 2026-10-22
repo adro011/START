@@ -53,7 +53,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
 
   return (
     <article className="group relative flex w-full flex-col" data-cursor="View">
-      <div className="lift card-sheen relative aspect-[3/4] overflow-hidden border border-[#172121]/8 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-dark)]/25 shadow-[0_0_0_rgba(0,0,0,0)] group-hover:shadow-[0_24px_48px_rgba(23,33,33,0.16)]">
+      <div className="lift card-sheen relative aspect-[3/4] overflow-hidden border border-[var(--abrar-ink)]/8 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-dark)]/25 shadow-[0_0_0_rgba(0,0,0,0)] group-hover:shadow-[0_24px_48px_rgba(23,33,33,0.16)]">
         {first ? (
           <Link
             href={`/product/${p.slug}`}
@@ -101,7 +101,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
             </span>
           )}
           {p.isNew && (
-            <span className="glass-dark px-2.5 py-1 text-[10.5px] font-semibold tracking-[0.16em] text-[#F5F5F5] uppercase">
+            <span className="glass-dark px-2.5 py-1 text-[10.5px] font-semibold tracking-[0.16em] text-[var(--color-smoke)] uppercase">
               New
             </span>
           )}
@@ -114,8 +114,8 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
           aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
           onClick={() => setWished((w) => !w)}
           className={cn(
-            "absolute top-3 right-3 rounded-full border border-white/40 bg-[#FBF6F3]/85 p-2 shadow-[0_8px_20px_rgba(23,33,33,0.12)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 active:scale-90",
-            wished ? "text-gold pop" : "text-[#172121]/80 hover:text-gold",
+            "absolute top-3 right-3 rounded-full border border-white/40 bg-[var(--color-paper)]/85 p-2 shadow-[0_8px_20px_rgba(23,33,33,0.12)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 active:scale-90",
+            wished ? "text-gold pop" : "text-[var(--abrar-ink)]/80 hover:text-gold",
           )}
         >
           <svg viewBox="0 0 24 24" fill={wished ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.8} strokeLinejoin="round" className="h-[17px] w-[17px]" aria-hidden="true">
@@ -146,7 +146,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
         <p className="text-[11px] font-semibold tracking-[0.2em] text-ash uppercase">{p.colors[0]?.name ?? "Heritage"}</p>
         <Link
           href={`/product/${p.slug}`}
-          className="link-lux w-fit text-[15px] leading-snug font-medium text-[#F5F5F5] hover:text-gold"
+          className="link-lux w-fit text-[15px] leading-snug font-medium text-[var(--color-smoke)] hover:text-gold"
         >
           {p.name}
         </Link>

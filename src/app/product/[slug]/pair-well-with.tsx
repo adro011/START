@@ -42,7 +42,7 @@ export default function PairWellWith({ product }: { product: Product }) {
   const img = product.images[0];
 
   return (
-    <section aria-label="Pairs well with" className="border border-white/15 bg-[#181818]/50 p-3">
+    <section aria-label="Pairs well with" className="border border-white/15 bg-[var(--color-dark-iron)]/50 p-3">
       <p className="px-1 text-[12px] font-semibold tracking-[0.18em] text-ash uppercase">
         Pairs well with
       </p>
@@ -50,7 +50,7 @@ export default function PairWellWith({ product }: { product: Product }) {
         <Link
           href={`/product/${product.slug}`}
           aria-label={`View ${product.name}`}
-          className="relative block h-20 w-16 shrink-0 overflow-hidden bg-[#F2CCC3]/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+          className="relative block h-20 w-16 shrink-0 overflow-hidden bg-[var(--color-blush)]/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
         >
           {img && (
             <Image src={img.src} alt={img.alt || product.name} fill sizes="64px" className="object-cover" />
@@ -70,7 +70,7 @@ export default function PairWellWith({ product }: { product: Product }) {
             type="button"
             onClick={quickAdd}
             className={cn(
-              "mt-1.5 px-4 py-1.5 text-[12px] font-semibold tracking-[0.1em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]",
+              "mt-1.5 px-4 py-1.5 text-[12px] font-semibold tracking-[0.1em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]",
               added ? "bg-[#7E9181] text-white" : "bg-gold text-black hover:bg-gold-dark",
             )}
           >

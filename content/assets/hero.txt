@@ -1,0 +1,36 @@
+# ── HERO IMAGES ────────────────────────────────────────────────────────
+# The full-screen cover + the three hero panels on the homepage.
+# PNG = tall editorial tiles (used by the panels).
+# JPG = photographic portraits (used by category/showcase cards).
+#
+# KEY                   WHERE IT SHOWS
+# cover.image           full-screen opening background
+# cover.alt             alt text for the cover
+# cover.overlay         dark overlay tint over the cover
+# panel.<name>.tile     tall hero panel image (PNG)
+# panel.<name>.portrait square/photo variant used on category cards (JPG)
+# panel.<name>.icon     lightweight SVG used in menus / fallbacks
+# panel.<name>.href     where the panel links
+# panel.<name>.alt      alt text for the panel image
+
+cover.image = /hero/women.jpg
+cover.alt = ABRAR editorial campaign
+cover.overlay = rgba(0,0,0,0.38)
+
+panel.men.tile = /library/men.png
+panel.men.portrait = /hero/men.jpg
+panel.men.icon = /hero/men.svg
+panel.men.href = /men
+panel.men.alt = Men's panjabi and kurta collection
+
+panel.women.tile = /library/women.png
+panel.women.portrait = /hero/women.jpg
+panel.women.icon = /hero/women.svg
+panel.women.href = /women
+panel.women.alt = Women's sharee and kurti collection
+
+panel.kids.tile = /library/children.png
+panel.kids.portrait = /hero/kids.jpg
+panel.kids.icon = /hero/kids.svg
+panel.kids.href = /kids
+panel.kids.alt = Children's festive wear collection

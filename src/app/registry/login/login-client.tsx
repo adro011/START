@@ -107,7 +107,7 @@ export default function RegistryLoginClient({
       {/* ── Left editorial panel ── */}
       <section
         aria-label={t.brandStory}
-        className="relative flex min-h-[42dvh] flex-col justify-end overflow-hidden bg-[#0b3531] px-6 pt-24 pb-10 text-[#FBF6F3] sm:px-10 lg:min-h-[100dvh] lg:w-[46%] lg:px-12 lg:pb-14"
+        className="relative flex min-h-[42dvh] flex-col justify-end overflow-hidden bg-[#0b3531] px-6 pt-24 pb-10 text-[var(--color-paper)] sm:px-10 lg:min-h-[100dvh] lg:w-[46%] lg:px-12 lg:pb-14"
       >
         <div aria-hidden="true" className="drift pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#7FD1C7]/20 blur-3xl" />
         <div aria-hidden="true" className="drift-2 pointer-events-none absolute right-[-80px] bottom-[-60px] h-80 w-80 rounded-full bg-[#2f8d82]/30 blur-3xl" />
@@ -126,10 +126,10 @@ export default function RegistryLoginClient({
         >
           {locale === "bn" ? `${t.shopRegistry}.` : splitChars(`${t.shopRegistry}.`)}
         </h1>
-        <p className="login-rise mt-4 max-w-md text-[16px] leading-relaxed text-[#FBF6F3]/75 sm:text-[17px]" style={{ animationDelay: "420ms" }}>
+        <p className="login-rise mt-4 max-w-md text-[16px] leading-relaxed text-[var(--color-paper)]/75 sm:text-[17px]" style={{ animationDelay: "420ms" }}>
           {t.staffParagraph}
         </p>
-        <div className="login-rise mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-[#FBF6F3]/65" style={{ animationDelay: "520ms" }}>
+        <div className="login-rise mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-[var(--color-paper)]/65" style={{ animationDelay: "520ms" }}>
           <span>{t.cod}</span>
           <span aria-hidden="true" className="h-1 w-1 rounded-full bg-[#7FD1C7]" />
           <span>{t.exchange}</span>
@@ -187,7 +187,7 @@ export default function RegistryLoginClient({
       {leaving ? (
         <div aria-hidden="true" className={`login-curtain ${!leaving.label ? "login-curtain-hold" : ""}`}>
           <p className="kicker text-[#9adbd2]/70">{t.tagline}</p>
-          <p className="mt-2 font-medium tracking-tight text-[#FBF6F3]"
+          <p className="mt-2 font-medium tracking-tight text-[var(--color-paper)]"
             style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(2rem,6vw,3.6rem)" }}>
             {leaving.label}…
           </p>

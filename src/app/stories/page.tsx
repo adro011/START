@@ -2,55 +2,38 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { SITE } from "@/config/site";
+import { toArray, page, rec, text } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: `Stories | ${SITE.name}`,
   description: `Notes from ${SITE.name} — fabric, fit and festive dressing across Bangladesh.`,
 };
 
-const STORIES = [
-  {
-    slug: "eid-edit",
-    eyebrow: "Festive · Eid",
-    title: "The Eid edit: five outfits, zero stress",
-    excerpt: "Breathable panjabis, one heirloom jamdani sharee, and kids' sets that survive salami chaos — our stylists' picks for the morning rush.",
-    img: "/hero/men.svg",
-    alt: "Eid festive menswear editorial",
-  },
-  {
-    slug: "jamdani-notes",
-    eyebrow: "Fabric · Jamdani",
-    title: "How to spot — and keep — good jamdani",
-    excerpt: "Count the motifs, feel the hand, store it rolled. A weaver and our cutter explain what makes muslin-jamdani worth handing down.",
-    img: "/hero/women.svg",
-    alt: "Jamdani weave editorial",
-  },
-  {
-    slug: "kids-that-last",
-    eyebrow: "Kids · Fit",
-    title: "Kids grow. Their clothes should keep up",
-    excerpt: "Room-to-grow hems, soft waistbands and reinforced knees: how we cut boys' and girls' sets for a full year of wear.",
-    img: "/hero/kids.svg",
-    alt: "Kids festive wear editorial",
-  },
-];
-
 export default function StoriesPage() {
+  const p = page("stories");
+  const STORIES = toArray(rec(p.story)).map((s) => ({
+    slug: text(rec(s).slug),
+    eyebrow: text(rec(s).eyebrow),
+    title: text(rec(s).title),
+    excerpt: text(rec(s).excerpt),
+    img: text(rec(s).image),
+    alt: text(rec(s).alt),
+  }));
+
   return (
-    <main className="bg-black text-[#F5F5F5]">
+    <main className="bg-black text-[var(--color-smoke)]">
       <section className="mx-auto w-full max-w-6xl px-5 py-14 sm:py-20">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Journal · Stories</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">{text(p.eyebrow)}</p>
         <h1 className="mt-3 max-w-2xl font-serif text-4xl leading-tight sm:text-6xl">
-          Notes on cloth, fit & festive days.
+          {text(p.title)}
         </h1>
         <p className="mt-4 max-w-2xl leading-relaxed text-steel">
-          Short reads from our Dhaka studio — fabric guides, fit tips and
-          behind-the-seams peeks. New stories every month.
+          {text(p.intro)}
         </p>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {STORIES.map((s) => (
-            <article key={s.slug} className="group border border-white/15 bg-[#181818]">
-              <div className="relative aspect-[16/10] overflow-hidden bg-[#181818]">
+            <article key={s.slug} className="group border border-white/15 bg-[var(--color-dark-iron)]">
+              <div className="relative aspect-[16/10] overflow-hidden bg-[var(--color-dark-iron)]">
                 <Image src={s.img} alt={s.alt} fill sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
               </div>
@@ -59,19 +42,19 @@ export default function StoriesPage() {
                 <h2 className="mt-2 font-serif text-2xl leading-snug">{s.title}</h2>
                 <p className="mt-2 text-[0.95rem] leading-relaxed text-steel">{s.excerpt}</p>
                 <span className="mt-4 inline-block text-sm font-semibold uppercase tracking-[0.14em] underline underline-offset-4 group-hover:text-gold">
-                  Read story →
+                  {text(p.readmore)} →
                 </span>
               </div>
             </article>
           ))}
         </div>
         <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-white/15 pt-8">
-          <p className="text-sm text-steel">Like this? Get one thoughtful email a month — no spam.</p>
+          <p className="text-sm text-steel">{text(rec(p.footer).note)}</p>
           <Link href="/#newsletter" className="bg-gold px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-black hover:bg-gold-dark">
-            Join the letter
+            {text(rec(p.footer).cta)}
           </Link>
           <Link href="/about" className="px-2 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-gold underline underline-offset-4">
-            About {SITE.name}
+            {text(rec(p.footer).about)}
           </Link>
         </div>
       </section>

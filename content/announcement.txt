@@ -1,0 +1,8 @@
+# ── TOP ANNOUNCEMENT BAR ───────────────────────────────────────────────
+# Three rotating messages shown in the thin black bar above the header.
+# On mobile they scroll; on desktop the FIRST message is shown centered.
+# Edit each line's text after the "=" sign.
+
+1 = Free delivery in Dhaka on orders over ৳2,500 · 7-day easy exchange
+2 = The Eid edit is live — panjabis, sharees & kids' sets
+3 = Cash on delivery, all across Bangladesh

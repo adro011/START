@@ -1,0 +1,28 @@
+# ── LAYOUT / SPACING ───────────────────────────────────────────────────
+# Page width, section rhythm, gutters and grid. These feed CSS variables
+# (--layout-*, --section-*, --grid-*) so spacing changes stay consistent.
+#
+# KEY                    MEANING
+# container.max          max content width on large screens
+# container.padX         left/right page padding
+# section.padY           vertical space between homepage sections (desktop)
+# section.padYmobile     vertical space on phones
+# grid.columns           number of design columns
+# grid.gap               gap between grid cards
+# header.height          header bar height
+# announcement.height    thin announcement strip height
+# footer.padY            footer top/bottom padding
+# drawer.width           cart drawer width on desktop
+# menu.max               mega-menu max width
+
+container.max = 1440px
+container.padX = 20px
+section.padY = 96px
+section.padYmobile = 56px
+grid.columns = 12
+grid.gap = 24px
+header.height = 68px
+announcement.height = 32px
+footer.padY = 64px
+drawer.width = 420px
+menu.max = 1200px

@@ -16,7 +16,7 @@ export default function StickyATC({
   label?: string;
 }) {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-[#181818]/95 p-3 backdrop-blur md:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-[var(--color-dark-iron)]/95 p-3 backdrop-blur md:hidden">
       <div className="flex items-center gap-3">
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs text-ash">{name}</p>

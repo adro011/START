@@ -10,7 +10,7 @@ import BackInStock from "@/components/back-in-stock";
 import StickyATC from "@/components/sticky-atc";
 
 const RING =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]";
 
 /**
  * Buy box: price, colour/size pickers with live stock, quantity stepper,
@@ -218,7 +218,7 @@ export default function VariantPicker({ product }: { product: Product }) {
       )}
 
       {/* Free-shipping meter (live with qty) */}
-      <div className="mt-5 border border-white/15 bg-[#181818]/50 px-4 py-3.5">
+      <div className="mt-5 border border-white/15 bg-[var(--color-dark-iron)]/50 px-4 py-3.5">
         <p className="text-[13.5px] font-medium">
           {shipDone ? (
             <>You unlocked <span className="font-semibold text-gold">FREE delivery</span> 🎉</>

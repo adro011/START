@@ -1,0 +1,19 @@
+# ── SHADOWS / GLOWS (ELEVATION) ────────────────────────────────────────
+# How far elements float above the page. Full CSS box-shadow values.
+#
+# KEY             WHERE IT SHOWS
+# shadow.card     cards at rest
+# shadow.hover    cards on hover
+# shadow.menu     mega menu / dropdown
+# shadow.drawer   cart drawer
+# shadow.modal    dialogs
+# glow.gold       accent halo around gold elements
+# glow.soft       subtle white glow on dark
+
+shadow.card = 0 8px 24px rgba(0,0,0,0.35)
+shadow.hover = 0 24px 48px rgba(0,0,0,0.45)
+shadow.menu = 0 20px 60px rgba(0,0,0,0.60)
+shadow.drawer = -24px 0 60px rgba(0,0,0,0.60)
+shadow.modal = 0 24px 80px rgba(0,0,0,0.70)
+glow.gold = 0 0 24px rgba(255,214,0,0.35)
+glow.soft = 0 0 40px rgba(255,255,255,0.08)

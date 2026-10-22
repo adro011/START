@@ -8,7 +8,7 @@ export default function NotFound() {
         404 · Off the rack
       </p>
       <h1
-        className="mt-2 text-[52px] leading-tight font-medium text-[#F5F5F5]"
+        className="mt-2 text-[52px] leading-tight font-medium text-[var(--color-smoke)]"
         style={{ fontFamily: "'Cormorant Garamond', serif" }}
       >
         This piece isn&apos;t on the rail.
@@ -26,7 +26,7 @@ export default function NotFound() {
         </Link>
         <Link
           href="/new-arrivals"
-          className="border border-white/15 px-7 py-3 text-[12px] font-semibold tracking-[0.16em] uppercase hover:bg-white/10 hover:text-[#F5F5F5]"
+          className="border border-white/15 px-7 py-3 text-[12px] font-semibold tracking-[0.16em] uppercase hover:bg-white/10 hover:text-[var(--color-smoke)]"
         >
           New arrivals
         </Link>

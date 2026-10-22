@@ -1,0 +1,34 @@
+# ── STORIES (JOURNAL) PAGE ─────────────────────────────────────────────
+# Content for /stories. Token {name} is replaced automatically.
+# `slug` is the internal route id — keep it stable unless you also change
+# the product/story routes. `image` is a path under /public.
+
+eyebrow = Journal · Stories
+title = Notes on cloth, fit & festive days.
+intro = Short reads from our Dhaka studio — fabric guides, fit tips and behind-the-seams peeks. New stories every month.
+
+story.1.slug = eid-edit
+story.1.eyebrow = Festive · Eid
+story.1.title = The Eid edit: five outfits, zero stress
+story.1.excerpt = Breathable panjabis, one heirloom jamdani sharee, and kids' sets that survive salami chaos — our stylists' picks for the morning rush.
+story.1.image = /hero/men.svg
+story.1.alt = Eid festive menswear editorial
+
+story.2.slug = jamdani-notes
+story.2.eyebrow = Fabric · Jamdani
+story.2.title = How to spot — and keep — good jamdani
+story.2.excerpt = Count the motifs, feel the hand, store it rolled. A weaver and our cutter explain what makes muslin-jamdani worth handing down.
+story.2.image = /hero/women.svg
+story.2.alt = Jamdani weave editorial
+
+story.3.slug = kids-that-last
+story.3.eyebrow = Kids · Fit
+story.3.title = Kids grow. Their clothes should keep up
+story.3.excerpt = Room-to-grow hems, soft waistbands and reinforced knees: how we cut boys' and girls' sets for a full year of wear.
+story.3.image = /hero/kids.svg
+story.3.alt = Kids festive wear editorial
+
+readmore = Read story
+footer.note = Like this? Get one thoughtful email a month — no spam.
+footer.cta = Join the letter
+footer.about = About {name}

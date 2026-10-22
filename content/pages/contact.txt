@@ -1,0 +1,25 @@
+# ── CONTACT PAGE ───────────────────────────────────────────────────────
+# Content for /contact. Tokens {email} / {phone} are replaced automatically.
+
+eyebrow = Contact
+title = Ask us anything — we reply fast.
+intro = Sizing between two sizes? Wedding next week? Tell us your district and we'll suggest the fastest delivery option. We reply within 1–2 working days (Sat–Thu).
+
+form.name.label = Name
+form.name.placeholder = Your full name
+form.email.label = Email
+form.email.placeholder = you@example.com
+form.message.label = Message
+form.message.placeholder = Order no. (if any), size, district — e.g. Panjabi size 42 to Uttara, needed before Eid…
+form.submit = Send message
+form.sending = Sending…
+form.success = Thank you — message received. We reply within 1–2 working days.
+form.error = Something went wrong. Please email us directly.
+form.networkError = Network error. Please email us directly.
+
+aside.direct = Direct
+aside.email = Email
+aside.phone = Phone / WhatsApp
+aside.note = Sat–Thu, 10am–7pm (Dhaka time). For orders, keep your order number handy (e.g. BR-100231).
+aside.track.title = Track an order
+aside.track.body = Use your order number + phone on our tracking page.

@@ -59,7 +59,7 @@ export default function TrustPanel() {
   return (
     <section
       aria-label="Why shop with us"
-      className="relative overflow-hidden bg-[#181818] px-5 py-6 text-[#F5F5F5] sm:px-6"
+      className="relative overflow-hidden bg-[var(--color-dark-iron)] px-5 py-6 text-[var(--color-smoke)] sm:px-6"
     >
       <div
         aria-hidden="true"

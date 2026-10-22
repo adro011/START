@@ -1,0 +1,40 @@
+# ── SHIPPING & RETURNS PAGE ────────────────────────────────────────────
+# Content for /shipping-returns. Tokens {email} are replaced automatically.
+# Body is a list of blocks:
+#   block.<n>.kind = h2 | p | ul
+#   block.<n>.text = heading or paragraph text
+#   block.<n>.item.<i> = a bullet (for ul)
+# Inline markup: **bold**  and  [label](url)
+
+eyebrow = Help · Shipping & returns
+title = Delivery, COD & easy exchange.
+intro = Cash on delivery across Bangladesh, clear timelines by zone, and a 7-day size exchange — no drama.
+updated = October 2026
+
+block.1.kind = h2
+block.1.text = Where we deliver
+block.2.kind = p
+block.2.text = We deliver to all 64 districts of Bangladesh via our courier partners (Steadfast / Pathao / RedX). Delivery is **cash on delivery (COD)** by default; bKash, Nagad and cards are available online via SSLCommerz where enabled.
+
+block.3.kind = h2
+block.3.text = Charges & timelines
+block.4.kind = ul
+block.4.item.1 = **Inside Dhaka:** flat fee, delivery in 2–3 working days.
+block.4.item.2 = **Outside Dhaka:** flat fee, delivery in 3–5 working days.
+block.4.item.3 = **Free delivery** on orders above the threshold shown at checkout.
+block.4.item.4 = Eid / wedding season may add 1–2 days — we'll SMS you if your parcel is delayed.
+block.5.kind = p
+block.5.text = Please keep your phone reachable (+880 1XXXXXXXXX format). Two failed delivery attempts may return the parcel to us; redelivery is charged again.
+
+block.6.kind = h2
+block.6.text = 7-day size exchange
+block.7.kind = ul
+block.7.item.1 = Exchange for a different size within **7 days** of delivery.
+block.7.item.2 = Item must be unworn, unwashed, with tags attached.
+block.7.item.3 = Sale items at 30%+ off are final sale unless faulty.
+block.7.item.4 = To request: email [contact us](mailto:{email}) with your order number and photos.
+
+block.8.kind = h2
+block.8.text = Faulty or wrong item?
+block.9.kind = p
+block.9.text = Tell us within 48 hours with photos and we'll replace or refund you — return shipping is on us in this case. Refunds go to bKash/Nagad/bank within 5–7 working days after we receive the return.

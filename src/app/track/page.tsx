@@ -72,7 +72,7 @@ export default function TrackPage() {
           <p className="text-sm font-medium">Order {order.orderNo} · <span className="capitalize">{order.status}</span></p>
           <p className="mt-0.5 text-xs text-ash">Placed {formatDate(order.createdAt)}</p>
           {terminal ? (
-            <p className="mt-3 rounded-lg bg-[#181818] px-3 py-2 text-sm text-steel">
+            <p className="mt-3 rounded-lg bg-[var(--color-dark-iron)] px-3 py-2 text-sm text-steel">
               This order was {order.status}. Contact support if you need help.
             </p>
           ) : (

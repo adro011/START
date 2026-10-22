@@ -19,11 +19,11 @@ function Sparkline({ data }: { data: { label: string; revenuePaisa: number }[] }
   return (
     <div>
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`30-day revenue trend, latest ${last?.label}`} className="h-20 w-full">
-        <polyline points={pts} fill="none" strokeWidth="2" stroke="currentColor" className="text-[#F5F5F5]" />
+        <polyline points={pts} fill="none" strokeWidth="2" stroke="currentColor" className="text-[var(--color-smoke)]" />
         {data.map((d, i) => {
           const x = P + i * step;
           const y = H - P - (d.revenuePaisa / max) * (H - P * 2);
-          return i % 5 === 0 ? <circle key={d.label} cx={x} cy={y} r="1.6" className="fill-[#7D7D7D]" /> : null;
+          return i % 5 === 0 ? <circle key={d.label} cx={x} cy={y} r="1.6" className="fill-[var(--color-ash)]" /> : null;
         })}
       </svg>
       <div className="flex justify-between text-[11px] text-ash">

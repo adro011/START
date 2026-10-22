@@ -16,7 +16,7 @@ export default function Error({
         A loose thread
       </p>
       <h1
-        className="mt-2 text-[52px] leading-tight font-medium text-[#F5F5F5]"
+        className="mt-2 text-[52px] leading-tight font-medium text-[var(--color-smoke)]"
         style={{ fontFamily: "'Cormorant Garamond', serif" }}
       >
         Something snagged.
@@ -40,7 +40,7 @@ export default function Error({
         </button>
         <Link
           href="/"
-          className="border border-white/15 px-7 py-3 text-[12px] font-semibold tracking-[0.16em] uppercase hover:bg-white/10 hover:text-[#F5F5F5]"
+          className="border border-white/15 px-7 py-3 text-[12px] font-semibold tracking-[0.16em] uppercase hover:bg-white/10 hover:text-[var(--color-smoke)]"
         >
           Back home
         </Link>

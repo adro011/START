@@ -1,0 +1,76 @@
+# ── DESIGN THEME ───────────────────────────────────────────────────────
+# This file controls the site's COLORS, FONTS, EASING and SPOTLIGHT.
+# Edit a value after "=", save, then `npm run content` (auto on dev/build).
+# Every value below maps to a CSS variable used across the whole site, so
+# changing one color here recolors every button/text/section that uses it.
+
+# ── Colors ──────────────────────────────────────────────────────────────
+# black        -> page background / header / footer base
+# gold         -> primary accent (header logo, links, focus rings)
+# goldBright   -> bright accent used in hero/sale/newsletter buttons & text
+# goldDark     -> accent hover
+# goldText     -> accent text variant
+# blush        -> soft accent text on dark (eyebrows, marquee)
+# clay         -> CTA text on light surfaces (add-to-bag, subscribe)
+# paper        -> light paper surface / text on ink
+# ink          -> dark ink used in glass / dark text contexts
+# smoke        -> default light text
+# steel        -> secondary text
+# ash          -> muted text
+# graphite     -> dark grey text
+# charcoal     -> card / surface background
+# darkIron     -> deeper surface (footer, cards)
+# surface      -> darkest card background (home tiles)
+
+color.black = #000000
+color.gold = #FFC000
+color.goldBright = #FFD600
+color.goldDark = #917300
+color.goldText = #FFCE3E
+color.blush = #F2CCC3
+color.clay = #A93A24
+color.paper = #FBF6F3
+color.ink = #172121
+color.smoke = #F5F5F5
+color.steel = #969696
+color.ash = #7D7D7D
+color.graphite = #494949
+color.charcoal = #202020
+color.darkIron = #181818
+color.surface = #0d0d0d
+
+# ── UI / state color roles ──────────────────────────────────────────────
+# border   -> hairline borders on cards, inputs, dividers
+# focus    -> keyboard focus ring
+# overlay  -> dim layer behind menus/dialogs
+# success / error / warning / info -> form + order status messages
+color.border = rgba(255,255,255,0.12)
+color.focus = #FFD600
+color.overlay = rgba(0,0,0,0.55)
+color.success = #2FBF71
+color.error = #E5484D
+color.warning = #F5A524
+color.info = #29ABE2
+
+# ── Fonts ───────────────────────────────────────────────────────────────
+# display  -> headings / wordmark (uppercase brand font)
+# ui       -> body / interface text
+# serif    -> editorial headings (used via font-family on some headings)
+
+font.display = "LamboType", "Roboto", "Helvetica Neue", Arial, sans-serif
+font.ui = "LamboType", "Open Sans", sans-serif
+font.serif = "Cormorant Garamond", "Playfair Display", Georgia, serif
+font.mono = "SF Mono", Monaco, "Courier New", monospace
+
+# ── Motion ──────────────────────────────────────────────────────────────
+# ease.lux        -> the site-wide easing curve
+# marquee.speed   -> duration of the scrolling luxury ticker strip
+
+ease.lux = cubic-bezier(0.22, 1, 0.36, 1)
+marquee.speed = 58s
+
+# ── Spotlight (scroll-driven section illumination) ──────────────────────
+spotlight.base = #010101
+spotlight.core = 255, 248, 150
+spotlight.mid = 255, 230, 0
+spotlight.outer = 255, 185, 0

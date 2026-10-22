@@ -47,7 +47,7 @@ function OrderCard({ order }: { order: LiveOrder }) {
       {!terminal && (
         <ol className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs">
           {STATUS_STEPS.map((s, i) => (
-            <li key={s} className={i <= stepIndex ? "font-semibold text-[#F5F5F5]" : "text-steel"}>
+            <li key={s} className={i <= stepIndex ? "font-semibold text-[var(--color-smoke)]" : "text-steel"}>
               <span aria-hidden>{i <= stepIndex ? "●" : "○"}</span> <span className="capitalize">{s}</span>
             </li>
           ))}
@@ -57,7 +57,7 @@ function OrderCard({ order }: { order: LiveOrder }) {
         <ol className="mt-3 space-y-1.5 border-t pt-3 text-xs text-ash">
           {order.events.map((ev) => (
             <li key={ev.id} className="flex flex-wrap gap-x-2">
-              <span className="font-medium text-[#F5F5F5]">{ev.status}</span>
+              <span className="font-medium text-[var(--color-smoke)]">{ev.status}</span>
               {ev.note && <span>— {ev.note}</span>}
               <span className="ml-auto text-ash">
                 {new Date(ev.created_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}

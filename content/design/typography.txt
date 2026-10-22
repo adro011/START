@@ -1,0 +1,43 @@
+# ── TYPE SCALE / WEIGHTS / TRACKING ────────────────────────────────────
+# Font FAMILIES live in content/theme.txt (font.display / font.ui / font.serif).
+# This file controls their SIZES, WEIGHTS, LINE-HEIGHT and LETTER-SPACING.
+#
+# KEY                        MEANING
+# size.hero                  full-screen opening headline
+# size.display1..4           section headings (1 = biggest)
+# size.feature               large editorial paragraph
+# size.cardTitle             product/collection card titles
+# size.bodyLarge             intro paragraphs
+# size.body                  default paragraph
+# size.bodySmall             secondary text
+# size.caption               labels, eyebrows, fine print
+# weight.light/regular/medium/semibold/bold
+# line.tight/normal/loose
+# tracking.tight/normal/wide/kicker
+
+size.hero = clamp(54px, 12vw, 120px)
+size.display1 = clamp(40px, 8vw, 80px)
+size.display2 = clamp(32px, 6vw, 54px)
+size.display3 = clamp(28px, 5vw, 40px)
+size.display4 = clamp(22px, 4vw, 30px)
+size.feature = clamp(20px, 3vw, 27px)
+size.cardTitle = clamp(18px, 2.5vw, 24px)
+size.bodyLarge = clamp(16px, 2vw, 18px)
+size.body = clamp(14px, 1.5vw, 16px)
+size.bodySmall = clamp(12px, 1vw, 14px)
+size.caption = clamp(11px, 1vw, 14px)
+
+weight.light = 300
+weight.regular = 400
+weight.medium = 500
+weight.semibold = 600
+weight.bold = 700
+
+line.tight = 1.05
+line.normal = 1.5
+line.loose = 1.8
+
+tracking.tight = -0.02em
+tracking.normal = 0.02em
+tracking.wide = 0.14em
+tracking.kicker = 0.22em

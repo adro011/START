@@ -22,39 +22,56 @@ const COMPANY_LINKS = [
 ];
 
 /**
- * Footer: newsletter (POSTs to /api/newsletter), help links, payment badges,
- * socials, and an EN/BN language switch persisted in a cookie + reload.
+ * Footer: Join us registration (POSTs to /api/newsletter, persisted in
+ * Supabase), help links, payment badges, socials, and an EN/BN language
+ * switch persisted in a cookie + reload.
  */
-export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
+export function SiteFooter({
+  locale = "en",
+  joinEnabled = true,
+}: {
+  locale?: Locale;
+  joinEnabled?: boolean;
+}) {
   const d = getDict(locale);
   const [email, setEmail] = useState("");
-  const [state, setState] = useState<"idle" | "busy" | "ok" | "err">("idle");
+  const [status, setStatus] = useState<"idle" | "busy" | "done">("idle");
+  const [error, setError] = useState<string | null>(null);
 
-  async function subscribe(e: FormEvent) {
+  async function join(e: FormEvent) {
     e.preventDefault();
-    if (!email.trim() || state === "busy") return;
-    setState("busy");
+    if (!email.trim() || status === "busy") return;
+    setStatus("busy");
+    setError(null);
     try {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
+        body: JSON.stringify({ email: email.trim(), source: "footer" }),
       });
-      if (!res.ok) throw new Error(`newsletter ${res.status}`);
-      setState("ok");
+      const data = (await res.json().catch(() => null)) as
+        | { ok?: boolean; error?: string }
+        | null;
+      if (!res.ok || !data?.ok) {
+        setStatus("idle");
+        setError(data?.error ?? d.newsletter_error);
+        return;
+      }
+      setStatus("done");
       setEmail("");
     } catch {
-      setState("err");
+      setStatus("idle");
+      setError(d.newsletter_error);
     }
   }
 
   return (
-    <footer className="relative overflow-hidden bg-[#181818] text-[#F5F5F5]">
+    <footer className="relative overflow-hidden bg-[var(--color-dark-iron)] text-[var(--color-smoke)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-24 left-1/3 h-[300px] w-[520px] rounded-full bg-[#FFC000]/12 blur-[120px]" />
+        <div className="absolute -top-24 left-1/3 h-[300px] w-[520px] rounded-full bg-[var(--color-gold)]/12 blur-[120px]" />
         <span aria-hidden="true" className="text-ghost absolute -bottom-8 left-4 text-[18vw] leading-none font-semibold tracking-tight opacity-60 select-none">ABRAR</span>
       </div>
-      {/* Newsletter */}
+      {/* Join us */}
       <div className="relative border-b border-white/15">
         <div className="mx-auto grid max-w-[1280px] gap-6 px-4 py-14 sm:px-6 md:grid-cols-2 md:items-center">
           <div>
@@ -67,48 +84,54 @@ export function SiteFooter({ locale = "en" }: { locale?: Locale }) {
             </p>
             <p className="mt-1 max-w-[44ch] text-[15px] text-steel">{d.newsletter_sub}</p>
           </div>
-          <form
-            id="newsletter"
-            onSubmit={subscribe}
-            className="flex w-full flex-col gap-2 sm:flex-row"
-          >
-            <label htmlFor="newsletter-email" className="sr-only">
-              {d.newsletter_cta}
-            </label>
-            <input
-              id="newsletter-email"
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={d.newsletter_placeholder}
-              className="glass-dark h-13 flex-1 px-4 py-3.5 text-[15px] text-white placeholder:text-ash focus:border-[#FFC000] focus:outline-none"
-            />
-            <button
-              type="submit"
-              disabled={state === "busy"}
-              className="h-13 bg-gold px-7 py-3.5 text-[13px] font-semibold tracking-[0.16em] text-black uppercase transition-all duration-300 hover:bg-gold-dark hover:shadow-[0_12px_32px_rgba(255,192,0,0.4)] disabled:opacity-60"
+          {status === "done" ? (
+            <div className="flex w-full flex-col gap-3" aria-live="polite">
+              <p className="text-[15px] text-gold">{d.newsletter_ok}</p>
+              <Link
+                href="/"
+                className="inline-flex w-fit items-center gap-2 border-b border-gold/60 pb-0.5 text-[13px] font-semibold tracking-[0.16em] text-white uppercase transition-colors hover:text-gold"
+              >
+                {d.newsletter_back_home} <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+          ) : joinEnabled ? (
+            <form
+              id="newsletter"
+              onSubmit={join}
+              className="flex w-full flex-col gap-2 sm:flex-row"
             >
-              {state === "busy" ? "…" : d.newsletter_cta}
-            </button>
-            <span aria-live="polite" className="sr-only">
-              {state === "ok"
-                ? d.newsletter_ok
-                : state === "err"
-                  ? d.newsletter_error
-                  : ""}
-            </span>
-          </form>
-          {state === "ok" && (
-            <p className="text-[14px] text-gold md:col-span-2">
-              {d.newsletter_ok}
-            </p>
-          )}
-          {state === "err" && (
-            <p className="text-[14px] text-gold md:col-span-2">
-              {d.newsletter_error}
-            </p>
+              <label htmlFor="newsletter-email" className="sr-only">
+                {d.newsletter_placeholder}
+              </label>
+              <input
+                id="newsletter-email"
+                type="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (error) setError(null);
+                }}
+                placeholder={d.newsletter_placeholder}
+                aria-invalid={error ? true : undefined}
+                className="glass-dark h-13 flex-1 px-4 py-3.5 text-[15px] text-white placeholder:text-ash focus:border-[var(--color-gold)] focus:outline-none"
+              />
+              <button
+                type="submit"
+                disabled={status === "busy"}
+                className="h-13 bg-gold px-7 py-3.5 text-[13px] font-semibold tracking-[0.16em] text-black uppercase transition-all duration-300 hover:bg-gold-dark hover:shadow-[0_12px_32px_rgba(255,192,0,0.4)] disabled:opacity-60"
+              >
+                {status === "busy" ? "…" : d.newsletter_cta}
+              </button>
+              {error && (
+                <p role="alert" className="text-[13px] text-gold sm:order-last sm:basis-full">
+                  {error}
+                </p>
+              )}
+            </form>
+          ) : (
+            <p className="text-[15px] text-steel">{d.newsletter_closed}</p>
           )}
         </div>
       </div>

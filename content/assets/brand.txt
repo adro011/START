@@ -1,0 +1,27 @@
+# ── BRAND IMAGES / PNG · JPG · SVG · ICO ───────────────────────────────
+# Every brand mark, favicon and social-share image in one place.
+# Edit the path after "=" to swap an image. Files must live under /public.
+# Save, then run `npm run content` (auto-runs on dev/build).
+#
+# KEY            WHERE IT SHOWS
+# logo           header + footer wordmark (SVG preferred)
+# logoAlt        alt text for the logo (screen readers / SEO)
+# monogram       square mark used where the wordmark is too wide
+# favicon16/32/48  browser tab icons (PNG)
+# appleIcon      iOS home-screen icon (PNG, 180×180)
+# pwa192/512     Android / PWA install icons (PNG)
+# pwaMaskable192/512  Android adaptive icons (PNG, safe-zone padded)
+# openGraph      social share / OG preview image
+
+logo = /logo.svg
+logoAlt = ABRAR wordmark
+monogram = /hero/icons/icon-512.png
+favicon16 = /hero/icons/favicon-16.png
+favicon32 = /hero/icons/favicon-32.png
+favicon48 = /hero/icons/favicon-48.png
+appleIcon = /apple-icon.png
+pwa192 = /hero/icons/icon-192.png
+pwa512 = /hero/icons/icon-512.png
+pwaMaskable192 = /hero/icons/maskable-192.png
+pwaMaskable512 = /hero/icons/maskable-512.png
+openGraph = /hero/icons/MAIN LOGO.png

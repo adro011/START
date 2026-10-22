@@ -27,7 +27,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams?:
       <div className="overflow-x-auto rounded-lg border border-white/15">
         <table className="w-full min-w-[760px] text-left text-sm">
           <thead>
-            <tr className="bg-[#202020] text-xs uppercase tracking-wider text-ash">
+            <tr className="bg-[var(--color-charcoal)] text-xs uppercase tracking-wider text-ash">
               <th className="px-3 py-2">Order</th><th className="px-3 py-2">Customer</th><th className="px-3 py-2">Items</th><th className="px-3 py-2">Total</th><th className="px-3 py-2">Payment</th><th className="px-3 py-2">Status</th>
             </tr>
           </thead>

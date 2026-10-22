@@ -1,0 +1,30 @@
+# ── LAYER ORDER (Z-INDEX) ──────────────────────────────────────────────
+# Which element sits on top of which. Higher = closer to the viewer.
+# Change a number to restack an area without hunting through CSS.
+#
+# KEY          ELEMENT
+# base         page content
+# content      normal sections
+# sticky       sticky add-to-bag / bars
+# header       site header
+# menu         mega menu / dropdown
+# drawer       cart drawer
+# overlay      full-screen dim layer
+# modal        dialogs / search palette
+# toast        small notifications
+# cursor       custom cursor ring
+# grain        paper-grain texture
+# loader       full-screen brand loader (topmost)
+
+base = 0
+content = 10
+sticky = 20
+header = 30
+menu = 40
+drawer = 50
+overlay = 60
+modal = 70
+toast = 75
+cursor = 78
+grain = 80
+loader = 90

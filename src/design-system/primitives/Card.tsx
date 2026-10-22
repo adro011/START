@@ -26,14 +26,14 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
   ) => {
     const baseStyles = cn(
       "relative overflow-hidden",
-      "bg-[#202020]",
+      "bg-[var(--color-charcoal)]",
       "transition-all duration-standard easing-lamborghini"
     );
 
     const variantStyles = {
       default: "",
       elevated: "hover:shadow-elevation2",
-      outlined: "border border-[#202020] hover:border-[#494949]",
+      outlined: "border border-[var(--color-charcoal)] hover:border-[var(--color-graphite)]",
     };
 
     const paddingStyles = {
@@ -44,7 +44,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     };
 
     const hoverStyles = hover
-      ? "hover:shadow-gold-glow hover:border-[#FFC000]/30 cursor-pointer"
+      ? "hover:shadow-gold-glow hover:border-[var(--color-gold)]/30 cursor-pointer"
       : "";
 
     const Component = asChild ? "div" : "div";
@@ -115,7 +115,7 @@ export const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
   ({ className, children, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("text-[#7D7D7D] font-ui font-regular leading-[1.5]", className)}
+      className={cn("text-[var(--color-ash)] font-ui font-regular leading-[1.5]", className)}
       {...props}
     >
       {children}

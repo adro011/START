@@ -49,7 +49,7 @@ export default function ReviewList({
         {reviews.map((review, i) => (
           <article
             key={`${review.name}-${review.date}-${i}`}
-            className="rounded-xl border border-white/10 bg-[#FBF6F3]/5 p-4"
+            className="rounded-xl border border-white/10 bg-[var(--color-paper)]/5 p-4"
           >
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-3">
               <div className="flex flex-col sm:flex-row sm:items-start gap-3">

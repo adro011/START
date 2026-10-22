@@ -33,7 +33,7 @@ function HeaderIcon({
   children: ReactNode;
 }) {
   const cls =
-    "relative rounded-full p-2.5 text-[#F5F5F5] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:text-gold hover:shadow-[0_8px_20px_rgba(213,87,59,0.18)] focus-visible:outline-2 focus-visible:outline-[#FFC000]";
+    "relative rounded-full p-2.5 text-[var(--color-smoke)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:text-gold hover:shadow-[0_8px_20px_rgba(213,87,59,0.18)] focus-visible:outline-2 focus-visible:outline-[var(--color-gold)]";
   const inner = (
     <>
       {children}
@@ -81,19 +81,19 @@ export function SiteHeader() {
             href="/"
             onClick={hardNav("/")}
             aria-label={`${SITE.name} \u2014 home`}
-            className="relative isolate flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+            className="relative isolate flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
           >
             <span aria-hidden="true" className="brand-halo" />
             <Image
               src="/hero/icons/icon-192.png"
               alt={`${SITE.name} logo`}
-              width={56}
-              height={56}
-              className="brand-mark-glow h-14 w-14 object-contain"
+              width={80}
+              height={80}
+              className="brand-mark-glow h-20 w-20 object-contain"
               priority
             />
             <span
-              className="brand-word-glow text-[22px] font-semibold tracking-[0.06em] whitespace-nowrap text-[#F5F5F5] uppercase sm:text-[25px]"
+              className="brand-word-glow text-[22px] font-semibold tracking-[0.06em] whitespace-nowrap text-[var(--color-smoke)] uppercase sm:text-[25px]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
               {SITE.name}
@@ -128,7 +128,7 @@ export function SiteHeader() {
                 href={`https://wa.me/${SITE.whatsappDigits}`}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[12.5px] font-medium tracking-[0.08em] text-steel uppercase underline-offset-4 hover:text-gold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+                className="text-[12.5px] font-medium tracking-[0.08em] text-steel uppercase underline-offset-4 hover:text-gold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
               >
                 WhatsApp {SITE.whatsappDisplay}
               </a>

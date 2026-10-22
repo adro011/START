@@ -37,29 +37,29 @@ export const Button = forwardRef<HTMLAnchorElement, ButtonProps>(
 
     const variantStyles = {
       accent: cn(
-        "bg-[#FFC000] text-[#000000]",
+        "bg-[var(--color-gold)] text-[var(--color-black)]",
         "hover:bg-[#917300]",
-        "focus-visible:ring-[#FFC000] focus-visible:ring-offset-[#000000]"
+        "focus-visible:ring-[var(--color-gold)] focus-visible:ring-offset-[var(--color-black)]"
       ),
       ghost: cn(
         "bg-transparent text-[#FFFFFF] border border-[#FFFFFF]/50",
         "hover:bg-[#1EAEDB]/70 hover:border-transparent",
-        "focus-visible:ring-[#1EAEDB] focus-visible:ring-offset-[#000000]"
+        "focus-visible:ring-[#1EAEDB] focus-visible:ring-offset-[var(--color-black)]"
       ),
       white: cn(
-        "bg-[#FFFFFF] text-[#202020]",
-        "hover:bg-[#F5F5F5]",
-        "focus-visible:ring-[#FFFFFF] focus-visible:ring-offset-[#202020]"
+        "bg-[#FFFFFF] text-[var(--color-charcoal)]",
+        "hover:bg-[var(--color-smoke)]",
+        "focus-visible:ring-[#FFFFFF] focus-visible:ring-offset-[var(--color-charcoal)]"
       ),
       black: cn(
-        "bg-[#000000] text-[#FFFFFF]",
-        "hover:bg-[#181818]",
-        "focus-visible:ring-[#FFFFFF] focus-visible:ring-offset-[#000000]"
+        "bg-[var(--color-black)] text-[#FFFFFF]",
+        "hover:bg-[var(--color-dark-iron)]",
+        "focus-visible:ring-[#FFFFFF] focus-visible:ring-offset-[var(--color-black)]"
       ),
       gray: cn(
-        "bg-[#969696] text-[#202020]",
-        "hover:bg-[#7D7D7D]",
-        "focus-visible:ring-[#969696] focus-visible:ring-offset-[#202020]"
+        "bg-[var(--color-steel)] text-[var(--color-charcoal)]",
+        "hover:bg-[var(--color-ash)]",
+        "focus-visible:ring-[var(--color-steel)] focus-visible:ring-offset-[var(--color-charcoal)]"
       ),
     };
 

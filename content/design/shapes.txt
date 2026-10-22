@@ -1,0 +1,28 @@
+# ── SHAPES / RADIUS / BORDERS ──────────────────────────────────────────
+# Corner roundness, border weight, card ratios and decorative geometry.
+#
+# KEY                 MEANING
+# radius.xs/sm/md/lg  corner radius scale (xs = nearly square)
+# radius.pill         fully rounded (buttons/chips)
+# border.width        default hairline border
+# border.style        solid / dashed / none
+# card.aspect         product-card crop ratio
+# button.height       primary button height
+# input.height        form field height
+# divider.width       separators between list rows
+# panel.rounding      hero/category panel corners
+# image.rounding      images inside cards
+
+radius.xs = 2px
+radius.sm = 4px
+radius.md = 8px
+radius.lg = 16px
+radius.pill = 999px
+border.width = 1px
+border.style = solid
+card.aspect = 3/4
+button.height = 44px
+input.height = 44px
+divider.width = 1px
+panel.rounding = 0px
+image.rounding = 0px

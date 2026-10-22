@@ -106,43 +106,255 @@ export default async function CategoryPage({
   };
 
   return (
-    <main className="mx-auto max-w-[1280px] px-4 py-6">
+    <main
+      className="mx-auto min-h-screen max-w-[1280px] bg-[#010101] px-4 py-6 text-[var(--color-smoke)]"
+      data-particle-id={`category.${section}.${category}.main`}
+      data-particle-type="section"
+      data-particle-label={`${name} (${section}) Category Main Container`}
+      data-editable="true"
+    >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <nav className="text-xs text-ash" aria-label="Breadcrumb">
-        <Link href="/" className="underline">Home</Link> /{" "}
-        <Link href={`/${section}`} className="capitalize underline">{section}</Link> /{" "}
-        <span className="text-[#F5F5F5]">{name}</span>
-      </nav>
-      <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold md:text-3xl">{name}</h1>
-          <p className="text-sm text-ash">{filtered.length} result{filtered.length === 1 ? "" : "s"}</p>
-        </div>
-        <Suspense>
-          <SortSelect />
-        </Suspense>
-      </div>
-      <div className="mt-4 grid gap-6 lg:grid-cols-[240px_1fr] lg:items-start">
-        <Suspense>
-          <Filters categories={cats} sizes={["S", "M", "L", "XL"]} bounds={priceBounds(allProducts)} />
-        </Suspense>
-        <div>
-          {visible.length === 0 ? (
-            <div className="rounded-xl border p-10 text-center text-sm">
-              Nothing here yet — try <Link href={`/${section}`} className="underline">all {section}</Link>.
+
+      {/* Category Hero / Header Banner Section */}
+      <section
+        data-spotlight-section
+        className="relative overflow-hidden rounded-xl border border-white/10 bg-[#010101] p-6 md:p-8"
+        data-particle-id={`category.${section}.${category}.hero`}
+        data-particle-type="section"
+        data-particle-label={`${name} Category Hero Banner`}
+        data-editable="true"
+      >
+        <div
+          data-spotlight-target
+          className="relative z-10"
+          data-particle-id={`category.${section}.${category}.hero.inner`}
+          data-particle-type="section"
+          data-particle-label={`${name} Category Hero Spotlight Target`}
+          data-editable="true"
+        >
+          <nav
+            className="text-xs text-ash"
+            aria-label="Breadcrumb"
+            data-particle-id={`category.${section}.${category}.breadcrumb`}
+            data-particle-type="section"
+            data-particle-label={`${name} Category Breadcrumb Navigation`}
+            data-editable="true"
+          >
+            <Link
+              href="/"
+              className="underline transition-colors hover:text-[var(--abrar-accent)]"
+              data-particle-id={`category.${section}.${category}.breadcrumb.home`}
+              data-particle-type="link"
+              data-particle-label="Breadcrumb Home Link"
+              data-editable="true"
+            >
+              Home
+            </Link>{" "}
+            /{" "}
+            <Link
+              href={`/${section}`}
+              className="capitalize underline transition-colors hover:text-[var(--abrar-accent)]"
+              data-particle-id={`category.${section}.${category}.breadcrumb.section`}
+              data-particle-type="link"
+              data-particle-label={`Breadcrumb ${section} Section Link`}
+              data-editable="true"
+            >
+              {section}
+            </Link>{" "}
+            /{" "}
+            <span
+              className="text-[var(--color-smoke)]"
+              data-particle-id={`category.${section}.${category}.breadcrumb.current`}
+              data-particle-type="text"
+              data-particle-label={`Breadcrumb Current Category (${name})`}
+              data-editable="true"
+            >
+              {name}
+            </span>
+          </nav>
+
+          <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p
+                className="text-[11px] font-semibold tracking-[0.2em] text-[var(--abrar-accent)] uppercase"
+                data-particle-id={`category.${section}.${category}.kicker`}
+                data-particle-type="badge"
+                data-particle-label={`${name} Category Section Kicker`}
+                data-editable="true"
+              >
+                {section.toUpperCase()} COLLECTION // {name}
+              </p>
+              <h1
+                className="mt-1 text-2xl font-semibold text-[var(--color-smoke)] md:text-3xl"
+                data-particle-id={`category.${section}.${category}.title`}
+                data-particle-type="heading"
+                data-particle-label={`${name} Category Heading`}
+                data-editable="true"
+              >
+                {name}
+              </h1>
+              <div className="mt-2 flex flex-wrap items-center gap-2.5">
+                <span
+                  className="inline-flex items-center rounded-full border border-[var(--abrar-accent)]/40 bg-[var(--abrar-surface)] px-2.5 py-0.5 text-xs font-medium text-[var(--abrar-accent)]"
+                  data-particle-id={`category.${section}.${category}.count_badge`}
+                  data-particle-type="badge"
+                  data-particle-label={`${name} Product Count Badge`}
+                  data-editable="true"
+                >
+                  {filtered.length} result{filtered.length === 1 ? "" : "s"}
+                </span>
+                <p
+                  className="text-sm text-ash"
+                  data-particle-id={`category.${section}.${category}.subtitle`}
+                  data-particle-type="text"
+                  data-particle-label={`${name} Category Description`}
+                  data-editable="true"
+                >
+                  Shop {name} in our {section} collection with Cash on Delivery across Bangladesh.
+                </p>
+              </div>
             </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-              {visible.map((p) => (
-                <ProductCard key={p.slug} product={asCatalogProduct(p)} />
-              ))}
+            <div
+              data-particle-id={`category.${section}.${category}.sort_wrapper`}
+              data-particle-type="section"
+              data-particle-label={`${name} Sort Selector Wrapper`}
+              data-editable="true"
+            >
+              <Suspense>
+                <SortSelect />
+              </Suspense>
+            </div>
+          </div>
+
+          {/* Sibling Category Pills */}
+          {cats.length > 0 && (
+            <div
+              className="mt-5 flex gap-1.5 overflow-x-auto pb-1"
+              data-particle-id={`category.${section}.${category}.pills`}
+              data-particle-type="section"
+              data-particle-label={`${section} Category Navigation Pills`}
+              data-editable="true"
+            >
+              {cats.slice(0, 10).map((c) => {
+                const active = c.slug === category;
+                return (
+                  <Link
+                    key={c.slug}
+                    href={`/${section}/${c.slug}`}
+                    className={`shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                      active
+                        ? "border-[var(--abrar-accent)] bg-[var(--abrar-accent)] text-[#010101]"
+                        : "border-white/15 bg-[var(--abrar-surface)] text-[var(--color-smoke)] hover:border-[var(--abrar-accent)]/60 hover:text-[var(--abrar-accent)]"
+                    }`}
+                    data-particle-id={`category.${section}.${category}.pill.${c.slug}`}
+                    data-particle-type="link"
+                    data-particle-label={`${c.name} Category Pill`}
+                    data-editable="true"
+                  >
+                    {c.name}
+                  </Link>
+                );
+              })}
             </div>
           )}
-          <Suspense>
-            <LoadMore total={filtered.length} pageSize={PAGE_SIZE} />
-          </Suspense>
         </div>
-      </div>
+      </section>
+
+      {/* Product Grid & Filters Section */}
+      <section
+        data-spotlight-section
+        className="mt-6 rounded-xl border border-white/10 bg-[#010101] p-4 md:p-6"
+        data-particle-id={`category.${section}.${category}.catalog_section`}
+        data-particle-type="section"
+        data-particle-label={`${name} Catalog & Product Grid Section`}
+        data-editable="true"
+      >
+        <div
+          data-spotlight-target
+          className="grid gap-6 lg:grid-cols-[240px_1fr] lg:items-start"
+          data-particle-id={`category.${section}.${category}.catalog.inner`}
+          data-particle-type="section"
+          data-particle-label={`${name} Catalog Spotlight Target`}
+          data-editable="true"
+        >
+          <div
+            data-particle-id={`category.${section}.${category}.filters_sidebar`}
+            data-particle-type="section"
+            data-particle-label={`${name} Filters Sidebar`}
+            data-editable="true"
+          >
+            <Suspense>
+              <Filters categories={cats} sizes={["S", "M", "L", "XL"]} bounds={priceBounds(allProducts)} />
+            </Suspense>
+          </div>
+          <div
+            data-particle-id={`category.${section}.${category}.results_column`}
+            data-particle-type="section"
+            data-particle-label={`${name} Product Results Column`}
+            data-editable="true"
+          >
+            {visible.length === 0 ? (
+              <div
+                className="rounded-xl border border-white/15 bg-[var(--abrar-surface)] p-10 text-center text-sm text-[var(--color-smoke)]"
+                data-particle-id={`category.${section}.${category}.empty_state`}
+                data-particle-type="card"
+                data-particle-label={`${name} Empty State Card`}
+                data-editable="true"
+              >
+                <span
+                  data-particle-id={`category.${section}.${category}.empty_state.text`}
+                  data-particle-type="text"
+                  data-particle-label="Empty State Message"
+                  data-editable="true"
+                >
+                  Nothing here yet — try{" "}
+                </span>
+                <Link
+                  href={`/${section}`}
+                  className="text-[var(--abrar-accent)] underline hover:text-[var(--color-smoke)]"
+                  data-particle-id={`category.${section}.${category}.empty_state.link`}
+                  data-particle-type="link"
+                  data-particle-label={`View All ${section} Link`}
+                  data-editable="true"
+                >
+                  all {section}
+                </Link>
+                .
+              </div>
+            ) : (
+              <div
+                className="grid grid-cols-2 gap-3 md:grid-cols-3"
+                data-particle-id={`category.${section}.${category}.product_grid`}
+                data-particle-type="section"
+                data-particle-label={`${name} Product Grid Wrapper`}
+                data-editable="true"
+              >
+                {visible.map((p) => (
+                  <div
+                    key={p.slug}
+                    data-particle-id={`category.${section}.${category}.product_card.${p.slug}`}
+                    data-particle-type="card"
+                    data-particle-label={`Product Card: ${p.name}`}
+                    data-editable="true"
+                  >
+                    <ProductCard product={asCatalogProduct(p)} />
+                  </div>
+                ))}
+              </div>
+            )}
+            <div
+              data-particle-id={`category.${section}.${category}.load_more`}
+              data-particle-type="section"
+              data-particle-label={`${name} Load More Pagination`}
+              data-editable="true"
+            >
+              <Suspense>
+                <LoadMore total={filtered.length} pageSize={PAGE_SIZE} />
+              </Suspense>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

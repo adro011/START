@@ -1,0 +1,23 @@
+# ── FAQ PAGE ───────────────────────────────────────────────────────────
+# Content for /faq. Token {phone} is replaced automatically.
+
+eyebrow = Help · FAQ
+title = Good questions.
+intro = Ordering, payments, delivery and exchanges — answered plainly. Still stuck?
+
+faq.1.q = How do I place an order?
+faq.1.a = Add your size to cart, check out as guest or with an account, enter your division → district → area and phone, then choose COD or online payment. You'll get an SMS confirmation with your order number (e.g. BR-100231).
+faq.2.q = Do you offer Cash on Delivery?
+faq.2.a = Yes — COD is our default across all 64 districts. High-value COD orders may need a quick phone/OTP confirmation before we dispatch, to protect you and our couriers.
+faq.3.q = Which online payments do you accept?
+faq.3.a = bKash, Nagad and cards via SSLCommerz where enabled. Payments are verified with the gateway before dispatch; failed payments are automatically cancelled — you're never charged without confirmation.
+faq.4.q = How long does delivery take?
+faq.4.a = Inside Dhaka: 2–3 working days. Outside Dhaka: 3–5 working days. Eid and wedding season can add 1–2 days — we'll SMS you if your parcel is delayed. Keep your +880 phone reachable.
+faq.5.q = What if the size doesn't fit?
+faq.5.a = Exchange within 7 days for a different size — unworn, unwashed, tags on. Email us your order number and we'll arrange it. Sale items at 30%+ off are final sale unless faulty.
+faq.6.q = How do I find my size?
+faq.6.a = Check our Size Guides (Men/Women/Kids, in inches) and compare with your best-fitting garment. Between sizes? Size up for panjabis and festive wear. Still unsure — WhatsApp us your measurements before ordering.
+faq.7.q = Can I order via WhatsApp?
+faq.7.a = Yes. Send the product link + size + district to {phone} and we'll place the order for you — same prices, same exchange policy.
+faq.8.q = How do I track my order?
+faq.8.a = Use your order number + phone on our tracking page. You'll also get courier SMS updates once the parcel is dispatched.

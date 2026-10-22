@@ -1,0 +1,129 @@
+# ── HOME PAGE COPY ─────────────────────────────────────────────────────
+# Every piece of text on the homepage (abrar-exclusive.shop/).
+# Edit the text after "=" to change what visitors see.
+# Images are file paths under /public (e.g. /hero/women.jpg) or /library.
+
+# ── Cover (the full-screen opening) ──────────────────────────────────────
+cover.eyebrow = New Collection — Eid '26 Edit
+cover.title = ABRAR
+cover.subtitle = Connecting Consumer through Digital media
+cover.cta.arrivals = Shop new arrivals
+cover.cta.women = Explore women
+cover.location = Dhaka — Worldwide
+cover.scroll = Scroll
+cover.number = N°01 — The Cover
+
+# ── Hero panels (MAN / WOMEN / CHILDREN) ────────────────────────────────
+hero.eyebrow.left = Connecting Consumer through Digital media
+hero.eyebrow.right = Est. Dhaka · Eid '26 edit live
+hero.scrollcue = Scroll to enter the house
+hero.hoverhint = Hover to open · click a panel to step in
+
+# Three panels. Each has: key, index, title, href, image.
+hero.panel.1.key = men
+hero.panel.1.index = 01
+hero.panel.1.title = MAN
+hero.panel.1.href = /men
+hero.panel.1.image = /library/men.png
+hero.panel.2.key = women
+hero.panel.2.index = 02
+hero.panel.2.title = WOMEN
+hero.panel.2.href = /women
+hero.panel.2.image = /library/women.png
+hero.panel.3.key = kids
+hero.panel.3.index = 03
+hero.panel.3.title = CHILDREN
+hero.panel.3.href = /kids
+hero.panel.3.image = /library/children.png
+
+# Scrolling marquee ticker (3 phrases, repeated)
+hero.marquee.1 = Promising Quality
+hero.marquee.2 = Delivery throughout Bangladesh
+hero.marquee.3 = Beauty, Elegance and Simplicity
+
+# ── Brand statement ─────────────────────────────────────────────────────
+statement.kicker = The house of Abrar
+statement.headline = Quiet luxury, cut for real weather
+statement.accent = and real bodies.
+
+# ── New arrivals rail ───────────────────────────────────────────────────
+arrivals.kicker = Just landed — small batches
+arrivals.title = New arrivals
+arrivals.copy = Honest fabrics, limited runs. When it's gone, it's gone.
+arrivals.cta = View all
+arrivals.empty = Fresh pieces are on the cutting table — check back very soon.
+
+# ── Shop by category ────────────────────────────────────────────────────
+category.kicker = Find your lane
+category.title = Shop by category
+category.copy = Three sections, one thread: clothes that respect the craft.
+category.cta = Explore
+
+# ── Shop by occasion ────────────────────────────────────────────────────
+occasion.kicker = Dress for the day
+occasion.title = Shop by occasion
+occasion.copy = Eid mornings, wedding evenings, and everything in between.
+occasion.cta = Shop now
+
+occasion.item.1.name = Eid
+occasion.item.1.copy = Moonlit whites & golds
+occasion.item.1.href = /women?occasion=eid
+occasion.item.1.image = /library/photo-album/EID.jpg
+occasion.item.2.name = Wedding
+occasion.item.2.copy = Heirlooms in the making
+occasion.item.2.href = /women?occasion=wedding
+occasion.item.2.image = /library/photo-album/WEDDING.jpg
+occasion.item.3.name = Everyday
+occasion.item.3.copy = Breathable, reworn often
+occasion.item.3.href = /men?occasion=everyday
+occasion.item.3.image = /library/photo-album/Everyday.jpg
+occasion.item.4.name = Winter
+occasion.item.4.copy = Layers with intention
+occasion.item.4.href = /men?occasion=winter
+occasion.item.4.image = /library/photo-album/WINTER.jpg
+
+# ── Sale edit ───────────────────────────────────────────────────────────
+sale.kicker = Up to honest markdowns
+sale.title = The sale edit
+sale.copy = Last pieces, best fabrics. Loved by regulars.
+sale.cta = Shop sale
+
+# ── Craft story ─────────────────────────────────────────────────────────
+craft.kicker = Woven, not rushed
+craft.title = From loom to doorstep, with patience.
+craft.body = We work with weaving clusters across Bangladesh — muslin, endi, silk — and cut every piece for real bodies and real weather. No overproduction, no shouting discounts. Just clothes that earn their place.
+craft.cta = Read our story
+craft.stat.1.value = 40+
+craft.stat.1.label = artisan clusters
+craft.stat.2.value = 100%
+craft.stat.2.label = breathable fabrics
+craft.stat.3.value = 7-day
+craft.stat.3.label = easy exchange
+
+# ── Testimonials ────────────────────────────────────────────────────────
+testimonials.kicker = Worn & loved
+testimonials.title = Word on the street
+
+testimonial.1.quote = The panjabi fits like it was cut for me. Wore it all Eid, zero wrinkles.
+testimonial.1.name = Tanvir · Dhaka
+testimonial.2.quote = Ordered Tuesday, delivered Thursday. The muslin sharee is softer in person.
+testimonial.2.name = Nusrat · Chattogram
+testimonial.3.quote = Finally, kids' festive wear that survives actual kids. Exchanged a size over WhatsApp in minutes.
+testimonial.3.name = Faria · Sylhet
+
+# ── Trust badges row ────────────────────────────────────────────────────
+trust.1.title = Cash on delivery
+trust.1.copy = Pay at your door, anywhere in Bangladesh.
+trust.1.icon = ৳
+trust.2.title = 7-day exchange
+trust.2.copy = Wrong size? We swap it fast, no drama.
+trust.2.icon = ↺
+trust.3.title = WhatsApp support
+trust.3.copy = Real humans, Sat–Thu 10am–8pm.
+trust.3.icon = ✦
+
+# ── Newsletter CTA ──────────────────────────────────────────────────────
+newsletter.kicker = The letter — 10% off first order
+newsletter.title = First dibs, every drop.
+newsletter.copy = Join for 10% off your first order over ৳2,500 — plus craft notes worth opening.
+newsletter.cta = Join us

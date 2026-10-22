@@ -125,7 +125,7 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
           <div className="grid gap-2 sm:grid-cols-2">
             <label className="text-sm">
               Division
-              <select value={division} onChange={(e) => { setDivision(e.target.value); setDistrict(DIVISIONS.find((d) => d.name === e.target.value)?.districts[0] ?? ""); }} className="mt-1 w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-[#F5F5F5]">
+              <select value={division} onChange={(e) => { setDivision(e.target.value); setDistrict(DIVISIONS.find((d) => d.name === e.target.value)?.districts[0] ?? ""); }} className="mt-1 w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-[var(--color-smoke)]">
                 {DIVISIONS.map((d) => (
                   <option key={d.name} value={d.name}>{d.name}</option>
                 ))}
@@ -133,7 +133,7 @@ export default function CheckoutForm({ sslEnabled }: { sslEnabled: boolean }) {
             </label>
             <label className="text-sm">
               District
-              <select value={district} onChange={(e) => setDistrict(e.target.value)} className="mt-1 w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-[#F5F5F5]">
+              <select value={district} onChange={(e) => setDistrict(e.target.value)} className="mt-1 w-full rounded border border-white/15 bg-[#111111] px-3 py-2 text-[var(--color-smoke)]">
                 {districts.map((d) => (
                   <option key={d} value={d}>{d}</option>
                 ))}

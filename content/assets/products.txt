@@ -1,0 +1,22 @@
+# ── PRODUCT IMAGE RULES ────────────────────────────────────────────────
+# Product photos are stored as /public/products/<slug>-<n>.jpg and are
+# managed in the Admin → Products panel (Supabase), NOT here. This file
+# controls the shared rules every product image follows.
+#
+# KEY              MEANING
+# folder           folder where product photos live
+# pattern          filename convention ({slug} = product slug, {n} = 1,2,3…)
+# fallback         image shown when a product has no photo
+# aspect           crop ratio for product cards
+# card.sizes       responsive sizes hint (helps the browser pick a size)
+# detail.sizes     sizes hint for the product-detail gallery
+# placeholder.*    what an empty image slot looks like
+
+folder = /products
+pattern = {slug}-{n}.jpg
+fallback = /hero/women.jpg
+aspect = 3/4
+card.sizes = (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw
+detail.sizes = (max-width: 768px) 100vw, 50vw
+placeholder.color = #0d0d0d
+placeholder.label = Image coming soon

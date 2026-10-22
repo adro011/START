@@ -1,0 +1,28 @@
+# ── SCRIPT / FEATURE SWITCHES ──────────────────────────────────────────
+# Turn whole behaviours on or off without deleting code.
+# true = on, false = off.
+#
+# KEY                WHAT IT DOES
+# smoothScroll       Lenis smooth scrolling
+# spotlight          scroll-driven golden spotlight on sections
+# cursorRing         custom cursor ring on desktop
+# brandLoader        full-screen loading animation
+# particleInspector  on-page element inspector (dev/authoring tool)
+# serviceWorker      offline caching / PWA behaviour
+# tabRefresh         refreshes page state when returning to the tab
+# searchPalette      ⌘K / search overlay
+# occasionEffects    seasonal particle/occasion effects
+# microFx            small hover/press micro-interactions
+# whatsappOrder      floating WhatsApp order button
+
+smoothScroll = true
+spotlight = true
+cursorRing = true
+brandLoader = true
+particleInspector = true
+serviceWorker = true
+tabRefresh = true
+searchPalette = true
+occasionEffects = true
+microFx = true
+whatsappOrder = true

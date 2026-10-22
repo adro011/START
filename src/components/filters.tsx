@@ -32,7 +32,7 @@ export function LoadMore({ total, pageSize = 12 }: { total: number; pageSize?: n
       <button
         type="button"
         onClick={() => router.replace(`${pathname}?${setParam(params, "page", String(page + 1))}`, { scroll: false })}
-        className="mt-2 rounded-full border px-6 py-2 text-sm font-medium hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+        className="mt-2 rounded-full border px-6 py-2 text-sm font-medium hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
       >
         Load more
       </button>
@@ -83,7 +83,7 @@ export default function Filters({
             type="button"
             onClick={() => update("category", null)}
             aria-pressed={activeCat === ""}
-            className={`rounded-full border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] ${activeCat === "" ? "bg-gold text-black" : "hover:bg-white/10"}`}
+            className={`rounded-full border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)] ${activeCat === "" ? "bg-gold text-black" : "hover:bg-white/10"}`}
           >
             All
           </button>
@@ -93,7 +93,7 @@ export default function Filters({
               type="button"
               onClick={() => update("category", activeCat === c.slug ? null : c.slug)}
               aria-pressed={activeCat === c.slug}
-              className={`rounded-full border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] ${activeCat === c.slug ? "bg-gold text-black" : "hover:bg-white/10"}`}
+              className={`rounded-full border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)] ${activeCat === c.slug ? "bg-gold text-black" : "hover:bg-white/10"}`}
             >
               {c.name}
             </button>
@@ -113,7 +113,7 @@ export default function Filters({
           step={10000}
           value={maxPrice ? Number(maxPrice) : liveBounds.max}
           onChange={(e) => update("maxPrice", e.target.value)}
-          className="w-full accent-[#FFC000] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+          className="w-full accent-[var(--color-gold)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
         />
         <div className="flex justify-between text-xs text-ash">
           <span>{formatBDT(liveBounds.min)}</span>
@@ -130,7 +130,7 @@ export default function Filters({
               type="button"
               onClick={() => toggleSize(s)}
               aria-pressed={activeSizes.includes(s)}
-              className={`rounded border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000] ${activeSizes.includes(s) ? "bg-gold text-black" : "hover:bg-white/10"}`}
+              className={`rounded border px-3 py-1 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)] ${activeSizes.includes(s) ? "bg-gold text-black" : "hover:bg-white/10"}`}
             >
               {s}
             </button>
@@ -143,7 +143,7 @@ export default function Filters({
           type="checkbox"
           checked={inStock}
           onChange={(e) => update("inStock", e.target.checked ? "1" : null)}
-          className="accent-[#FFC000] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+          className="accent-[var(--color-gold)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
         />
         In stock only
       </label>
@@ -152,7 +152,7 @@ export default function Filters({
         <button
           type="button"
           onClick={() => router.replace(pathname, { scroll: false })}
-          className="text-xs underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFC000]"
+          className="text-xs underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
         >
           Clear all filters
         </button>

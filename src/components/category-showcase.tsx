@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { asset, motionNumber } from "@/lib/content";
 
 const CONFIG = {
   rest: 1,
-  hovered: 2.0,
-  others: 0.85,
+  hovered: motionNumber("effects", "category.hoverGrow", 2.0),
+  others: motionNumber("effects", "category.othersGrow", 0.85),
   parallaxMax: 28,
   zoomIn: 1.08,
   zoomOut: 1.0,
@@ -18,7 +19,7 @@ const CONFIG = {
   overlayIn: 0.15,
   overlayOut: 0,
   ease: "expo.out",
-  duration: 1.7,
+  duration: motionNumber("effects", "category.duration", 1.7),
   imageDuration: 1.8,
   titleDuration: 1.9,
   ctaDuration: 2.0,
@@ -65,24 +66,24 @@ const PANELS: Panel[] = [
     number: "01",
     title: "MEN",
     href: "/men",
-    img: "/hero/men.jpg",
-    alt: "Men's collection",
+    img: asset("categories", "men.portrait", "/hero/men.jpg"),
+    alt: asset("categories", "men.alt", "Men's collection"),
   },
   {
     id: "women",
     number: "02",
     title: "WOMEN",
     href: "/women",
-    img: "/hero/women.jpg",
-    alt: "Women's collection",
+    img: asset("categories", "women.portrait", "/hero/women.jpg"),
+    alt: asset("categories", "women.alt", "Women's collection"),
   },
   {
     id: "kids",
     number: "03",
     title: "KIDS",
     href: "/kids",
-    img: "/hero/kids.jpg",
-    alt: "Kids' collection",
+    img: asset("categories", "kids.portrait", "/hero/kids.jpg"),
+    alt: asset("categories", "kids.alt", "Kids' collection"),
   },
 ];
 
@@ -298,7 +299,7 @@ export default function CategoryShowcase() {
             ref={(el) => {
               itemsRef.current[i] = el;
             }}
-            className="group relative flex-1 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#FFC000]"
+            className="group relative flex-1 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-gold)]"
             onMouseEnter={() => setActive(p.id)}
             onMouseLeave={() => setActive((a) => (a === p.id ? null : a))}
             onFocus={() => setActive(p.id)}
