@@ -6,6 +6,7 @@ node_modules/
 coverage/
 playwright-report/
 test-results/
+.lighthouseci/
 *.tsbuildinfo
 
 # Supabase CLI local state (linked project ref, versions) — never commit

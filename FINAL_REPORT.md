@@ -76,13 +76,23 @@ See `README.md` § Env vars (full table) — source of truth is `.env.example`:
 
 ## 8. Quality results
 
-`PLACEHOLDER_SCORES` — to be filled by the main agent after running the suites
-(docs pass ran nothing by instruction):
+Measured 2026-10-22 (Node 24, `next build` + `next start`, Supabase live):
 
-- Lighthouse CI (`/`, `/men`; budgets ≥ 0.90 ×4, LCP ≤ 2500 ms, CLS ≤ 0.05): ___
-- Axe (`/`, `/men`, `/cart`; zero serious/critical): ___
-- Unit — 36 tests (`money` 5, `cart` 6, `validators` 25): ___
-- E2E — 4 tests (1 COD purchase flow + 3 axe pages): ___
+- **Unit — 77 tests, all passing** (`money` 5, `cart` 6, `validators` 25,
+  `order-state-machine` 26, `sslcommerz` 15).
+- **E2E — 4 tests, all passing** (1 COD purchase flow + 3 axe pages).
+- **Axe — zero serious/critical violations** on `/`, `/men`, `/cart`.
+- **Lighthouse CI** (`/` and `/men`, local `next start`):
+
+  | URL | Perf | A11y | Best-Practices | SEO | LCP | CLS |
+  |---|---|---|---|---|---|---|
+  | `/` | **0.59** ✗ | 0.96 ✓ | 1.00 ✓ | 1.00 ✓ | 4532 ms ✗ | 0.0077 ✓ |
+  | `/men` | **0.58** ✗ | 0.96 ✓ | 1.00 ✓ | 1.00 ✓ | 5256 ms ✗ | 0.000 ✓ |
+
+  A11y / Best-Practices / SEO / CLS all meet the §9 budgets. **Performance and
+  LCP fail** — the home and listing pages are server-rendered on demand (they
+  await Supabase reads in the page component), so TTFB + LCP land at ~4.5–5.3 s
+  locally. See §11 item 1.
 
 ## 9. Known limitations (all verified in-repo)
 
@@ -121,9 +131,16 @@ See `README.md` § Env vars (full table) — source of truth is `.env.example`:
 
 ## 11. Prioritized next steps
 
-1. **Merchant feed polish** — `/feed.xml` route exists; validate against Google/Meta Merchant specs (availability, GTIN-less BD apparel, BDT pricing) and add scheduled refresh.
-2. **Abandoned-cart emails** — persist guest carts, scheduled Resend reminders with coupon incentive.
-3. **Loyalty points** — earn/burn ledger on orders, member tiers in `profiles`.
-4. **Size recommendation** — fit quiz + order-history fit model on product pages.
-5. **Gift cards** — issuable codes, balance ledger, checkout redemption.
-6. **B2B wholesale** — wholesale price lists, MOQ rules, tax-invoice PDFs, staff-assisted ordering.
+1. **Fix Lighthouse performance budget (§9)** — performance is 0.58–0.59 with LCP
+   4.5–5.3 s. Root cause: home + listing pages are server-rendered on demand and
+   `await` Supabase reads in the page component (no ISR/static prerender), and the
+   412 KB hero LCP image loads synchronously. Fix: static-generate or ISR-cache
+   (`revalidateTag` on product edits) the home/listing pages, add a `loading.tsx`
+   streaming boundary, convert the hero to AVIF/WebP with a smaller `sizes`/`quality`,
+   and preload the display font.
+2. **Merchant feed polish** — `/feed.xml` route exists; validate against Google/Meta Merchant specs (availability, GTIN-less BD apparel, BDT pricing) and add scheduled refresh.
+3. **Abandoned-cart emails** — persist guest carts, scheduled Resend reminders with coupon incentive.
+4. **Loyalty points** — earn/burn ledger on orders, member tiers in `profiles`.
+5. **Size recommendation** — fit quiz + order-history fit model on product pages.
+6. **Gift cards** — issuable codes, balance ledger, checkout redemption.
+7. **B2B wholesale** — wholesale price lists, MOQ rules, tax-invoice PDFs, staff-assisted ordering.
