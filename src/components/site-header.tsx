@@ -89,6 +89,7 @@ export function SiteHeader() {
               alt={`${SITE.name} logo`}
               width={80}
               height={80}
+              sizes="80px"
               className="brand-mark-glow h-20 w-20 object-contain"
               priority
             />

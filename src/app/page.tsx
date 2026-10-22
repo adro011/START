@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fragment } from "react";
+import { Fragment, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -20,6 +20,11 @@ import { SITE } from "@/config/site";
 import { CONTENT, asset, toArray } from "@/lib/content";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+
+// ISR: the homepage is re-rendered at most once an hour (and revalidated on
+// product/category edits via revalidateTag), so it is served from cache
+// instead of hitting Supabase on every request (see §9 performance budget).
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -138,7 +143,7 @@ const HERO = toArray(CONTENT.home.hero.panel).map((p) => ({
   index: p.index,
   title: p.title,
   href: p.href,
-  img: p.image || asset("hero", `panel.${p.key}.tile`, "/library/men.png"),
+  img: p.image || asset("hero", `panel.${p.key}.tile`, "/hero/men.jpg"),
   bg: PANEL_BG,
 }));
 
@@ -159,27 +164,71 @@ const CRAFT_STATS = toArray(CONTENT.home.craft.stat);
 
 const TRUST_ITEMS = toArray(CONTENT.home.trust);
 
-/**
- * Home: cinematic 100dvh hero, editorial rails, occasion journey,
- * sale cinema, craft story, testimonials, trust, newsletter.
- * Server component; catalog lib supplies products.
- */
-export default async function HomePage() {
-  // Live-first: Supabase products/categories, local TS mirror as fallback
-  // (offline builds, missing env). Same helpers, source list injected.
-  const [{ products: liveProducts }, { categories: liveCategories }] = await Promise.all([
-    safe(() => getLiveProducts(), { products: [], live: false }),
-    safe(() => getLiveCategories(), { categories: [], live: false }),
-  ]);
-  // Live-first: Supabase products, local TS mirror as fallback (offline
-  // builds, missing env). `undefined` selects the catalog default (local).
-  const liveList = liveProducts.length > 0 ? liveProducts : undefined;
-  const [arrivals, sale] = await Promise.all([
-    safe(() => getNewArrivals(8, liveList), []),
-    safe(() => getSale(8, liveList), []),
-  ]);
+/** Shimmer placeholder for the streamed product rails (below the fold). */
+function RailSkeleton() {
+  return (
+    <div
+      className="rail -mx-[clamp(16px,4vw,64px)] flex gap-5 overflow-hidden px-[clamp(16px,4vw,64px)] pb-4"
+      aria-hidden="true"
+    >
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="w-[228px] shrink-0 sm:w-[272px]">
+          <div className="aspect-[3/4] w-full animate-pulse bg-white/5" />
+          <div className="mt-3 h-4 w-3/4 animate-pulse bg-white/5" />
+        </div>
+      ))}
+    </div>
+  );
+}
 
-  const cats = liveCategories.length > 0 ? liveCategories : undefined;
+/** New-arrivals rail — streamed, so the cover paints before Supabase resolves. */
+async function NewArrivalsRail() {
+  const live = await safe(() => getLiveProducts(), { products: [], live: false });
+  const liveList = live.products.length > 0 ? live.products : undefined;
+  const arrivals = await safe(() => getNewArrivals(8, liveList), []);
+
+  if (arrivals.length === 0) {
+    return (
+      <p
+        className="border border-dashed border-white/20 px-6 py-10 text-center text-[15px] text-steel"
+        data-particle-id="home.new-arrivals.empty"
+        data-particle-type="text"
+        data-particle-label="New Arrivals Empty State Text"
+        data-editable="true"
+      >
+        {CONTENT.home.arrivals.empty}
+      </p>
+    );
+  }
+
+  return (
+    <div className="rail -mx-[clamp(16px,4vw,64px)] flex snap-x snap-mandatory gap-5 overflow-x-auto px-[clamp(16px,4vw,64px)] pb-4">
+      {arrivals.slice(0, 10).map((p, i) => (
+        <Reveal
+          key={p.slug}
+          delay={(i % 5) * 70}
+          className="w-[228px] shrink-0 snap-start sm:w-[272px]"
+        >
+          <span
+            className="mb-2 block text-[11px] font-semibold tracking-[0.24em] text-ash uppercase"
+            data-particle-id={`home.new-arrivals.item.${i}.index`}
+            data-particle-type="badge"
+            data-particle-label={`New Arrival Item ${i + 1} Index Badge`}
+            data-editable="true"
+          >
+            N° {String(i + 1).padStart(2, "0")}
+          </span>
+          <ProductCard product={asCard(p)} />
+        </Reveal>
+      ))}
+    </div>
+  );
+}
+
+/** Category tile grid — streamed (reads live categories with local fallback). */
+async function CategoryGrid() {
+  const live = await safe(() => getLiveCategories(), { categories: [], live: false });
+  const cats = live.categories.length > 0 ? live.categories : undefined;
   type Tile = { name: string; href: string; img?: string };
   const tiles = (
     Array.isArray(cats) && cats.length > 0
@@ -207,6 +256,113 @@ export default async function HomePage() {
     tiles[5] = { name: "JACKETS", href: "/men/jackets", img: "/library/male/JAcket.webp" };
   }
 
+  return (
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+      {tiles.map((t, i) => (
+        <Reveal
+          key={t.href + t.name}
+          delay={(i % 3) * 80}
+          className="lift group relative overflow-hidden border border-white/10 bg-[var(--abrar-surface)] px-6 py-8 sm:py-10"
+        >
+          <Link
+            href={t.href}
+            className="block"
+            data-cursor="Open"
+            data-particle-id={`home.category.tile.${i}`}
+            data-particle-type="card"
+            data-particle-label={`Category Tile ${t.name}`}
+            data-editable="true"
+          >
+            {t.img && (
+              <Image
+                src={t.img}
+                alt={`${t.name} collection`}
+                width={400}
+                height={533}
+                className="mb-4 block aspect-[3/4] w-full object-cover object-center opacity-90 transition-all duration-700 group-hover:opacity-100"
+                loading="lazy"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                data-particle-id={`home.category.tile.${i}.image`}
+                data-particle-type="image"
+                data-particle-label={`Category Tile ${t.name} Image`}
+                data-editable="true"
+              />
+            )}
+            <span
+              aria-hidden="true"
+              className="text-ghost pointer-events-none absolute -right-2 -bottom-6 text-[96px] leading-none font-semibold"
+              data-particle-id={`home.category.tile.${i}.number`}
+              data-particle-type="badge"
+              data-particle-label={`Category Tile ${t.name} Ghost Number`}
+              data-editable="true"
+            >
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <span
+              className="kicker text-[var(--abrar-accent)]/80"
+              data-particle-id={`home.category.tile.${i}.kicker`}
+              data-particle-type="badge"
+              data-particle-label={`Category Tile ${t.name} Kicker`}
+              data-editable="true"
+            >
+              0{i + 1} — {CONTENT.home.category.cta}
+            </span>
+            <span
+              className="mt-2 block text-[28px] leading-tight font-medium break-words text-white sm:text-[32px]"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              data-particle-id={`home.category.tile.${i}.title`}
+              data-particle-type="heading"
+              data-particle-label={`Category Tile ${t.name} Heading`}
+              data-editable="true"
+            >
+              {t.name}
+            </span>
+            <span
+              className="link-lux mt-3 inline-block text-[12px] font-semibold tracking-[0.2em] text-white/85 uppercase"
+              data-particle-id={`home.category.tile.${i}.cta`}
+              data-particle-type="link"
+              data-particle-label={`Category Tile ${t.name} Explore CTA`}
+              data-editable="true"
+            >
+              {CONTENT.home.category.cta} →
+            </span>
+          </Link>
+        </Reveal>
+      ))}
+    </div>
+  );
+}
+
+/** Sale rail — streamed (reads live products with local fallback). */
+async function SaleRail() {
+  const live = await safe(() => getLiveProducts(), { products: [], live: false });
+  const liveList = live.products.length > 0 ? live.products : undefined;
+  const sale = await safe(() => getSale(8, liveList), []);
+
+  if (sale.length === 0) return null;
+
+  return (
+    <div className="rail rail-dark mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2">
+      {sale.slice(0, 8).map((p, i) => (
+        <Reveal
+          key={p.slug}
+          delay={(i % 4) * 70}
+          className="w-[228px] shrink-0 snap-start sm:w-[258px] [&_a]:text-[var(--color-paper)] [&_p]:text-white/70 [&_s]:text-white/70 [&_.text-clay]:text-blush [&_.price]:text-blush"
+        >
+          <ProductCard product={asCard(p)} />
+        </Reveal>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Home: cinematic 100dvh hero, editorial rails, occasion journey,
+ * sale cinema, craft story, testimonials, trust, newsletter.
+ * The three data-driven sections stream in via Suspense so the cover (LCP)
+ * paints before Supabase resolves.
+ */
+export default function HomePage() {
   return (
     <div className="overflow-x-hidden">
       <MicroFx />
@@ -497,38 +653,9 @@ export default async function HomePage() {
             href="/new-arrivals"
             particlePrefix="home.new-arrivals"
           />
-          {arrivals.length > 0 ? (
-            <div className="rail -mx-[clamp(16px,4vw,64px)] flex snap-x snap-mandatory gap-5 overflow-x-auto px-[clamp(16px,4vw,64px)] pb-4">
-              {arrivals.slice(0, 10).map((p, i) => (
-                <Reveal
-                  key={p.slug}
-                  delay={(i % 5) * 70}
-                  className="w-[228px] shrink-0 snap-start sm:w-[272px]"
-                >
-                  <span
-                    className="mb-2 block text-[11px] font-semibold tracking-[0.24em] text-ash uppercase"
-                    data-particle-id={`home.new-arrivals.item.${i}.index`}
-                    data-particle-type="badge"
-                    data-particle-label={`New Arrival Item ${i + 1} Index Badge`}
-                    data-editable="true"
-                  >
-                    N° {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <ProductCard product={asCard(p)} />
-                </Reveal>
-              ))}
-            </div>
-          ) : (
-            <p
-              className="border border-dashed border-white/20 px-6 py-10 text-center text-[15px] text-steel"
-              data-particle-id="home.new-arrivals.empty"
-              data-particle-type="text"
-              data-particle-label="New Arrivals Empty State Text"
-              data-editable="true"
-            >
-              {CONTENT.home.arrivals.empty}
-            </p>
-          )}
+          <Suspense fallback={<RailSkeleton />}>
+            <NewArrivalsRail />
+          </Suspense>
         </div>
       </section>
 
@@ -550,79 +677,9 @@ export default async function HomePage() {
             dark
             particlePrefix="home.category"
           />
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-            {tiles.map((t, i) => (
-              <Reveal
-                key={t.href + t.name}
-                delay={(i % 3) * 80}
-                className="lift group relative overflow-hidden border border-white/10 bg-[var(--abrar-surface)] px-6 py-8 sm:py-10"
-              >
-                <Link
-                  href={t.href}
-                  className="block"
-                  data-cursor="Open"
-                  data-particle-id={`home.category.tile.${i}`}
-                  data-particle-type="card"
-                  data-particle-label={`Category Tile ${t.name}`}
-                  data-editable="true"
-                >
-                  {t.img && (
-                    <Image
-                      src={t.img}
-                      alt={`${t.name} collection`}
-                      width={400}
-                      height={533}
-                      className="mb-4 block aspect-[3/4] w-full object-cover object-center opacity-90 transition-all duration-700 group-hover:opacity-100"
-                      loading="lazy"
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                      data-particle-id={`home.category.tile.${i}.image`}
-                      data-particle-type="image"
-                      data-particle-label={`Category Tile ${t.name} Image`}
-                      data-editable="true"
-                    />
-                  )}
-                  <span
-                    aria-hidden="true"
-                    className="text-ghost pointer-events-none absolute -right-2 -bottom-6 text-[96px] leading-none font-semibold"
-                    data-particle-id={`home.category.tile.${i}.number`}
-                    data-particle-type="badge"
-                    data-particle-label={`Category Tile ${t.name} Ghost Number`}
-                    data-editable="true"
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span
-                    className="kicker text-[var(--abrar-accent)]/80"
-                    data-particle-id={`home.category.tile.${i}.kicker`}
-                    data-particle-type="badge"
-                    data-particle-label={`Category Tile ${t.name} Kicker`}
-                    data-editable="true"
-                  >
-                    0{i + 1} — {CONTENT.home.category.cta}
-                  </span>
-                  <span
-                    className="mt-2 block text-[28px] leading-tight font-medium break-words text-white sm:text-[32px]"
-                    style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                    data-particle-id={`home.category.tile.${i}.title`}
-                    data-particle-type="heading"
-                    data-particle-label={`Category Tile ${t.name} Heading`}
-                    data-editable="true"
-                  >
-                    {t.name}
-                  </span>
-                  <span
-                    className="link-lux mt-3 inline-block text-[12px] font-semibold tracking-[0.2em] text-white/85 uppercase"
-                    data-particle-id={`home.category.tile.${i}.cta`}
-                    data-particle-type="link"
-                    data-particle-label={`Category Tile ${t.name} Explore CTA`}
-                    data-editable="true"
-                  >
-                    {CONTENT.home.category.cta} →
-                  </span>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
+          <Suspense fallback={<RailSkeleton />}>
+            <CategoryGrid />
+          </Suspense>
         </div>
       </section>
 
@@ -779,19 +836,9 @@ export default async function HomePage() {
               </Magnetic>
             </div>
           </Reveal>
-          {sale.length > 0 && (
-            <div className="rail rail-dark mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2">
-              {sale.slice(0, 8).map((p, i) => (
-                <Reveal
-                  key={p.slug}
-                  delay={(i % 4) * 70}
-                  className="w-[228px] shrink-0 snap-start sm:w-[258px] [&_a]:text-[var(--color-paper)] [&_p]:text-white/70 [&_s]:text-white/70 [&_.text-clay]:text-blush [&_.price]:text-blush"
-                >
-                  <ProductCard product={asCard(p)} />
-                </Reveal>
-              ))}
-            </div>
-          )}
+          <Suspense fallback={null}>
+            <SaleRail />
+          </Suspense>
         </div>
       </section>
 

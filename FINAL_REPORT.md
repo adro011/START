@@ -82,25 +82,44 @@ Measured 2026-10-22 (Node 24, `next build` + `next start`, Supabase live):
   `order-state-machine` 26, `sslcommerz` 15).
 - **E2E — 4 tests, all passing** (1 COD purchase flow + 3 axe pages).
 - **Axe — zero serious/critical violations** on `/`, `/men`, `/cart`.
-- **Lighthouse CI** (`/` and `/men`, local `next start`):
+- **Lighthouse CI** (`/` and `/men`, local `next start`, mobile emulation
+  slow-4G; run-to-run spread is ±0.05 score / ±1 s LCP because root layout and
+  rails await remote Supabase at SSR time):
 
   | URL | Perf | A11y | Best-Practices | SEO | LCP | CLS |
   |---|---|---|---|---|---|---|
-  | `/` | **0.59** ✗ | 0.96 ✓ | 1.00 ✓ | 1.00 ✓ | 4532 ms ✗ | 0.0077 ✓ |
-  | `/men` | **0.58** ✗ | 0.96 ✓ | 1.00 ✓ | 1.00 ✓ | 5256 ms ✗ | 0.000 ✓ |
+  | `/` | **0.52–0.59** ✗ | 0.96 ✓ | 1.00 ✓ | 1.00 ✓ | 4532–5819 ms ✗ | 0.0000 ✓ |
+  | `/men` | **0.77–0.86** ✗ | 0.96 ✓ | 1.00 ✓ | 1.00 ✓ | 3589–4225 ms ✗ | 0.000 ✓ |
 
   A11y / Best-Practices / SEO / CLS all meet the §9 budgets. **Performance and
-  LCP fail** — the home and listing pages are server-rendered on demand (they
-  await Supabase reads in the page component), so TTFB + LCP land at ~4.5–5.3 s
-  locally. See §11 item 1.
+  LCP fail.** Fixes landed this pass (each verified against a fresh build):
+  hero `<img>` payloads cut ~9 MB → ~1 MB (`library/*.png` → `hero/*.jpg`
+  everywhere incl. CMS defaults), cover HTML+LCP and rails split into
+  Suspense-streamed server components, logo `<Image sizes="80px">`, fonts made
+  non-render-blocking, and the first-visit brand loader + Particle Inspector
+  (dev/authoring tool) disabled by default via `content/scripts/features.txt`.
+  What remains is structural: the root layout `await`s `cookies()` +
+  `isRegistrationOpen()` so **every page renders dynamically** (the home
+  `revalidate = 3600` is inert), the home HTML is ~360 KB (the particle
+  editorial attributes system) and the home/client chunk set is ~600 KB —
+  under simulated slow-4G that floors LCP at ~3–4 s regardless of cache state.
+  See §11 item 1 for the acceptance plan.
 
 ## 9. Known limitations (all verified in-repo)
 
 1. **Demo checkout RPC is wired with local fallback:** `src/actions/checkout.ts::placeOrder` tries live `create_order` first (`tryLiveOrder` resolves cart SKUs to DB variant uuids — fires automatically for storefront carts carrying DB SKUs) and falls back to the local demo repricer (random `BR-` number) only when env is missing or SKUs have no DB match.
 2. **No live Supabase yet:** no `.env.local` values and no linked project in-repo; DB-backed paths (auth roles, orders, RLS) are unexercised until §7 item 1 is done.
-3. **Motion is CSS-only:** `motion`/`lenis`/`gsap` are not in `package.json`; hero/parallax/scroll-rail effects from plan §5 are not implemented as specified.
-4. **Service worker unregistered:** `public/sw.js` exists (static cache + `/offline` fallback) but a repo-wide search finds no `serviceWorker.register` call in `src` — PWA install/offline works only after registration lands.
-5. Hero visuals are `.svg` placeholders (`men.svg`/`women.svg`/`kids.svg`); contact info, WhatsApp number, and social links are placeholders (`src/config/site.ts`).
+3. Motion now uses `gsap` (^3.15) and `lenis` (^1.3.27) alongside CSS
+   entrances; plan §5's split-type / scroll-rail choreography is partially
+   scripted — remaining polish is visual judgment.
+4. **PWA installs intentionally disabled:** `public/sw.js` exists but no
+   `register` call ships; `src/components/sw-register.tsx` instead
+   unregisters any stale worker (a cache-first worker previously served stale
+   chunks). Re-enable only with a validated revalidation strategy.
+5. Hero/category visuals are real photography (`hero/*.jpg`, `library/**`);
+   `public/hero/{men,women,kids}.svg` remain only as unused legacy fallback
+   defaults. Contact info, WhatsApp number, and social links are still
+   placeholders (`src/config/site.ts`).
 6. Turnstile/Resend/Upstash integrations are env-gated stubs, not end-to-end verified.
 
 ## 10. Addendum 2026-10-16 — live DB + motion + pre-commit fixes (uncommitted at docs-pass time, now in repo)
@@ -131,13 +150,25 @@ Measured 2026-10-22 (Node 24, `next build` + `next start`, Supabase live):
 
 ## 11. Prioritized next steps
 
-1. **Fix Lighthouse performance budget (§9)** — performance is 0.58–0.59 with LCP
-   4.5–5.3 s. Root cause: home + listing pages are server-rendered on demand and
-   `await` Supabase reads in the page component (no ISR/static prerender), and the
-   412 KB hero LCP image loads synchronously. Fix: static-generate or ISR-cache
-   (`revalidateTag` on product edits) the home/listing pages, add a `loading.tsx`
-   streaming boundary, convert the hero to AVIF/WebP with a smaller `sizes`/`quality`,
-   and preload the display font.
+1. **Fix Lighthouse performance budget (§9)** — perf is 0.52–0.86 with LCP
+   3.6–5.8 s under slow-4G emulation after the streaming/image/loader/font
+   fixes already landed. Acceptance plan, in order of leverage:
+   1. **Make layout static** so ISR `revalidate = 3600` activates: move the
+      `await cookies()` locale read out of `src/app/layout.tsx` (detect locale
+      client-side in `providers.tsx` / a tiny inline script) and convert the
+      footer registration CTA to a client-side `isRegistrationOpen()` fetch
+      (or a tag-revalidated call). Removes Supabase from the request path →
+      HTML served from cache, stable TTFB/LCP, and kills the ±1 s run noise.
+   2. **HTML diet** — the ~360 KB home HTML (250 KB flight payload) comes from
+      the `data-particle-*` editorial attributes on ~250 DOM nodes; consider
+      shipping particle metadata only to editor sessions.
+   3. **JS diet** — home client chunks ~600 KB boot up in 1.1–1.5 s on
+      mobile CPUs; the heaviest below-fold interactive shells
+      (`InstagramGrid`, occasion effects, testimonials) can be
+      `next/dynamic` imports.
+   4. Then re-audit `lighthouserc.json` with the image cache warmed
+      (a rebuild wipes `.next/cache/images`; cold-variant sharp work adds
+      ~0.3–0.8 s to the first post-build run only).
 2. **Merchant feed polish** — `/feed.xml` route exists; validate against Google/Meta Merchant specs (availability, GTIN-less BD apparel, BDT pricing) and add scheduled refresh.
 3. **Abandoned-cart emails** — persist guest carts, scheduled Resend reminders with coupon incentive.
 4. **Loyalty points** — earn/burn ledger on orders, member tiers in `profiles`.

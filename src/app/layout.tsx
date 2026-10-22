@@ -74,10 +74,13 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font -- deliberate: <link> fonts keep builds offline-safe (see DECISIONS.md) */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet"
+        {/* Non-blocking font load: the stylesheet is injected with media="print"
+            and flipped to "all" once ready, so Roboto never delays first paint.
+            Kept as a <link> (not next/font) so builds stay offline-safe — see DECISIONS.md. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var l=document.createElement("link");l.rel="stylesheet";l.href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap";l.media="print";l.onload=function(){l.media="all";};document.head.appendChild(l);})();`,
+          }}
         />
       </head>
       <body className="overflow-x-clip bg-[var(--color-black)] text-[var(--color-smoke)] antialiased">

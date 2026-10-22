@@ -18,8 +18,8 @@
 smoothScroll = true
 spotlight = true
 cursorRing = true
-brandLoader = true
-particleInspector = true
+brandLoader = false
+particleInspector = false
 serviceWorker = true
 tabRefresh = true
 searchPalette = true

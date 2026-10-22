@@ -34,15 +34,15 @@ export const GENERATED_CONTENT = {
       "openGraph": "/hero/icons/MAIN LOGO.png"
     },
     "categories": {
-      "men.tile": "/library/men.png",
+      "men.tile": "/hero/men.jpg",
       "men.portrait": "/hero/men.jpg",
       "men.icon": "/hero/men.svg",
       "men.alt": "Men's collection",
-      "women.tile": "/library/women.png",
+      "women.tile": "/hero/women.jpg",
       "women.portrait": "/hero/women.jpg",
       "women.icon": "/hero/women.svg",
       "women.alt": "Women's collection",
-      "kids.tile": "/library/children.png",
+      "kids.tile": "/hero/kids.jpg",
       "kids.portrait": "/hero/kids.jpg",
       "kids.icon": "/hero/kids.svg",
       "kids.alt": "Children's collection"
@@ -51,17 +51,17 @@ export const GENERATED_CONTENT = {
       "cover.image": "/hero/women.jpg",
       "cover.alt": "ABRAR editorial campaign",
       "cover.overlay": "rgba(0,0,0,0.38)",
-      "panel.men.tile": "/library/men.png",
+      "panel.men.tile": "/hero/men.jpg",
       "panel.men.portrait": "/hero/men.jpg",
       "panel.men.icon": "/hero/men.svg",
       "panel.men.href": "/men",
       "panel.men.alt": "Men's panjabi and kurta collection",
-      "panel.women.tile": "/library/women.png",
+      "panel.women.tile": "/hero/women.jpg",
       "panel.women.portrait": "/hero/women.jpg",
       "panel.women.icon": "/hero/women.svg",
       "panel.women.href": "/women",
       "panel.women.alt": "Women's sharee and kurti collection",
-      "panel.kids.tile": "/library/children.png",
+      "panel.kids.tile": "/hero/kids.jpg",
       "panel.kids.portrait": "/hero/kids.jpg",
       "panel.kids.icon": "/hero/kids.svg",
       "panel.kids.href": "/kids",
@@ -208,21 +208,21 @@ export const GENERATED_CONTENT = {
           "index": "01",
           "title": "MAN",
           "href": "/men",
-          "image": "/library/men.png"
+          "image": "/hero/men.jpg"
         },
         "2": {
           "key": "women",
           "index": "02",
           "title": "WOMEN",
           "href": "/women",
-          "image": "/library/women.png"
+          "image": "/hero/women.jpg"
         },
         "3": {
           "key": "kids",
           "index": "03",
           "title": "CHILDREN",
           "href": "/kids",
-          "image": "/library/children.png"
+          "image": "/hero/kids.jpg"
         }
       },
       "marquee": {
@@ -884,8 +884,8 @@ export const GENERATED_CONTENT = {
       "smoothScroll": "true",
       "spotlight": "true",
       "cursorRing": "true",
-      "brandLoader": "true",
-      "particleInspector": "true",
+      "brandLoader": "false",
+      "particleInspector": "false",
       "serviceWorker": "true",
       "tabRefresh": "true",
       "searchPalette": "true",

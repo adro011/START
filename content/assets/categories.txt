@@ -7,17 +7,17 @@
 # <name>.icon         small SVG mark
 # <name>.alt          alt text
 
-men.tile = /library/men.png
+men.tile = /hero/men.jpg
 men.portrait = /hero/men.jpg
 men.icon = /hero/men.svg
 men.alt = Men's collection
 
-women.tile = /library/women.png
+women.tile = /hero/women.jpg
 women.portrait = /hero/women.jpg
 women.icon = /hero/women.svg
 women.alt = Women's collection
 
-kids.tile = /library/children.png
+kids.tile = /hero/kids.jpg
 kids.portrait = /hero/kids.jpg
 kids.icon = /hero/kids.svg
 kids.alt = Children's collection

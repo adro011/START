@@ -266,7 +266,7 @@ export const PARTICLE_MANIFEST: Record<string, ParticleDefinition> = {
     id: "home.hero.panel.01.image",
     label: "Hero Panel 01 portrait image (MAN)",
     type: "image",
-    defaultValue: "/library/men.png",
+    defaultValue: "/hero/men.jpg",
     selector: "[data-particle-id='home.hero.panel.01.image']",
     keywords: ["man panel image", "men hero photo", "panel 01 picture"],
     section: "home.hero",
@@ -293,7 +293,7 @@ export const PARTICLE_MANIFEST: Record<string, ParticleDefinition> = {
     id: "home.hero.panel.02.image",
     label: "Hero Panel 02 portrait image (WOMEN)",
     type: "image",
-    defaultValue: "/library/women.png",
+    defaultValue: "/hero/women.jpg",
     selector: "[data-particle-id='home.hero.panel.02.image']",
     keywords: ["women panel image", "women hero photo", "panel 02 picture"],
     section: "home.hero",
@@ -320,7 +320,7 @@ export const PARTICLE_MANIFEST: Record<string, ParticleDefinition> = {
     id: "home.hero.panel.03.image",
     label: "Hero Panel 03 portrait image (CHILDREN)",
     type: "image",
-    defaultValue: "/library/children.png",
+    defaultValue: "/hero/kids.jpg",
     selector: "[data-particle-id='home.hero.panel.03.image']",
     keywords: ["children panel image", "kids hero photo", "panel 03 picture"],
     section: "home.hero",
@@ -909,7 +909,7 @@ export function findParticleByText(
  * Parses natural language edit commands like:
  *   "change cover title to ABRAR LUXURY"
  *   "set home.sale.cta to Explore Archive"
- *   "replace cover image with /library/women.png"
+ *   "replace cover image with /hero/women.jpg"
  */
 export function parseNaturalParticleCommand(input: string): {
   targetQuery: string;
