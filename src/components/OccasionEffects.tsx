@@ -7,174 +7,140 @@ type OccasionEffectsProps = {
   cardCount: number;
 };
 
-const createObserver = (
-  root: Element,
-  onEnter: (index: number) => void
-) => {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        const target = entry.target as HTMLElement;
-        if (target.dataset.occasionCardIndex) {
-          if (entry.isIntersecting) {
-            onEnter(Number(target.dataset.occasionCardIndex));
-          }
-        }
-      });
-    },
-    {
-      root,
-      rootMargin: "0px",
-      threshold: 0.5,
-    }
-  );
+const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 
-  return observer;
-};
-
-export default function OccasionEffects({
-  cardCount,
-}: OccasionEffectsProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
+/**
+ * Scroll-driven cinematic treatment for the Shop by Occasion section.
+ *
+ * Behaviour only — all styling lives in `globals.css` (`.occasion-section`,
+ * `.occasion-section__glow`, `.occasion-section__sweep`, `.occasion-card`):
+ * - Burgundy ambient glow + champagne sweep fade in as the section enters.
+ * - The card closest to the viewport centre gets the active highlight.
+ * - Intensity blends the section's own visibility with the shared
+ *   `--illumination` value written by the spotlight engine.
+ * - `prefers-reduced-motion` disables every movement, keeping a static wash.
+ */
+export default function OccasionEffects({ cardCount }: OccasionEffectsProps) {
+  const markerRef = useRef<HTMLSpanElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [activeCardIndex, setActiveCardIndex] = useState(-1);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(media.matches);
-    const listener = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    media.addListener(listener);
-    return () => media.removeListener(listener);
+
+    const onChange = (event: MediaQueryListEvent) =>
+      setReducedMotion(event.matches);
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
   }, []);
 
   useEffect(() => {
+    const marker = markerRef.current;
+    const section = marker?.closest<HTMLElement>("[data-occasion-section]");
+    if (!section) return;
+
+    const cards = Array.from(
+      section.querySelectorAll<HTMLElement>(".occasion-card")
+    );
+
+    const clearActive = () => {
+      cards.forEach((card) => card.classList.remove("occasion-card--active"));
+    };
+
+    const resetVars = () => {
+      section.style.removeProperty("--burgundy-glow-opacity");
+      section.style.removeProperty("--champagne-sweep-opacity");
+    };
+
     if (reducedMotion) {
-      if (sectionRef.current) {
-        sectionRef.current.style.setProperty(
-          "--burgundy-glow-opacity",
-          "0"
-        );
-        sectionRef.current.style.setProperty(
-          "--champagne-sweep-opacity",
-          "0"
-        );
-        setActiveCardIndex(-1);
-      }
+      clearActive();
+      resetVars();
       return;
     }
 
-    if (!sectionRef.current) return;
+    let frame = 0;
+    let lastGlow = -1;
 
-    const section = sectionRef.current;
+    const update = () => {
+      frame = 0;
+      const rect = section.getBoundingClientRect();
+      const viewport = window.innerHeight || 1;
+      const inRange =
+        rect.bottom > -viewport * 0.25 && rect.top < viewport * 1.25;
 
-    cardRefs.current = Array.from({ length: cardCount }, (_, i) => null);
-
-    const cardObservers = cardRefs.current.map((ref, _i) => {
-      if (!ref) return null;
-      return createObserver(
-        section,
-        (index) => {
-          setActiveCardIndex(index);
+      if (!inRange) {
+        clearActive();
+        if (lastGlow !== 0) {
+          lastGlow = 0;
+          section.style.setProperty("--burgundy-glow-opacity", "0");
+          section.style.setProperty("--champagne-sweep-opacity", "0");
         }
+        return;
+      }
+
+      const visible = Math.max(
+        0,
+        Math.min(rect.bottom, viewport) - Math.max(rect.top, 0)
       );
-    });
+      const progress = clamp01(
+        rect.height > 0 ? visible / Math.min(rect.height, viewport) : 0
+      );
+      const illumination = clamp01(
+        parseFloat(section.style.getPropertyValue("--illumination")) || 0
+      );
+      const glow =
+        Math.round(clamp01(progress * 0.65 + illumination * 0.35) * 1000) / 1000;
+
+      if (glow !== lastGlow) {
+        lastGlow = glow;
+        section.style.setProperty("--burgundy-glow-opacity", glow.toFixed(3));
+        section.style.setProperty(
+          "--champagne-sweep-opacity",
+          (glow * 0.35).toFixed(3)
+        );
+      }
+
+      if (!cards.length) return;
+
+      const centerX = window.innerWidth / 2;
+      const centerY = viewport / 2;
+      let closest = -1;
+      let closestDistance = Infinity;
+
+      cards.forEach((card, index) => {
+        const box = card.getBoundingClientRect();
+        const distance = Math.hypot(
+          box.left + box.width / 2 - centerX,
+          box.top + box.height / 2 - centerY
+        );
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closest = index;
+        }
+      });
+
+      cards.forEach((card, index) =>
+        card.classList.toggle("occasion-card--active", index === closest)
+      );
+    };
+
+    const schedule = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
 
     return () => {
-      cardObservers.forEach((obs) => obs && obs.disconnect());
-      if (section) {
-        section.style.setProperty("--burgundy-glow-opacity", "0");
-        section.style.setProperty("--champagne-sweep-opacity", "0");
-      }
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      clearActive();
+      resetVars();
     };
   }, [reducedMotion, cardCount]);
 
-  useEffect(() => {
-    if (reducedMotion) {
-      if (sectionRef.current) {
-        sectionRef.current.style.setProperty("--burgundy-glow-opacity", "0");
-        sectionRef.current.style.setProperty("--champagne-sweep-opacity", "0");
-      }
-      return;
-    }
-
-    if (!sectionRef.current) return;
-
-    const section = sectionRef.current;
-
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!reduced && activeCardIndex >= 0) {
-      const card = section.querySelector<HTMLElement>(
-        `.occasion-card[data-occasion-card-index="${activeCardIndex}"]`
-      );
-      if (card) {
-        card.classList.add("occasion-card--active");
-      }
-    }
-
-    const cleanup = () => {
-      section.querySelectorAll<HTMLElement>(`.occasion-card`).forEach((card) => {
-        card.classList.remove("occasion-card--active");
-      });
-    };
-
-    return () => {
-      cleanup();
-    };
-  }, [reducedMotion, activeCardIndex]);
-
-  useEffect(() => {
-    if (reducedMotion) {
-      return;
-    }
-
-    const updateGlow = () => {
-      const section = sectionRef.current;
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const sectionTop = rect.top;
-      const sectionBottom = rect.bottom;
-
-      const visibleTop = Math.max(sectionTop, 0);
-      const visibleBottom = Math.min(sectionBottom, viewportHeight);
-      const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-      const sectionHeight = rect.height;
-
-      const progress = sectionHeight > 0 ? visibleHeight / sectionHeight : 0;
-
-      const clampedProgress = Math.max(0, Math.min(1, progress));
-
-      const illumination = parseFloat(
-        (section.style.getPropertyValue("--illumination") || "0")
-      );
-
-      const blended = (clampedProgress + illumination) / 2;
-
-      const glowOpacity = blended;
-      const sweepOpacity = blended * 0.3;
-
-      if (section.style) {
-        section.style.setProperty("--burgundy-glow-opacity", `${glowOpacity}`);
-        section.style.setProperty("--champagne-sweep-opacity", `${sweepOpacity}`);
-      }
-    };
-
-    updateGlow();
-    window.addEventListener("scroll", updateGlow, { passive: true });
-    window.addEventListener("resize", updateGlow);
-
-    return () => {
-      window.removeEventListener("scroll", updateGlow);
-      window.removeEventListener("resize", updateGlow);
-    };
-  }, [reducedMotion]);
-
-  useEffect(() => {
-    if (sectionRef.current) {
-      sectionRef.current.style.setProperty("--burgundy-glow-opacity", "0");
-      sectionRef.current.style.setProperty("--champagne-sweep-opacity", "0");
-      setActiveCardIndex(-1);
-    }
-  }, [reducedMotion]);
+  return <span ref={markerRef} hidden aria-hidden="true" />;
+}

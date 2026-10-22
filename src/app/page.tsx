@@ -15,8 +15,9 @@ import HeroPanels from "../components/hero-panels";
 import Magnetic from "../components/magnetic";
 import InstagramGrid from "../components/instagram-grid";
 import OccasionEffects from "../components/OccasionEffects";
+import MicroFx from "../components/micro-fx";
 import { SITE } from "@/config/site";
-import { CONTENT, toArray } from "@/lib/content";
+import { CONTENT, asset, toArray } from "@/lib/content";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
@@ -137,13 +138,13 @@ const HERO = toArray(CONTENT.home.hero.panel).map((p) => ({
   index: p.index,
   title: p.title,
   href: p.href,
-  img: p.image,
+  img: p.image || asset("hero", `panel.${p.key}.tile`, "/library/men.png"),
   bg: PANEL_BG,
 }));
 
 const MARQUEE = toArray(CONTENT.home.hero.marquee);
 
-const MARQUEE_STRIP = [...MARQUEE, ...MARQUEE, ...MARQUEE];
+const MARQUEE_STRIP = Array.from({ length: 5 }, () => MARQUEE).flat();
 
 const OCCASIONS = toArray(CONTENT.home.occasion.item).map((o) => ({
   name: o.name,
@@ -208,6 +209,7 @@ export default async function HomePage() {
 
   return (
     <div className="overflow-x-hidden">
+      <MicroFx />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_JSON_LD) }} />
       {/* ── Lamborghini-style cover: full-viewport slow-zoom portrait, grade, giant wordmark ── */}
@@ -396,17 +398,31 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="relative overflow-hidden border-t border-white/10 bg-black/80 py-3 backdrop-blur">
-          <div className="marquee-lux flex w-max gap-10 pr-10 text-[12px] font-semibold tracking-[0.14em] text-[var(--color-blush)]/90 uppercase">
+        <div
+          className="relative overflow-hidden border-t border-white/10 bg-black/80 py-3 backdrop-blur"
+          data-particle-id="home.hero.marquee"
+          data-particle-type="text"
+          data-particle-label="Home scrolling luxury ticker marquee strip"
+          data-editable="true"
+        >
+          <p className="sr-only">{MARQUEE.join(" · ")}</p>
+          <div
+            className="marquee-lux flex w-max gap-10 pr-10 text-[12px] font-semibold tracking-[0.14em] text-[var(--color-blush)]/90 uppercase"
+            aria-hidden="true"
+          >
             {Array.from({ length: 2 }).map((_, k) => (
-              <span key={k} className="flex gap-10 whitespace-nowrap" aria-hidden={k === 1}>
+              <span key={k} className="flex gap-10 whitespace-nowrap">
                 {MARQUEE_STRIP.map((m, i) => (
                   <Fragment key={`${m}-${i}`}>
                     <span
-                      data-particle-id={`home.hero.marquee.item.${i}`}
-                      data-particle-type="text"
-                      data-particle-label={`Hero Marquee Text ${i + 1}`}
-                      data-editable="true"
+                      data-particle-id={
+                        k === 0 ? `home.hero.marquee.item.${i}` : undefined
+                      }
+                      data-particle-type={k === 0 ? "text" : undefined}
+                      data-particle-label={
+                        k === 0 ? `Hero Marquee Text ${i + 1}` : undefined
+                      }
+                      data-editable={k === 0 ? true : undefined}
                     >
                       {m}
                     </span>
@@ -639,7 +655,6 @@ export default async function HomePage() {
                 key={o.name}
                 delay={i * 80}
                 className="lift group relative min-h-[260px] overflow-hidden border border-white/10 px-6 py-8 occasion-card"
-                data-occasion-card-index={i}
               >
                 <Image
                   src={o.img}
