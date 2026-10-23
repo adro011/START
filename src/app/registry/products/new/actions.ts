@@ -41,14 +41,16 @@ export async function saveRegistryProduct(
     return { ok: false, error: "Supabase is not configured in this environment." };
   }
 
-  const SECTION_BY_TYPE: Record<RegistryProductInput["type"], "men" | "women" | "kids" | "new-arrivals"> = {
-    male: "men",
-    female: "women",
-    men: "men",
-    women: "women",
-    children: "kids",
-    "new-arrivals": "new-arrivals",
-  };
+  const section: "men" | "women" | "kids" = (() => {
+    if (parsed.type === "women" || parsed.type === "female") return "women";
+    if (parsed.type === "children") return "kids";
+    if (parsed.type === "new-arrivals") {
+      if (parsed.newArrivalAudience === "women") return "women";
+      if (parsed.newArrivalAudience === "children") return "kids";
+      return "men";
+    }
+    return "men";
+  })();
 
   let productId: string | null = null;
   try {
@@ -57,10 +59,12 @@ export async function saveRegistryProduct(
       .insert({
         name: parsed.name,
         slug: parsed.slug,
-        section: SECTION_BY_TYPE[parsed.type],
+        description: parsed.description,
+        section,
         category_id: null,
         price_paisa: Math.round((parsed.price ?? 0) * 100),
         compare_at_paisa: null,
+        is_new: parsed.type === "new-arrivals",
         active: parsed.status === "published",
       })
       .select("id")
