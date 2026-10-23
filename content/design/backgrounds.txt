@@ -16,13 +16,13 @@
 # grain.opacity    paper-grain opacity (0 turns it off)
 
 page.color = #000000
-header.color = #200c0cff
-footer.color = #2c2b17a9
-section.color = #555353ff
+header.color = #000000
+footer.color = #0d0d0d
+section.color = #000000
 card.color = #0d0d0d
-overlay.color = rgba(46, 19, 19, 0.55)
-overlay.soft = rgba(15, 7, 7, 0.3)
-gradient.hero = linear-gradient(180deg, rgba(73, 69, 69, 0rgba(20, 20, 20, 0.75)0.75))
-gradient.sale = linear-gradient(135deg, rgba(27, 26, 21, 0.12), rgba(0,0,0,0))
-grain.opacity = 0.07
+overlay.color = rgba(0, 0, 0, 0.55)
+overlay.soft = rgba(0, 0, 0, 0.3)
+gradient.hero = linear-gradient(180deg, rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.75))
+gradient.sale = linear-gradient(135deg, rgba(255, 192, 0, 0.12), rgba(0, 0, 0, 0))
+grain.opacity = 0.05
 

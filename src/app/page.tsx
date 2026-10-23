@@ -14,8 +14,7 @@ import Reveal from "../components/reveal";
 import HeroPanels from "../components/hero-panels";
 import Magnetic from "../components/magnetic";
 import InstagramGrid from "../components/instagram-grid";
-import OccasionEffects from "../components/OccasionEffects";
-import MicroFx from "../components/micro-fx";
+import SectionAtmosphere from "../components/section-atmosphere";
 import { SITE } from "@/config/site";
 import { CONTENT, asset, toArray } from "@/lib/content";
 
@@ -365,12 +364,12 @@ async function SaleRail() {
 export default function HomePage() {
   return (
     <div className="overflow-x-hidden">
-      <MicroFx />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_JSON_LD) }} />
       {/* ── Lamborghini-style cover: full-viewport slow-zoom portrait, grade, giant wordmark ── */}
       <section
         data-spotlight-section
+        data-atmosphere="hero"
         aria-label="New collection"
         className="cover relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-black text-center text-[var(--color-paper)]"
         data-particle-id="home.cover.section"
@@ -396,6 +395,7 @@ export default function HomePage() {
         <div aria-hidden="true" className="grade-cine absolute inset-0" />
         <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
         <div aria-hidden="true" className="paper-grain absolute inset-0 opacity-60" />
+        <SectionAtmosphere preset="hero" overlay />
 
         <div data-spotlight-target className="relative mx-auto max-w-[1100px] px-6 pt-16 pb-24">
           <p
@@ -491,6 +491,7 @@ export default function HomePage() {
       {/* ── Cinematic hero: 100dvh, split-type entrance, depth orbs ── */}
       <section
         data-spotlight-section
+        data-atmosphere="audience"
         aria-label="Shop by section"
         className="relative w-full bg-black text-[var(--color-paper)]"
         data-particle-id="home.hero.section"
@@ -498,12 +499,7 @@ export default function HomePage() {
         data-particle-label="Home Hero Split Panels Section"
         data-editable="true"
       >
-        {/* ambient orbs */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="drift absolute -top-24 -left-24 h-[420px] w-[420px] rounded-full bg-[#D5573B]/20 blur-[120px]" />
-          <div className="drift-2 absolute top-1/3 -right-28 h-[480px] w-[480px] rounded-full bg-[#7E9181]/20 blur-[130px]" />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black to-transparent" />
-        </div>
+        <SectionAtmosphere preset="audience" />
 
         <div data-spotlight-target className="relative mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] pt-3">
           {/* eyebrow */}
@@ -594,6 +590,7 @@ export default function HomePage() {
       {/* ── Brand statement ─────────────────────────── */}
       <section
         data-spotlight-section
+        data-atmosphere="statement"
         aria-label="House statement"
         className="w-full py-16"
         data-particle-id="home.statement.section"
@@ -601,6 +598,7 @@ export default function HomePage() {
         data-particle-label="House Statement Section"
         data-editable="true"
       >
+        <SectionAtmosphere preset="statement" />
         <div data-spotlight-target className="mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)]">
           <Reveal>
             <p
@@ -637,6 +635,7 @@ export default function HomePage() {
       {/* ── New arrivals rail ────────────────────────── */}
       <section
         data-spotlight-section
+        data-atmosphere="arrivals"
         aria-label="New arrivals"
         className="w-full py-12"
         data-particle-id="home.new-arrivals.section"
@@ -644,6 +643,7 @@ export default function HomePage() {
         data-particle-label="New Arrivals Rail Section"
         data-editable="true"
       >
+        <SectionAtmosphere preset="arrivals" />
         <div data-spotlight-target className="mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)]">
           <SectionHeading
             kicker={CONTENT.home.arrivals.kicker}
@@ -662,6 +662,7 @@ export default function HomePage() {
       {/* ── Shop by category: editorial brutalism ───── */}
       <section
         data-spotlight-section
+        data-atmosphere="categories"
         aria-label="Shop by category"
         className="cv w-full border-y border-white/10"
         data-particle-id="home.category.section"
@@ -669,6 +670,7 @@ export default function HomePage() {
         data-particle-label="Shop by Category Section"
         data-editable="true"
       >
+        <SectionAtmosphere preset="categories" />
         <div data-spotlight-target className="mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] py-16">
           <SectionHeading
             kicker={CONTENT.home.category.kicker}
@@ -686,6 +688,7 @@ export default function HomePage() {
       {/* ── Occasion journey ─────────────────────────── */}
       <section
         data-spotlight-section
+        data-atmosphere="occasions"
         aria-label="Shop by occasion"
         className="cv w-full py-16 occasion-section"
         data-particle-id="home.occasion.section"
@@ -694,18 +697,14 @@ export default function HomePage() {
         data-editable="true"
         data-occasion-section
       >
+        <SectionAtmosphere preset="occasions" />
         <div data-spotlight-target className="mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)]">
-          <div className="occasion-section__bg">
-            <div className="occasion-section__glow"></div>
-            <div className="occasion-section__sweep"></div>
-          </div>
           <SectionHeading
             kicker={CONTENT.home.occasion.kicker}
             title={CONTENT.home.occasion.title}
             copy={CONTENT.home.occasion.copy}
             particlePrefix="home.occasion"
           />
-          <OccasionEffects cardCount={OCCASIONS.length} />
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
             {OCCASIONS.map((o, i) => (
               <Reveal
@@ -783,6 +782,7 @@ export default function HomePage() {
       {/* ── Sale cinema ──────────────────────────────── */}
       <section
         data-spotlight-section
+        data-atmosphere="sale"
         aria-label="Sale"
         className="cv relative overflow-hidden border-y border-white/10 text-[var(--color-paper)]"
         data-particle-id="home.sale.section"
@@ -790,6 +790,7 @@ export default function HomePage() {
         data-particle-label="Sale Edit Section"
         data-editable="true"
       >
+        <SectionAtmosphere preset="sale" />
         <div data-spotlight-target className="relative mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] py-16">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-6">
@@ -845,6 +846,7 @@ export default function HomePage() {
       {/* ── Craft story ──────────────────────────────── */}
       <section
         data-spotlight-section
+        data-atmosphere="story"
         aria-label="Our craft"
         className="cv relative overflow-hidden text-[var(--color-smoke)]"
         data-particle-id="home.craft.section"
@@ -852,6 +854,7 @@ export default function HomePage() {
         data-particle-label="Our Craft Story Section"
         data-editable="true"
       >
+        <SectionAtmosphere preset="story" />
         <div data-spotlight-target className="relative mx-auto grid w-full max-w-[1400px] gap-10 px-[clamp(16px,4vw,64px)] py-20 md:grid-cols-[1.2fr_1fr] md:items-center">
           <Reveal>
             <div>
@@ -940,6 +943,7 @@ export default function HomePage() {
       {/* ── Testimonials ─────────────────────────────── */}
       <section
         data-spotlight-section
+        data-atmosphere="testimonials"
         aria-label="Customer words"
         className="cv w-full py-16"
         data-particle-id="home.testimonials.section"
@@ -947,6 +951,7 @@ export default function HomePage() {
         data-particle-label="Customer Testimonials Section"
         data-editable="true"
       >
+        <SectionAtmosphere preset="testimonials" />
         <div data-spotlight-target className="mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)]">
           <SectionHeading
             kicker={CONTENT.home.testimonials.kicker}
@@ -1013,6 +1018,7 @@ export default function HomePage() {
       {/* ── Trust row ────────────────────────────────── */}
       <section
         data-spotlight-section
+        data-atmosphere="trust"
         aria-label="Why shop with us"
         className="cv w-full border-y border-white/10 text-[var(--color-smoke)]"
         data-particle-id="home.trust.section"
@@ -1020,6 +1026,7 @@ export default function HomePage() {
         data-particle-label="Trust Badges Row Section"
         data-editable="true"
       >
+        <SectionAtmosphere preset="trust" />
         <div data-spotlight-target className="mx-auto grid w-full max-w-[1400px] gap-8 px-[clamp(16px,4vw,64px)] py-12 sm:grid-cols-3">
           {TRUST_ITEMS.map((item, i) => (
             <Reveal key={item.title} delay={i * 80}>
@@ -1070,6 +1077,7 @@ export default function HomePage() {
       {/* ── Newsletter CTA ───────────────────────────── */}
       <section
         data-spotlight-section
+        data-atmosphere="newsletter"
         aria-label="Newsletter"
         className="cv relative overflow-hidden text-center text-[var(--color-paper)]"
         data-particle-id="home.newsletter.section"
@@ -1077,6 +1085,7 @@ export default function HomePage() {
         data-particle-label="Home Newsletter CTA Section"
         data-editable="true"
       >
+        <SectionAtmosphere preset="newsletter" />
         <div data-spotlight-target className="relative mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)] py-20">
           <Reveal variant="scale">
             <p

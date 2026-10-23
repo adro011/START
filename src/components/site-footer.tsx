@@ -6,6 +6,7 @@ import Link from "next/link";
 import { SITE } from "@/config/site";
 import { getDict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/dictionary";
+import SectionAtmosphere from "./section-atmosphere";
 
 const HELP_LINKS = [
   { label: "Shipping & Returns", href: "/shipping-returns" },
@@ -66,9 +67,9 @@ export function SiteFooter({
   }
 
   return (
-    <footer className="relative overflow-hidden bg-[var(--color-dark-iron)] text-[var(--color-smoke)]">
+    <footer data-atmosphere="footer" className="relative overflow-hidden bg-[var(--color-dark-iron)] text-[var(--color-smoke)]">
+      <SectionAtmosphere preset="footer" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-24 left-1/3 h-[300px] w-[520px] rounded-full bg-[var(--color-gold)]/12 blur-[120px]" />
         <span aria-hidden="true" className="text-ghost absolute -bottom-8 left-4 text-[18vw] leading-none font-semibold tracking-tight opacity-60 select-none">ABRAR</span>
       </div>
       {/* Join us */}
