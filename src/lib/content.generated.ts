@@ -99,10 +99,10 @@ export const GENERATED_CONTENT = {
       "footer.color": "#0d0d0d",
       "section.color": "#000000",
       "card.color": "#0d0d0d",
-      "overlay.color": "rgba(0,0,0,0.55)",
-      "overlay.soft": "rgba(0,0,0,0.30)",
-      "gradient.hero": "linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.75))",
-      "gradient.sale": "linear-gradient(135deg, rgba(255,192,0,0.12), rgba(0,0,0,0))",
+      "overlay.color": "rgba(0, 0, 0, 0.55)",
+      "overlay.soft": "rgba(0, 0, 0, 0.3)",
+      "gradient.hero": "linear-gradient(180deg, rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.75))",
+      "gradient.sale": "linear-gradient(135deg, rgba(255, 192, 0, 0.12), rgba(0, 0, 0, 0))",
       "grain.opacity": "0.05"
     },
     "elevation": {
@@ -290,20 +290,20 @@ export const GENERATED_CONTENT = {
     "craft": {
       "kicker": "Woven, not rushed",
       "title": "From loom to doorstep, with patience.",
-      "body": "We work with weaving clusters across Bangladesh — muslin, endi, silk — and cut every piece for real bodies and real weather. No overproduction, no shouting discounts. Just clothes that earn their place.",
+      "body": "We work with weaving clusters across Bangladesh —  every piece for real bodies and real weather . Just clothes that earn their place.",
       "cta": "Read our story",
       "stat": {
         "1": {
           "value": "40+",
-          "label": "artisan clusters"
+          "label": "Trusted Brands"
         },
         "2": {
           "value": "100%",
-          "label": "breathable fabrics"
+          "label": "Breathable Fabrics"
         },
         "3": {
           "value": "7-day",
-          "label": "easy exchange"
+          "label": "Easy exchange"
         }
       }
     },
@@ -314,15 +314,15 @@ export const GENERATED_CONTENT = {
     "testimonial": {
       "1": {
         "quote": "The panjabi fits like it was cut for me. Wore it all Eid, zero wrinkles.",
-        "name": "Tanvir · Dhaka"
+        "name": "Tanvir Ahmed · Tangail"
       },
       "2": {
         "quote": "Ordered Tuesday, delivered Thursday. The muslin sharee is softer in person.",
-        "name": "Nusrat · Chattogram"
+        "name": "Abira  · Madhupur"
       },
       "3": {
         "quote": "Finally, kids' festive wear that survives actual kids. Exchanged a size over WhatsApp in minutes.",
-        "name": "Faria · Sylhet"
+        "name": "Fariha · N/A"
       }
     },
     "trust": {
@@ -338,14 +338,14 @@ export const GENERATED_CONTENT = {
       },
       "3": {
         "title": "WhatsApp support",
-        "copy": "Real humans, Sat–Thu 10am–8pm.",
+        "copy": "Real humans, Sat–Fri 10am–8pm.",
         "icon": "✦"
       }
     },
     "newsletter": {
-      "kicker": "The letter — 10% off first order",
-      "title": "First dibs, every drop.",
-      "copy": "Join for 10% off your first order over ৳2,500 — plus craft notes worth opening.",
+      "kicker": "BE THE FIRST — GET NOTIFIED ABOUT NEW ARRIVALS",
+      "title": "First STICH , every drop.",
+      "copy": "Join  — to get attached with culture.",
       "cta": "Join us"
     }
   },
@@ -902,9 +902,7 @@ export const GENERATED_CONTENT = {
     "email": "ziahoque1980@gmail.com",
     "supportHours": "Sat–Thu, 10am–8pm (BST)",
     "facebook": "https://www.facebook.com/profile.php?id=61560882538280",
-    "instagram": "https://instagram.com/abrarexclusive.bd",
-    "youtube": "https://youtube.com/@abrarexclusive.bd",
-    "tiktok": "https://tiktok.com/@abrarexclusive.bd"
+    "instagram": "https://instagram.com/abrarexclusive.bd"
   },
   "theme": {
     "color": {

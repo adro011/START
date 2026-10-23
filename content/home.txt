@@ -91,25 +91,25 @@ sale.cta = Shop sale
 # ── Craft story ─────────────────────────────────────────────────────────
 craft.kicker = Woven, not rushed
 craft.title = From loom to doorstep, with patience.
-craft.body = We work with weaving clusters across Bangladesh — muslin, endi, silk — and cut every piece for real bodies and real weather. No overproduction, no shouting discounts. Just clothes that earn their place.
+craft.body = We work with weaving clusters across Bangladesh —  every piece for real bodies and real weather . Just clothes that earn their place.
 craft.cta = Read our story
 craft.stat.1.value = 40+
-craft.stat.1.label = artisan clusters
+craft.stat.1.label = Trusted Brands
 craft.stat.2.value = 100%
-craft.stat.2.label = breathable fabrics
+craft.stat.2.label = Breathable Fabrics
 craft.stat.3.value = 7-day
-craft.stat.3.label = easy exchange
+craft.stat.3.label = Easy exchange
 
 # ── Testimonials ────────────────────────────────────────────────────────
 testimonials.kicker = Worn & loved
 testimonials.title = Word on the street
 
 testimonial.1.quote = The panjabi fits like it was cut for me. Wore it all Eid, zero wrinkles.
-testimonial.1.name = Tanvir · Dhaka
+testimonial.1.name = Tanvir Ahmed · Tangail
 testimonial.2.quote = Ordered Tuesday, delivered Thursday. The muslin sharee is softer in person.
-testimonial.2.name = Nusrat · Chattogram
+testimonial.2.name = Abira  · Madhupur
 testimonial.3.quote = Finally, kids' festive wear that survives actual kids. Exchanged a size over WhatsApp in minutes.
-testimonial.3.name = Faria · Sylhet
+testimonial.3.name = Fariha · N/A
 
 # ── Trust badges row ────────────────────────────────────────────────────
 trust.1.title = Cash on delivery
@@ -119,11 +119,11 @@ trust.2.title = 7-day exchange
 trust.2.copy = Wrong size? We swap it fast, no drama.
 trust.2.icon = ↺
 trust.3.title = WhatsApp support
-trust.3.copy = Real humans, Sat–Thu 10am–8pm.
+trust.3.copy = Real humans, Sat–Fri 10am–8pm.
 trust.3.icon = ✦
 
 # ── Newsletter CTA ──────────────────────────────────────────────────────
-newsletter.kicker = The letter — 10% off first order
-newsletter.title = First dibs, every drop.
-newsletter.copy = Join for 10% off your first order over ৳2,500 — plus craft notes worth opening.
+newsletter.kicker = BE THE FIRST — GET NOTIFIED ABOUT NEW ARRIVALS
+newsletter.title = First STICH , every drop.
+newsletter.copy = Join  — to get attached with culture.
 newsletter.cta = Join us

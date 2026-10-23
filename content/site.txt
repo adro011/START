@@ -22,5 +22,3 @@ email = ziahoque1980@gmail.com
 supportHours = Sat–Thu, 10am–8pm (BST)
 facebook = https://www.facebook.com/profile.php?id=61560882538280
 instagram = https://instagram.com/abrarexclusive.bd
-youtube = https://youtube.com/@abrarexclusive.bd
-tiktok = https://tiktok.com/@abrarexclusive.bd
