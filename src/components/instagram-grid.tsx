@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { SITE } from "@/config/site";
 import Reveal from "./reveal";
-import SectionAtmosphere from "./section-atmosphere";
 
 const IMAGES = [
   "/products/boys-kabli-mustard-2.jpg",
@@ -28,8 +27,7 @@ export default function InstagramGrid({
   href?: string;
 }) {
   return (
-    <section data-spotlight-section data-atmosphere="drop" aria-label="Instagram feed" className="cv w-full py-16">
-      <SectionAtmosphere preset="drop" />
+      <section data-spotlight-section aria-label="Instagram feed" className="cv w-full py-16">
       <div data-spotlight-target className="mx-auto w-full max-w-[1400px] px-[clamp(16px,4vw,64px)]">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
           <div>

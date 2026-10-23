@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @import "../design-system/tokens/css-variables.css";
-@import "./atmospheres.css";
 
 @theme {
   /* Lamborghini design system — absolute black dominant, gold as sole accent */
