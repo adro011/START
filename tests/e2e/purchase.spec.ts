@@ -45,21 +45,24 @@ test.describe('purchase flow (COD)', () => {
     await expect(page.locator('main, [role="main"]').first()).toBeVisible({ timeout: 15000 });
 
     // 4-5. Select a size (stable test id; enabled options only) and verify the
-    // Add button becomes enabled.
+    // Add button becomes enabled. The product page is client-hydrated on first
+    // visit under `next dev` (cold compile), so retry the size click until the
+    // buy-box reacts — a pre-hydration click would otherwise be a silent no-op.
     const sizeCandidates = page.locator('[data-testid="pdp-size"]:not([disabled])');
     await expect(sizeCandidates.first()).toBeVisible({ timeout: 15000 });
     // Stable test id: the buy-box Add button (not StickyATC / "Pairs well with").
     const addBtn = page.locator('[data-testid="pdp-add"]');
     await expect(addBtn, 'expected a buy-box "Add to bag" button on the product page').toBeVisible({ timeout: 15000 });
-    const nSizes = await sizeCandidates.count();
-    for (let i = 0; i < nSizes; i++) {
-      const btn = sizeCandidates.nth(i);
-      if (await btn.isVisible().catch(() => false)) {
-        await btn.click().catch(() => {});
-        if (await addBtn.isEnabled({ timeout: 2500 }).catch(() => false)) break;
+    await expect(async () => {
+      const n = await sizeCandidates.count();
+      for (let i = 0; i < n; i++) {
+        const btn = sizeCandidates.nth(i);
+        if (await btn.isVisible().catch(() => false)) {
+          await btn.click().catch(() => {});
+        }
       }
-    }
-    await expect(addBtn, 'expected the Add button enabled after selecting a size').toBeEnabled({ timeout: 15000 });
+      await expect(addBtn).toBeEnabled({ timeout: 1000 });
+    }).toPass({ timeout: 30000 });
     await addBtn.click();
     const drawer = page.locator('[data-testid="cart-drawer"]');
     await expect(drawer, 'expected cart drawer after Add to bag').toBeVisible({ timeout: 15000 });
