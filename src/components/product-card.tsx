@@ -13,10 +13,13 @@ import { cn, formatBDT } from "../lib/format";
  * CartItem to the cart store), wishlist heart (local state), sale/new
  * badges, paisa pricing, star text.
  */
+const ADD_PERCENTAGES = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50] as const;
+
 export function ProductCard({ product }: { product: CatalogProduct }) {
   const p = product;
   const [wished, setWished] = useState(false);
   const [added, setAdded] = useState(false);
+  const [addPct, setAddPct] = useState<number | null>(null);
   const { add } = useCart();
 
   const imgs = Array.isArray(p.images) ? p.images : [];
@@ -26,6 +29,15 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
 
   const onSale = p.isSale || (p.compareAtPaisa ?? 0) > p.pricePaisa;
   const rating = p.rating > 0 ? p.rating : null;
+
+  // Struck-through value: the chosen markup (price + %) or the stored
+  // compare-at price when no markup chip is active.
+  const struckPaisa =
+    addPct != null
+      ? Math.round(p.pricePaisa * (1 + addPct / 100))
+      : p.compareAtPaisa != null && p.compareAtPaisa > p.pricePaisa
+        ? p.compareAtPaisa
+        : null;
 
   const quickAdd = () => {
     if (!firstSize) return;
@@ -154,11 +166,46 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
           <span className="price text-[16px] font-semibold tracking-tight text-gold" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "19px" }}>
             {formatBDT(p.pricePaisa)}
           </span>
-          {p.compareAtPaisa != null && p.compareAtPaisa > p.pricePaisa && (
-            <s className="text-[13px] text-ash">
-              {formatBDT(p.compareAtPaisa)}
+          {struckPaisa != null && (
+            <s
+              className="text-[13px] text-ash"
+              aria-label={
+                addPct != null
+                  ? `Price with ${addPct}% added`
+                  : "Compare-at price"
+              }
+            >
+              {formatBDT(struckPaisa)}
             </s>
           )}
+        </div>
+        <div className="mt-1.5">
+          <p className="text-[9px] font-semibold tracking-[0.2em] text-ash uppercase">
+            Price + added %
+          </p>
+          <div
+            className="mt-1 flex flex-wrap gap-1"
+            role="group"
+            aria-label="Show price with percentage added"
+          >
+            {ADD_PERCENTAGES.map((pct) => (
+              <button
+                key={pct}
+                type="button"
+                aria-pressed={addPct === pct}
+                aria-label={`Add ${pct}% to price`}
+                onClick={() => setAddPct((v) => (v === pct ? null : pct))}
+                className={cn(
+                  "rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold tracking-[0.04em] tabular-nums transition-colors",
+                  addPct === pct
+                    ? "border-gold bg-gold text-black"
+                    : "border-[var(--color-gold)]/25 text-ash hover:border-gold hover:text-gold",
+                )}
+              >
+                +{pct}%
+              </button>
+            ))}
+          </div>
         </div>
         {rating !== null && (
           <p className="text-[12.5px] text-steel" aria-label={`Rated ${rating} out of 5`}>
