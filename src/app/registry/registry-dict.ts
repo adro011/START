@@ -101,6 +101,8 @@ const en = {
   ratingHint: "Optional 5-star review rating.",
   priceStatus: "Price & status",
   price: "Price (BDT)",
+  stock: "Stock",
+  stockPlaceholder: "0",
   status: "Status",
   statusOptions: {
     draft: "Draft",
@@ -236,6 +238,8 @@ const bn: typeof en = {
   ratingHint: "ঐচ্ছিক ৫-স্টার রিভিউ রেটিং।",
   priceStatus: "মূল্য ও স্ট্যাটাস",
   price: "মূল্য (টাকা)",
+  stock: "স্টক",
+  stockPlaceholder: "০",
   status: "স্ট্যাটাস",
   statusOptions: {
     draft: "খসড়া",

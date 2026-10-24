@@ -79,6 +79,7 @@ export const registryFormSchema = z.object({
   description: z.string().trim().min(10, "Description must be at least 10 characters.").max(2000),
   rating: z.coerce.number().int().min(1).max(5).optional().nullable(),
   price: z.coerce.number().positive("Price must be greater than 0."),
+  stock: z.coerce.number().min(0, "Stock cannot be negative.").optional().default(0),
   status: z.enum(["draft", "published"] as [string, ...string[]]),
   images: z.array(z.instanceof(File)).max(MAX_IMAGES, `Maximum ${MAX_IMAGES} images per product.`),
 })
@@ -137,6 +138,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
   const [description, setDescription] = useState("");
   const [rating, setRating] = useState<number | null>(null);
   const [price, setPrice] = useState("");
+  const [stock, setStock] = useState("0");
   const [status, setStatus] = useState<StatusValue>("draft");
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -246,6 +248,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
         description,
         rating,
         price: price ? Number(price) : undefined,
+        stock: stock ? Number(stock) : 0,
         status,
         images: files,
       });
@@ -269,6 +272,7 @@ export default function ProductForm({ locale }: { locale: Locale }) {
         setDescription("");
         setRating(null);
         setPrice("");
+        setStock("0");
         setStatus("draft");
         setFiles([]);
         setPreviews([]);
@@ -568,6 +572,19 @@ export default function ProductForm({ locale }: { locale: Locale }) {
               />
             </div>
             {fieldError("price") && <p role="alert" className="reg-input-error">{fieldError("price")}</p>}
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="stock" className="block text-xs text-ash tracking-wider">{t.stock}</label>
+            <input
+              id="stock"
+              value={stock}
+              onChange={(e) => setStock(e.target.value.replace(/[^0-9]/g, ""))}
+              required
+              placeholder={t.stockPlaceholder}
+              inputMode="numeric"
+              className={INPUT}
+            />
+            {fieldError("stock") && <p role="alert" className="reg-input-error">{fieldError("stock")}</p>}
           </div>
           <div className="space-y-2">
             <label className="block text-xs text-ash tracking-wider" id="status-group-label">{t.status}</label>

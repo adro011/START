@@ -17,7 +17,7 @@ const THEME_VALUE = "obsidian-leather";
  * Pure presentation — no business logic, no data, no routing changes.
  */
 export function ThemePreview() {
-  const [enabled, setEnabled] = useState(false);
+  const [enabled, setEnabled] = useState(true);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -25,7 +25,7 @@ export function ThemePreview() {
     // 1. Resolve initial theme (URL param wins, then persisted preference).
     const params = new URLSearchParams(window.location.search);
     const q = params.get("theme-preview");
-    let on: boolean;
+    let on = true;
     if (q === THEME_VALUE) {
       on = true;
       try {
@@ -34,11 +34,11 @@ export function ThemePreview() {
         /* storage unavailable — preview still applies for this visit */
       }
     } else if (q === null) {
-      let stored = false;
+      let stored = true;
       try {
-        stored = window.localStorage.getItem(THEME_KEY) === THEME_VALUE;
+        const item = window.localStorage.getItem(THEME_KEY); stored = item !== "classic" && item !== "gold";
       } catch {
-        stored = false;
+        stored = true;
       }
       on = stored;
     } else {
@@ -91,7 +91,7 @@ export function ThemePreview() {
     const next = !enabled;
     try {
       if (next) window.localStorage.setItem(THEME_KEY, THEME_VALUE);
-      else window.localStorage.removeItem(THEME_KEY);
+      else window.localStorage.setItem(THEME_KEY, "classic");
     } catch {
       /* storage unavailable — apply for this visit only */
     }
@@ -106,12 +106,12 @@ export function ThemePreview() {
       onClick={toggle}
       title={
         enabled
-          ? "Obsidian Leather preview on — click for original"
-          : "Click to preview Obsidian Leather Studio"
+          ? "Obsidian Leather active — click for classic gold"
+          : "Classic gold active — click for Obsidian Leather Studio"
       }
     >
       <span className="theme-preview-toggle__dot" aria-hidden="true" />
-      Obsidian
+      {enabled ? "Obsidian" : "Classic"}
     </button>
   );
 }

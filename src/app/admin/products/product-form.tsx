@@ -6,7 +6,7 @@ import { getCategory, CATEGORIES } from '@/lib/catalog';
 import { saveProduct } from './actions';
 import LivePreview from './live-preview';
 
-interface Img { id: string; url: string; alt: string; name: string; }
+interface Img { id: string; url: string; alt: string; name: string; file?: File; }
 interface ColorOpt { name: string; hex: string; }
 
 const DEFAULT_SIZES = ['S', 'M', 'L', 'XL'];
@@ -97,7 +97,7 @@ export default function ProductForm({ initial }: { initial?: Record<string, unkn
     setError('');
     const next: Img[] = [...images];
     for (const f of Array.from(files).slice(0, 5 - images.length)) {
-      next.push({ id: `${Date.now()}-${f.name}`, url: URL.createObjectURL(f), alt: '', name: f.name });
+      next.push({ id: `${Date.now()}-${f.name}`, url: URL.createObjectURL(f), alt: '', name: f.name, file: f });
     }
     setImages(next);
   }
@@ -153,7 +153,7 @@ export default function ProductForm({ initial }: { initial?: Record<string, unkn
       compare_at_paisa: compareAtPaisa,
       active, is_new: isNew, is_sale: isSale, is_featured: isFeatured,
       variants,
-      images: images.map((i, idx) => ({ position: idx + 1, alt: i.alt, name: i.name })),
+      images: images.map((i, idx) => ({ position: idx + 1, alt: i.alt, name: i.name, url: i.url, file: i.file })),
     });
     setSaving(false);
     if (result.ok) {

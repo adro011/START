@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
+import { uploadProductImage } from "@/lib/product-images";
 
 export interface VariantInput {
   size: string;
@@ -29,7 +30,7 @@ export interface SaveProductInput {
   is_sale?: boolean;
   is_featured?: boolean;
   variants: VariantInput[];
-  images: { position: number; alt: string; name: string }[];
+  images: { position: number; alt: string; name: string; url?: string; file?: File }[];
 }
 
 export type SaveProductResult =
@@ -148,12 +149,31 @@ export async function saveProduct(input: SaveProductInput): Promise<SaveProductR
   if (delImgErr) return { ok: false, error: delImgErr.message };
 
   if (input.images.length > 0) {
-    const imageRows = input.images.map((img) => ({
-      product_id: productId,
-      position: img.position,
-      path_medium: img.name,
-      alt: img.alt,
-    }));
+    const imageRows: {
+      product_id: string;
+      position: number;
+      path_medium: string;
+      alt: string;
+    }[] = [];
+    for (const img of input.images) {
+      let src: string | null = null;
+      if (img.file) {
+        const upload = await uploadProductImage(productId!, img.position, img.file);
+        if (!upload.ok) return { ok: false, error: upload.error };
+        src = upload.url;
+      } else if (img.url && !img.url.startsWith("blob:")) {
+        src = img.url;
+      } else if (img.name && (img.name.startsWith("http") || img.name.startsWith("/"))) {
+        src = img.name;
+      }
+      if (!src) return { ok: false, error: `Image ${img.position} could not be resolved.` };
+      imageRows.push({
+        product_id: productId!,
+        position: img.position,
+        path_medium: src,
+        alt: img.alt,
+      });
+    }
     const { error: imgErr } = await supabase.from("product_images").insert(imageRows);
     if (imgErr) return { ok: false, error: imgErr.message };
   }

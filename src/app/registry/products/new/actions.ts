@@ -1,8 +1,10 @@
 "use server";
 
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
+import { uploadProductImages } from "@/lib/product-images";
 import { registryFormSchema } from "./product-form";
 
 type RegistryProductInput = z.infer<typeof registryFormSchema>;
@@ -52,6 +54,9 @@ export async function saveRegistryProduct(
     return "men";
   })();
 
+  const variantColor = "Default";
+  const variantStock = Number.isFinite(parsed.stock) ? Math.max(0, parsed.stock) : 0;
+
   let productId: string | null = null;
   try {
     const { data, error } = await supabase
@@ -75,15 +80,45 @@ export async function saveRegistryProduct(
     return { ok: false, error: err instanceof Error ? err.message : "Failed to create product." };
   }
 
-  if (productId && parsed.images.length > 0) {
+  // Every purchasable product needs at least one variant so the storefront
+  // (src/lib/storefront.ts:254) renders it. Registry captures a single size
+  // per product, so persist exactly one variant row here.
+  if (productId) {
     try {
-      const imageRows = parsed.images.slice(0, 5).map((file, index) => ({
+      const sku = `${parsed.slug}-${parsed.size}-${variantColor}`
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      const { error: varErr } = await supabase.from("product_variants").insert({
+        product_id: productId,
+        sku,
+        size: parsed.size,
+        color: variantColor,
+        color_hex: "#172121",
+        stock: variantStock,
+        price_override_paisa: null,
+      });
+      if (varErr) return { ok: false, error: varErr.message };
+    } catch (err) {
+      return {
+        ok: false,
+        error: err instanceof Error ? err.message : "Failed to attach variant.",
+      };
+    }
+  }
+
+  // Real image upload to the public `product-images` bucket.
+  if (productId && parsed.images.length > 0) {
+    const upload = await uploadProductImages(productId, parsed.images);
+    if (!upload.ok) return { ok: false, error: upload.error };
+    try {
+      const imageRows = upload.urls.map((url, index) => ({
         product_id: productId,
         position: index + 1,
         path_thumb: null,
-        path_medium: file.name,
+        path_medium: url,
         path_large: null,
-        alt: "",
+        alt: parsed.name,
         blur_data_url: null,
       }));
       const { error } = await supabase.from("product_images").insert(imageRows);
@@ -93,5 +128,7 @@ export async function saveRegistryProduct(
     }
   }
 
+  revalidatePath("/");
+  revalidatePath("/registry/products");
   return { ok: true, id: productId! };
 }

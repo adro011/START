@@ -21,12 +21,8 @@ export const dynamic = "force-dynamic";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
-/** Reads locale from middleware header (falls back to cookie for backward compat). */
+/** Reads locale from cookie (source of truth). */
 async function getLocale(): Promise<"en" | "bn"> {
-  const headersList = await import("next/headers").then((m) => m.headers());
-  const locale = headersList.get("x-locale");
-  if (locale === "bn") return "bn";
-  // Fallback to cookie for any routes that bypass middleware
   const cookieStore = await import("next/headers").then((m) => m.cookies());
   return cookieStore.get("locale")?.value === "bn" ? "bn" : "en";
 }
@@ -78,7 +74,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const locale = await getLocale();
   const joinEnabled = await isRegistrationOpen();
   return (
-    <html lang={locale} className="overflow-x-clip">
+    <html lang={locale} data-theme="obsidian-leather" className="overflow-x-clip">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
