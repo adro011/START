@@ -1,6 +1,8 @@
 // Demo storefront data for the admin area (stub → replace with Supabase queries).
 // Money is integer paisa everywhere. Dates are ISO strings.
 
+import { CATEGORIES } from "@/lib/catalog";
+
 export type OrderStatus =
   | 'pending'
   | 'confirmed'
@@ -307,16 +309,12 @@ export interface DemoCategory {
   sort: number;
 }
 
-export const DEMO_CATEGORIES: DemoCategory[] = [
-  { slug: 'panjabi', name: 'Panjabi', section: 'men', sort: 1 },
-  { slug: 'shirts', name: 'Shirts', section: 'men', sort: 2 },
-  { slug: 'fatua', name: 'Fatua', section: 'men', sort: 3 },
-  { slug: 'sharee', name: 'Sharee', section: 'women', sort: 1 },
-  { slug: '3pcs', name: '3 Pcs & 2 Pcs', section: 'women', sort: 2 },
-  { slug: 'tunics', name: 'Tunics', section: 'women', sort: 3 },
-  { slug: 'boys-panjabi', name: "Boy's Panjabi", section: 'kids', sort: 1 },
-  { slug: 'girls-3pcs', name: "Girls' 3 Pcs", section: 'kids', sort: 2 },
-];
+export const DEMO_CATEGORIES: DemoCategory[] = CATEGORIES.map((c, i) => ({
+  slug: c.slug,
+  name: c.name,
+  section: c.section,
+  sort: i + 1,
+}));
 
 export interface DemoSetting {
   key: string;

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { CATEGORIES } from "@/lib/catalog";
+import { getCategoryGroups } from "@/lib/catalog";
 import { getDict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/dictionary";
 import { cn, hardNav } from "../lib/format";
@@ -18,77 +18,79 @@ type Section = {
 };
 
 const BLURBS: Record<Section["key"], string> = {
-  men: "Panjabis with presence — breathable cotton, sharp cuts, Eid-ready.",
-  women: "Sharees and sets that move with you — soft, vivid, unmistakably ours.",
-  kids: "Play-proof festive wear — gentle fabrics, zero fuss, all smiles.",
+  men: "Panjabis with presence — breathable cotton, Eid-ready.",
+  women: "Sharees and sets that move with you — soft, vivid, Artistic  .",
+  kids: "Play-proof festive wear — smooth fabrics,  all smiles.",
 };
 
 const FALLBACK_GROUPS: Record<Section["key"], MenuGroup[]> = {
   men: [
     {
-      heading: "Ethnic",
+      heading: "Traditional Wear",
       links: [
-        { label: "Panjabi", href: "/men/panjabi" },
-        { label: "Short Kurta", href: "/men/short-kurta" },
-        { label: "Fatua", href: "/men/fatua" },
+        { label: "Punjabi (Traditional Kurta)", href: "/men/punjabi" },
+        { label: "Sherwani", href: "/men/sherwani" },
       ],
     },
     {
-      heading: "Everyday",
+      heading: "Topwear",
       links: [
         { label: "Shirts", href: "/men/shirts" },
-        { label: "T-Shirts & Polos", href: "/men/t-shirts" },
+        { label: "T-Shirts", href: "/men/t-shirts" },
+        { label: "Vests (Undershirts)", href: "/men/vests" },
+      ],
+    },
+    {
+      heading: "Bottomwear",
+      links: [
+        { label: "Pants", href: "/men/pants" },
+        { label: "Jeans", href: "/men/jeans" },
+        { label: "Gabardine Pants", href: "/men/gabardine-pants" },
         { label: "Trousers", href: "/men/trousers" },
+        { label: "Three-Quarter Pants", href: "/men/three-quarter-pants" },
+        { label: "Two-Quarter Pants (Shorts)", href: "/men/two-quarter-pants" },
       ],
     },
     {
-      heading: "Festive",
+      heading: "Accessories & Essentials",
       links: [
-        { label: "Pajama Sets", href: "/men/panjabi-pajama-sets" },
-        { label: "Coaty & Jackets", href: "/men/coaty" },
-        { label: "Tupi", href: "/men/tupi" },
-      ],
-    },
-    {
-      heading: "More",
-      links: [
-        { label: "Lungi & Shawls", href: "/men/lungi" },
-        { label: "Shoes", href: "/men/shoes" },
-        { label: "Accessories", href: "/men/accessories" },
+        { label: "Ties", href: "/men/ties" },
+        { label: "Wallets", href: "/men/wallets" },
+        { label: "Men's Undergarments", href: "/men/mens-undergarments" },
       ],
     },
   ],
   women: [
     {
-      heading: "Signature",
+      heading: "Dresses & Sets",
       links: [
-        { label: "Sharee", href: "/women/sharee" },
-        { label: "3 Pcs & 2 Pcs", href: "/women/pcs-sets" },
-        { label: "Gown", href: "/women/gown" },
+        { label: "Women's Dresses", href: "/women/womens-dresses" },
+        { label: "Gowns", href: "/women/gowns" },
+        { label: "Ready-Made Three-Piece Sets", href: "/women/ready-made-three-piece-sets" },
+        { label: "Unstitched Three-Piece Sets", href: "/women/unstitched-three-piece-sets" },
+        { label: "One-Piece Outfits", href: "/women/one-piece-outfits" },
+        { label: "Two-Piece Sets", href: "/women/two-piece-sets" },
+        { label: "Three-Piece Sets", href: "/women/three-piece-sets" },
       ],
     },
     {
-      heading: "Everyday",
+      heading: "Sarees",
       links: [
-        { label: "Tunic", href: "/women/tunic" },
-        { label: "Tops & Shirts", href: "/women/tops-shirt" },
-        { label: "Skirt", href: "/women/skirt" },
+        { label: "Katan Silk Sarees", href: "/women/katan-silk-sarees" },
+        { label: "Cotton Sarees", href: "/women/cotton-sarees" },
+        { label: "Jamdani Sarees", href: "/women/jamdani-sarees" },
+        { label: "Party Wear Sarees", href: "/women/party-wear-sarees" },
       ],
     },
     {
-      heading: "Layers",
-      links: [
-        { label: "Jacket & Blazer", href: "/women/jacket" },
-        { label: "Ladies Polo", href: "/women/ladies-polo" },
-        { label: "Ladies Cap", href: "/women/ladies-cap" },
-      ],
+      heading: "Ethnic Wear",
+      links: [{ label: "Lehengas", href: "/women/lehengas" }],
     },
     {
-      heading: "More",
+      heading: "Accessories & Essentials",
       links: [
-        { label: "New Arrivals", href: "/new-arrivals" },
-        { label: "Sale", href: "/sale" },
-        { label: "Size Guide", href: "/size-guides" },
+        { label: "Women's Handbags", href: "/women/womens-handbags" },
+        { label: "Women's Undergarments", href: "/women/womens-undergarments" },
       ],
     },
   ],
@@ -96,39 +98,53 @@ const FALLBACK_GROUPS: Record<Section["key"], MenuGroup[]> = {
     {
       heading: "Boys",
       links: [
-        { label: "Panjabi", href: "/kids/boys-panjabi" },
-        { label: "Kabli & Cord Sets", href: "/kids/boys" },
-        { label: "Shirts & Polos", href: "/kids/boys-shirt" },
-      ],
-    },
-    {
-      heading: "Boys Casual",
-      links: [
-        { label: "T-Shirts & Tanks", href: "/kids/boys-tshirt" },
-        { label: "Denim", href: "/kids/boys-denim" },
-        { label: "New In", href: "/new-arrivals" },
+        { label: "Boys' Clothing Sets", href: "/kids/boys-clothing-sets" },
+        { label: "T-Shirts", href: "/kids/boys-t-shirts" },
+        { label: "Shirts", href: "/kids/boys-shirts" },
+        { label: "Polo Shirts", href: "/kids/boys-polo-shirts" },
+        { label: "Jeans", href: "/kids/boys-jeans" },
+        { label: "Casual Pants", href: "/kids/boys-casual-pants" },
+        { label: "Shorts", href: "/kids/boys-shorts" },
+        { label: "Trousers", href: "/kids/boys-trousers" },
+        { label: "Punjabi / Kurta", href: "/kids/boys-punjabi-kurta" },
+        { label: "Sherwani", href: "/kids/boys-sherwani" },
+        { label: "Hoodies", href: "/kids/boys-hoodies" },
+        { label: "Jackets", href: "/kids/boys-jackets" },
+        { label: "Sweaters", href: "/kids/boys-sweaters" },
+        { label: "Pajama Sets", href: "/kids/boys-pajama-sets" },
+        { label: "Tracksuits", href: "/kids/boys-tracksuits" },
+        { label: "Undergarments", href: "/kids/boys-undergarments" },
       ],
     },
     {
       heading: "Girls",
       links: [
-        { label: "3 Pcs & 2 Pcs", href: "/kids/girls-3pcs" },
-        { label: "Tops & Tees", href: "/kids/girls-tops" },
-        { label: "Jumpsuit", href: "/kids/girls-jumpsuit" },
-      ],
-    },
-    {
-      heading: "More",
-      links: [
-        { label: "Sale", href: "/sale" },
-        { label: "Size Guide", href: "/size-guides" },
-        { label: "Stories", href: "/stories" },
+        { label: "Girls' Clothing Sets", href: "/kids/girls-clothing-sets" },
+        { label: "Frocks", href: "/kids/girls-frocks" },
+        { label: "Dresses", href: "/kids/girls-dresses" },
+        { label: "T-Shirts", href: "/kids/girls-t-shirts" },
+        { label: "Tops", href: "/kids/girls-tops" },
+        { label: "Skirts", href: "/kids/girls-skirts" },
+        { label: "Jeans", href: "/kids/girls-jeans" },
+        { label: "Leggings", href: "/kids/girls-leggings" },
+        { label: "Casual Pants", href: "/kids/girls-casual-pants" },
+        { label: "One-Piece Dresses", href: "/kids/girls-one-piece-dresses" },
+        { label: "Two-Piece Sets", href: "/kids/girls-two-piece-sets" },
+        { label: "Three-Piece Sets", href: "/kids/girls-three-piece-sets" },
+        { label: "Salwar Kameez", href: "/kids/girls-salwar-kameez" },
+        { label: "Lehengas", href: "/kids/girls-lehengas" },
+        { label: "Gowns", href: "/kids/girls-gowns" },
+        { label: "Hoodies", href: "/kids/girls-hoodies" },
+        { label: "Jackets", href: "/kids/girls-jackets" },
+        { label: "Sweaters", href: "/kids/girls-sweaters" },
+        { label: "Nightwear", href: "/kids/girls-nightwear" },
+        { label: "Undergarments", href: "/kids/girls-undergarments" },
       ],
     },
   ],
 };
 
-/** Build mega-menu sections from the real catalog tree; curated fallback below. */
+/** Build mega-menu sections from the authoritative category groups. */
 function buildSections(d: ReturnType<typeof getDict>): Section[] {
   const keys: Section["key"][] = ["men", "women", "kids"];
   const labels: Record<Section["key"], string> = {
@@ -136,48 +152,26 @@ function buildSections(d: ReturnType<typeof getDict>): Section[] {
     women: d.nav_women,
     kids: d.nav_kids,
   };
-  try {
-    if (Array.isArray(CATEGORIES) && CATEGORIES.length > 0) {
-      return keys.map((key) => {
-        const withKids = CATEGORIES.filter(
-          (c) => c.section === key && c.children && c.children.length > 0,
-        );
-        const groups: MenuGroup[] = withKids.slice(0, 4).map((c) => ({
-          heading: c.name,
-          href: `/${key}/${c.slug}`,
-          links: (c.children ?? []).slice(0, 5).map((k) => ({
-            label: k.name,
-            href: `/${key}/${k.slug}`,
-          })),
-        }));
-        while (groups.length < 4) {
-          const fb = FALLBACK_GROUPS[key][groups.length];
-          if (!fb) break;
-          groups.push({
-            heading: fb.heading,
-            href: `/${key}`,
-            links: fb.links,
-          });
-        }
-        return {
-          key,
-          label: labels[key],
-          href: `/${key}`,
-          groups: groups.slice(0, 4),
-          blurb: BLURBS[key],
-        };
-      });
+  return keys.map((key) => {
+    let groups: MenuGroup[];
+    try {
+      groups = getCategoryGroups(key).map((g) => ({
+        heading: g.name,
+        href: `/${key}`,
+        links: g.children.map((k) => ({ label: k.name, href: `/${key}/${k.slug}` })),
+      }));
+    } catch {
+      // Menu must never crash the header — curated fallback below.
+      groups = FALLBACK_GROUPS[key];
     }
-  } catch {
-    // Fall through to curated fallback — menu must never crash the header.
-  }
-  return keys.map((key) => ({
-    key,
-    label: labels[key],
-    href: `/${key}`,
-    groups: FALLBACK_GROUPS[key].map((g) => ({ ...g, href: `/${key}` })),
-    blurb: BLURBS[key],
-  }));
+    return {
+      key,
+      label: labels[key],
+      href: `/${key}`,
+      groups,
+      blurb: BLURBS[key],
+    };
+  });
 }
 
 /**
@@ -323,7 +317,12 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
           <div
             key={s.key}
             hidden={openKey !== s.key}
-            className="mx-auto grid max-w-[1280px] grid-cols-[1fr_1fr_1fr_1fr_300px] gap-8 px-8 py-8"
+            className={cn(
+              "mx-auto grid max-w-[1280px] gap-8 px-8 py-8",
+              s.groups.length >= 4
+                ? "grid-cols-[1fr_1fr_1fr_1fr_300px]"
+                : "grid-cols-[1fr_1fr_300px]",
+            )}
           >
             {s.groups.map((g, gi) => (
               <div
@@ -335,7 +334,13 @@ export function MegaMenu({ locale = "en" }: { locale?: Locale }) {
                   <span aria-hidden="true" className="h-px w-4 bg-gold" />
                   {g.heading}
                 </p>
-                <ul className="space-y-2">
+                <ul
+                  className={
+                    g.links.length > 8
+                      ? "grid grid-cols-2 gap-x-8 gap-y-2"
+                      : "space-y-2"
+                  }
+                >
                   {g.links.map((l) => (
                     <li key={l.href + l.label}>
                       <Link

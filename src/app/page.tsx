@@ -244,14 +244,14 @@ async function CategoryGrid() {
     ][tiles.length];
     if (fb) tiles.push(fb);
   }
-  // Reorder category tiles per brand: 01 PANJABI, 02 PANJABI PAJAMA SETS, 03 COATY, 04 SHIRT, 05 COAT, 06 JACKETS
+  // Curated category tiles (brand editorial) — new authoritative taxonomy.
   if (tiles.length >= 6) {
-    tiles[0] = { name: "PANJABI", href: "/men/panjabi", img: "/library/male/PANJABI.jpg" };
-    tiles[1] = { name: "PANJABI PAJAMA SETS", href: "/men/panjabi-pajama-sets", img: "/library/male/PANJABI-PAjAMA SET.jpg" };
-    tiles[2] = { name: "COATY", href: "/men/coaty", img: "/library/male/Coaty.webp" };
-    tiles[3] = { name: "SHIRT", href: "/men/shirts", img: "/library/male/Shirt.jpg" };
-    tiles[4] = { name: "COAT", href: "/men/coaty", img: "/library/male/COAT.jpg" };
-    tiles[5] = { name: "JACKETS", href: "/men/jackets", img: "/library/male/JAcket.webp" };
+    tiles[0] = { name: "PUNJABI", href: "/men/punjabi", img: "/library/male/PANJABI.jpg" };
+    tiles[1] = { name: "SHERWANI", href: "/men/sherwani", img: "/library/male/COAT.jpg" };
+    tiles[2] = { name: "SHIRTS", href: "/men/shirts", img: "/library/male/Shirt.jpg" };
+    tiles[3] = { name: "TROUSERS", href: "/men/trousers", img: "/hero/men.jpg" };
+    tiles[4] = { name: "GOWNS", href: "/women/gowns", img: "/hero/women.jpg" };
+    tiles[5] = { name: "LEHENGAS", href: "/women/lehengas", img: "/library/photo-album/WEDDING.jpg" };
   }
 
   return (

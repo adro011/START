@@ -44,13 +44,23 @@ export type Product = {
 };
 
 export type CategoryChild = { slug: string; name: string };
+
 export type Category = {
   slug: string;
   name: string;
   nameBn?: string;
   section: Section;
+  /** Navigation group slug (Traditional Wear, Topwear, Boys, …). */
+  group?: string;
   image?: string;
   children?: CategoryChild[];
+};
+
+export type CategoryGroup = {
+  slug: string;
+  name: string;
+  section: Section;
+  children: CategoryChild[];
 };
 
 export const SECTIONS: VirtualSection[] = ["men", "women", "kids", "new-arrivals", "sale"];
@@ -62,168 +72,246 @@ export function isValidSection(s: string): s is VirtualSection {
 export const SIZES_DEFAULT = ["S", "M", "L", "XL"] as const;
 
 /* ------------------------------------------------------------------ */
-/* Categories — mirrors DB seed tree (plan.md §6)                      */
+/* Categories — single authoritative taxonomy (64 leaf categories).    */
+/*                                                                     */
+/* Groups are pure navigation groupings; leaves are the product         */
+/* categories referenced by every product and route.                   */
+/*                                                                     */
+/* Counts: MEN 14 · WOMEN 14 · BOYS 16 · GIRLS 20 = 64                */
 /* ------------------------------------------------------------------ */
 
-export const CATEGORIES: Category[] = [
-  // ---- Men ----
-  {
-    slug: "panjabi",
-    name: "Panjabi",
-    section: "men",
-    image: "/hero/men.svg",
-    children: [
-      { slug: "panjabi-cotton", name: "Cotton & Blends" },
-      { slug: "panjabi-addi", name: "Addi" },
-      { slug: "panjabi-endi", name: "Endi" },
-      { slug: "panjabi-silk", name: "Silk" },
-      { slug: "panjabi-muslin", name: "Muslin & Jamdani" },
-      { slug: "panjabi-taaga", name: "Taaga Man Panjabis" },
-    ],
-  },
-  {
-    slug: "panjabi-pajama-sets",
-    name: "Panjabi Pajama Sets",
-    section: "men",
-    children: [
-      { slug: "pajama-set-cotton", name: "Cotton & Blends" },
-      { slug: "pajama-set-silk", name: "Silk" },
-    ],
-  },
-  { slug: "pajama", name: "Pajama", section: "men" },
-  { slug: "coaty", name: "Coaty", section: "men" },
-  { slug: "short-kurta", name: "Short Kurta", section: "men" },
-  { slug: "jackets", name: "Jackets", section: "men" },
-  {
-    slug: "trousers",
-    name: "Trousers",
-    section: "men",
-    children: [
-      { slug: "trousers-chinos", name: "Chinos" },
-      { slug: "trousers-denim", name: "Denim" },
-      { slug: "trousers-lounge", name: "Lounge Wear" },
-    ],
-  },
-  {
-    slug: "shirts",
-    name: "Shirts",
-    section: "men",
-    children: [
-      { slug: "shirts-ethnic", name: "Ethnic" },
-      { slug: "shirts-casual", name: "Casual" },
-      { slug: "shirts-executive", name: "Executive" },
-    ],
-  },
-  {
-    slug: "fatua",
-    name: "Fatua",
-    section: "men",
-    children: [
-      { slug: "fatua-cotton", name: "Cotton & Blends" },
-      { slug: "fatua-endi", name: "Endi" },
-      { slug: "fatua-silk", name: "Silk" },
-    ],
-  },
-  { slug: "lungi", name: "Lungi", section: "men" },
-  { slug: "shawls", name: "Shawls", section: "men" },
-  { slug: "scarves-mufflers", name: "Scarves & Mufflers", section: "men" },
-  { slug: "t-shirts", name: "T-Shirts", section: "men" },
-  { slug: "polos", name: "Polos", section: "men" },
-  { slug: "sleeping-suits", name: "Sleeping Suits", section: "men" },
-  {
-    slug: "shoes",
-    name: "Shoes",
-    section: "men",
-    children: [
-      { slug: "shoes-sandals", name: "Sandals" },
-      { slug: "shoes-formal", name: "Shoes" },
-      { slug: "shoes-nagra", name: "Nagras" },
-    ],
-  },
-  {
-    slug: "accessories",
-    name: "Accessories",
-    section: "men",
-    children: [
-      { slug: "acc-belts", name: "Belts" },
-      { slug: "acc-wallets", name: "Wallets" },
-      { slug: "acc-card-holders", name: "Card Holders" },
-      { slug: "acc-key-rings", name: "Key Rings" },
-      { slug: "acc-bags", name: "Bags" },
-      { slug: "acc-attar", name: "Attar" },
-    ],
-  },
-  { slug: "tupi", name: "Tupi", section: "men" },
+type SectionGroupDef = { slug: string; name: string; children: string[] };
 
-  // ---- Women ----
-  { slug: "jacket", name: "Jacket", section: "women" },
-  { slug: "gown", name: "Gown", section: "women" },
-  { slug: "ladies-cap", name: "Ladies Cap", section: "women" },
-  { slug: "skirt", name: "Skirt", section: "women" },
-  { slug: "ladies-polo", name: "Ladies Polo", section: "women" },
-  {
-    slug: "tunic",
-    name: "Tunic",
-    section: "women",
-    children: [
-      { slug: "tunic-long", name: "Long Tunic" },
-      { slug: "tunic-short", name: "Short Tunic" },
-    ],
-  },
-  {
-    slug: "pcs-sets",
-    name: "3 Pcs & 2 Pcs",
-    section: "women",
-    children: [
-      { slug: "pcs-cord-set", name: "Cord-Set" },
-      { slug: "pcs-3pcs", name: "3 Pcs Set" },
-      { slug: "pcs-2pcs", name: "2 Pcs" },
-    ],
-  },
-  {
-    slug: "tops-shirt",
-    name: "Tops & Shirt",
-    section: "women",
-    children: [
-      { slug: "tops-tshirt", name: "T-shirt" },
-      { slug: "tops-polo", name: "Bangladesh Polo" },
-      { slug: "tops-top", name: "Tops" },
-    ],
-  },
-  { slug: "sharee", name: "Sharee", section: "women", image: "/hero/women.svg" },
-  { slug: "blazer", name: "Blazer", section: "women" },
+/** group slug → leaf slugs (ordering is the storefront display order). */
+const GROUP_DEFS: Record<Section, SectionGroupDef[]> = {
+  men: [
+    {
+      slug: "traditional-wear",
+      name: "Traditional Wear",
+      children: ["punjabi", "sherwani"],
+    },
+    {
+      slug: "topwear",
+      name: "Topwear",
+      children: ["shirts", "t-shirts", "vests"],
+    },
+    {
+      slug: "bottomwear",
+      name: "Bottomwear",
+      children: [
+        "pants",
+        "jeans",
+        "gabardine-pants",
+        "trousers",
+        "three-quarter-pants",
+        "two-quarter-pants",
+      ],
+    },
+    {
+      slug: "accessories-essentials",
+      name: "Accessories & Essentials",
+      children: ["ties", "wallets", "mens-undergarments"],
+    },
+  ],
+  women: [
+    {
+      slug: "dresses-sets",
+      name: "Dresses & Sets",
+      children: [
+        "womens-dresses",
+        "gowns",
+        "ready-made-three-piece-sets",
+        "unstitched-three-piece-sets",
+        "one-piece-outfits",
+        "two-piece-sets",
+        "three-piece-sets",
+      ],
+    },
+    {
+      slug: "sarees",
+      name: "Sarees",
+      children: ["katan-silk-sarees", "cotton-sarees", "jamdani-sarees", "party-wear-sarees"],
+    },
+    { slug: "ethnic-wear", name: "Ethnic Wear", children: ["lehengas"] },
+    {
+      slug: "accessories-essentials",
+      name: "Accessories & Essentials",
+      children: ["womens-handbags", "womens-undergarments"],
+    },
+  ],
+  kids: [
+    {
+      slug: "boys",
+      name: "Boys",
+      children: [
+        "boys-clothing-sets",
+        "boys-t-shirts",
+        "boys-shirts",
+        "boys-polo-shirts",
+        "boys-jeans",
+        "boys-casual-pants",
+        "boys-shorts",
+        "boys-trousers",
+        "boys-punjabi-kurta",
+        "boys-sherwani",
+        "boys-hoodies",
+        "boys-jackets",
+        "boys-sweaters",
+        "boys-pajama-sets",
+        "boys-tracksuits",
+        "boys-undergarments",
+      ],
+    },
+    {
+      slug: "girls",
+      name: "Girls",
+      children: [
+        "girls-clothing-sets",
+        "girls-frocks",
+        "girls-dresses",
+        "girls-t-shirts",
+        "girls-tops",
+        "girls-skirts",
+        "girls-jeans",
+        "girls-leggings",
+        "girls-casual-pants",
+        "girls-one-piece-dresses",
+        "girls-two-piece-sets",
+        "girls-three-piece-sets",
+        "girls-salwar-kameez",
+        "girls-lehengas",
+        "girls-gowns",
+        "girls-hoodies",
+        "girls-jackets",
+        "girls-sweaters",
+        "girls-nightwear",
+        "girls-undergarments",
+      ],
+    },
+  ],
+};
 
-  // ---- Kids ----
-  {
-    slug: "boys",
-    name: "Boys",
-    section: "kids",
-    image: "/hero/kids.svg",
-    children: [
-      { slug: "boys-kabli", name: "Kabli" },
-      { slug: "boys-denim", name: "Boy's Denim" },
-      { slug: "boys-cord-set", name: "Boy's Cord Set" },
-      { slug: "boys-shirt", name: "Shirt" },
-      { slug: "boys-polo", name: "Polo Shirt" },
-      { slug: "boys-panjabi", name: "Panjabi" },
-      { slug: "boys-tank", name: "Tank Top" },
-      { slug: "boys-tshirt", name: "T-Shirt" },
-    ],
-  },
-  {
-    slug: "girls",
-    name: "Girls",
-    section: "kids",
-    image: "/hero/kids.svg",
-    children: [
-      { slug: "girls-3pcs", name: "3 Pcs" },
-      { slug: "girls-2pcs", name: "2 Pcs" },
-      { slug: "girls-jumpsuit", name: "Jumpsuit" },
-      { slug: "girls-tshirt", name: "T-Shirts" },
-      { slug: "girls-tops", name: "Tops" },
-    ],
-  },
-];
+/** leaf slug → display label (the 64 authoritative category names). */
+const CATEGORY_NAMES: Record<string, string> = {
+  // Men — Traditional Wear
+  punjabi: "Punjabi (Traditional Kurta)",
+  sherwani: "Sherwani",
+  // Men — Topwear
+  shirts: "Shirts",
+  "t-shirts": "T-Shirts",
+  vests: "Vests (Undershirts)",
+  // Men — Bottomwear
+  pants: "Pants",
+  jeans: "Jeans",
+  "gabardine-pants": "Gabardine Pants",
+  trousers: "Trousers",
+  "three-quarter-pants": "Three-Quarter Pants",
+  "two-quarter-pants": "Two-Quarter Pants (Shorts)",
+  // Men — Accessories & Essentials
+  ties: "Ties",
+  wallets: "Wallets",
+  "mens-undergarments": "Men's Undergarments",
+
+  // Women — Dresses & Sets
+  "womens-dresses": "Women's Dresses",
+  gowns: "Gowns",
+  "ready-made-three-piece-sets": "Ready-Made Three-Piece Sets",
+  "unstitched-three-piece-sets": "Unstitched Three-Piece Sets",
+  "one-piece-outfits": "One-Piece Outfits",
+  "two-piece-sets": "Two-Piece Sets",
+  "three-piece-sets": "Three-Piece Sets",
+  // Women — Sarees
+  "katan-silk-sarees": "Katan Silk Sarees",
+  "cotton-sarees": "Cotton Sarees",
+  "jamdani-sarees": "Jamdani Sarees",
+  "party-wear-sarees": "Party Wear Sarees",
+  // Women — Ethnic Wear
+  lehengas: "Lehengas",
+  // Women — Accessories & Essentials
+  "womens-handbags": "Women's Handbags",
+  "womens-undergarments": "Women's Undergarments",
+
+  // Boys
+  "boys-clothing-sets": "Boys' Clothing Sets",
+  "boys-t-shirts": "T-Shirts",
+  "boys-shirts": "Shirts",
+  "boys-polo-shirts": "Polo Shirts",
+  "boys-jeans": "Jeans",
+  "boys-casual-pants": "Casual Pants",
+  "boys-shorts": "Shorts",
+  "boys-trousers": "Trousers",
+  "boys-punjabi-kurta": "Punjabi / Kurta",
+  "boys-sherwani": "Sherwani",
+  "boys-hoodies": "Hoodies",
+  "boys-jackets": "Jackets",
+  "boys-sweaters": "Sweaters",
+  "boys-pajama-sets": "Pajama Sets",
+  "boys-tracksuits": "Tracksuits",
+  "boys-undergarments": "Undergarments",
+
+  // Girls
+  "girls-clothing-sets": "Girls' Clothing Sets",
+  "girls-frocks": "Frocks",
+  "girls-dresses": "Dresses",
+  "girls-t-shirts": "T-Shirts",
+  "girls-tops": "Tops",
+  "girls-skirts": "Skirts",
+  "girls-jeans": "Jeans",
+  "girls-leggings": "Leggings",
+  "girls-casual-pants": "Casual Pants",
+  "girls-one-piece-dresses": "One-Piece Dresses",
+  "girls-two-piece-sets": "Two-Piece Sets",
+  "girls-three-piece-sets": "Three-Piece Sets",
+  "girls-salwar-kameez": "Salwar Kameez",
+  "girls-lehengas": "Lehengas",
+  "girls-gowns": "Gowns",
+  "girls-hoodies": "Hoodies",
+  "girls-jackets": "Jackets",
+  "girls-sweaters": "Sweaters",
+  "girls-nightwear": "Nightwear",
+  "girls-undergarments": "Undergarments",
+};
+
+const SECTION_ORDER: Section[] = ["men", "women", "kids"];
+
+function toChild(slug: string): CategoryChild {
+  return { slug, name: CATEGORY_NAMES[slug] ?? slug };
+}
+
+/** Navigation groups (group → ordered leaf categories). */
+export const CATEGORY_GROUPS: CategoryGroup[] = SECTION_ORDER.flatMap((section) =>
+  GROUP_DEFS[section].map((g) => ({
+    slug: g.slug,
+    name: g.name,
+    section,
+    children: g.children.map(toChild),
+  })),
+);
+
+/** Flat leaf-category list (the product-facing taxonomy). */
+export const CATEGORIES: Category[] = SECTION_ORDER.flatMap((section) =>
+  GROUP_DEFS[section].flatMap((g) =>
+    g.children.map((slug) => ({
+      slug,
+      name: CATEGORY_NAMES[slug] ?? slug,
+      section,
+      group: g.slug,
+    })),
+  ),
+);
+
+export function getCategoryGroups(section: Section): CategoryGroup[] {
+  return GROUP_DEFS[section].map((g) => ({
+    slug: g.slug,
+    name: g.name,
+    section,
+    children: g.children.map(toChild),
+  }));
+}
+
+export function getSectionCategories(section: Section): Category[] {
+  return CATEGORIES.filter((c) => c.section === section);
+}
 
 export function getCategory(slug: string, list: Category[] = CATEGORIES): Category | undefined {
   const direct = list.find((c) => c.slug === slug);
@@ -279,8 +367,8 @@ export const PRODUCTS: Product[] = [
     care: "Machine wash cold, hang dry in shade, warm iron.",
     fitNotes: "Regular fit. Model is 5'9\" and wears size M.",
     section: "men",
-    category: "panjabi",
-    categoryName: "Panjabi",
+    category: "punjabi",
+    categoryName: "Punjabi (Traditional Kurta)",
     pricePaisa: 249000,
     compareAtPaisa: 299000,
     images: [
@@ -312,8 +400,8 @@ export const PRODUCTS: Product[] = [
     care: "Dry clean recommended. Cool iron inside out.",
     fitNotes: "Slim-regular fit with extra shoulder room.",
     section: "men",
-    category: "panjabi",
-    categoryName: "Panjabi",
+    category: "punjabi",
+    categoryName: "Punjabi (Traditional Kurta)",
     pricePaisa: 499000,
     compareAtPaisa: 599000,
     images: [
@@ -342,8 +430,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Addi voile cotton",
     care: "Gentle machine wash, line dry.",
     section: "men",
-    category: "panjabi",
-    categoryName: "Panjabi",
+    category: "punjabi",
+    categoryName: "Punjabi (Traditional Kurta)",
     pricePaisa: 329000,
     images: [
       { src: "/products/addi-panjabi-sky-1.jpg", alt: "Addi Panjabi front" },
@@ -371,8 +459,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Handloom Endi cotton",
     care: "Hand wash cold with mild detergent.",
     section: "men",
-    category: "fatua",
-    categoryName: "Fatua",
+    category: "shirts",
+    categoryName: "Shirts",
     pricePaisa: 189000,
     images: [
       { src: "/products/endi-fatua-natural-1.jpg", alt: "Endi Fatua front" },
@@ -460,8 +548,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Matte suiting blend",
     care: "Dry clean only.",
     section: "men",
-    category: "coaty",
-    categoryName: "Coaty",
+    category: "sherwani",
+    categoryName: "Sherwani",
     pricePaisa: 359000,
     images: [
       { src: "/products/taaga-coaty-charcoal-1.jpg", alt: "Coaty front" },
@@ -489,8 +577,8 @@ export const PRODUCTS: Product[] = [
     fabric: "100% combed cotton",
     care: "Machine wash cold, sun dry.",
     section: "men",
-    category: "lungi",
-    categoryName: "Lungi",
+    category: "pants",
+    categoryName: "Pants",
     pricePaisa: 99000,
     compareAtPaisa: 129000,
     images: [
@@ -522,8 +610,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Pure muslin, blouse piece included",
     care: "Dry clean recommended, store folded in muslin cloth.",
     section: "women",
-    category: "sharee",
-    categoryName: "Sharee",
+    category: "cotton-sarees",
+    categoryName: "Cotton Sarees",
     pricePaisa: 549000,
     images: [
       { src: "/products/muslin-sharee-rose-1.jpg", alt: "Muslin sharee drape" },
@@ -552,8 +640,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Fine cotton-silk Jamdani",
     care: "Dry clean only. Kata wash by specialist as needed.",
     section: "women",
-    category: "sharee",
-    categoryName: "Sharee",
+    category: "jamdani-sarees",
+    categoryName: "Jamdani Sarees",
     pricePaisa: 899000,
     images: [
       { src: "/products/jamdani-sharee-emerald-1.jpg", alt: "Jamdani sharee full drape" },
@@ -581,8 +669,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Swiss lawn + chiffon dupatta",
     care: "Gentle wash, dry in shade.",
     section: "women",
-    category: "pcs-sets",
-    categoryName: "3 Pcs & 2 Pcs",
+    category: "ready-made-three-piece-sets",
+    categoryName: "Ready-Made Three-Piece Sets",
     pricePaisa: 299000,
     compareAtPaisa: 359000,
     images: [
@@ -611,8 +699,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Crepe blend, no iron needed",
     care: "Machine wash, hang dry.",
     section: "women",
-    category: "pcs-sets",
-    categoryName: "3 Pcs & 2 Pcs",
+    category: "two-piece-sets",
+    categoryName: "Two-Piece Sets",
     pricePaisa: 249000,
     images: [
       { src: "/products/cord-set-lavender-1.jpg", alt: "Cord set front" },
@@ -640,8 +728,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Yarn-dyed cotton",
     care: "Machine wash cold.",
     section: "women",
-    category: "tunic",
-    categoryName: "Tunic",
+    category: "womens-dresses",
+    categoryName: "Women's Dresses",
     pricePaisa: 199000,
     images: [
       { src: "/products/long-tunic-terracotta-1.jpg", alt: "Long tunic front" },
@@ -669,8 +757,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Georgette with crepe lining",
     care: "Dry clean recommended.",
     section: "women",
-    category: "gown",
-    categoryName: "Gown",
+    category: "gowns",
+    categoryName: "Gowns",
     pricePaisa: 449000,
     compareAtPaisa: 529000,
     images: [
@@ -699,8 +787,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Viscose rayon",
     care: "Gentle wash.",
     section: "women",
-    category: "tops-shirt",
-    categoryName: "Tops & Shirt",
+    category: "one-piece-outfits",
+    categoryName: "One-Piece Outfits",
     pricePaisa: 129000,
     images: [
       { src: "/products/casual-tops-floral-1.jpg", alt: "Floral top front" },
@@ -728,8 +816,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Poly-viscose suiting",
     care: "Dry clean only.",
     section: "women",
-    category: "blazer",
-    categoryName: "Blazer",
+    category: "one-piece-outfits",
+    categoryName: "One-Piece Outfits",
     pricePaisa: 399000,
     images: [
       { src: "/products/ladies-blazer-sand-1.jpg", alt: "Blazer front" },
@@ -759,8 +847,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Soft cotton, elastic pajama",
     care: "Machine wash.",
     section: "kids",
-    category: "boys",
-    categoryName: "Boys",
+    category: "boys-clothing-sets",
+    categoryName: "Boys' Clothing Sets",
     pricePaisa: 149000,
     images: [
       { src: "/products/boys-kabli-mustard-1.jpg", alt: "Boys kabli set" },
@@ -788,8 +876,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Cotton blend",
     care: "Machine wash.",
     section: "kids",
-    category: "boys",
-    categoryName: "Boys",
+    category: "boys-punjabi-kurta",
+    categoryName: "Punjabi / Kurta",
     pricePaisa: 139000,
     images: [
       { src: "/products/boys-panjabi-cream-1.jpg", alt: "Boys panjabi front" },
@@ -817,8 +905,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Soft denim + jersey",
     care: "Machine wash inside out.",
     section: "kids",
-    category: "boys",
-    categoryName: "Boys",
+    category: "boys-clothing-sets",
+    categoryName: "Boys' Clothing Sets",
     pricePaisa: 189000,
     compareAtPaisa: 229000,
     images: [
@@ -847,8 +935,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Georgette + cotton lining",
     care: "Gentle wash.",
     section: "kids",
-    category: "girls",
-    categoryName: "Girls",
+    category: "girls-three-piece-sets",
+    categoryName: "Three-Piece Sets",
     pricePaisa: 179000,
     images: [
       { src: "/products/girls-3pcs-peach-1.jpg", alt: "Girls 3pcs set" },
@@ -877,8 +965,8 @@ export const PRODUCTS: Product[] = [
     fabric: "100% cotton",
     care: "Machine wash.",
     section: "kids",
-    category: "girls",
-    categoryName: "Girls",
+    category: "girls-two-piece-sets",
+    categoryName: "Two-Piece Sets",
     pricePaisa: 159000,
     images: [
       { src: "/products/girls-2pcs-sky-1.jpg", alt: "Girls 2pcs set" },
@@ -906,8 +994,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Rayon twill",
     care: "Machine wash.",
     section: "kids",
-    category: "girls",
-    categoryName: "Girls",
+    category: "girls-one-piece-dresses",
+    categoryName: "One-Piece Dresses",
     pricePaisa: 149000,
     compareAtPaisa: 189000,
     images: [
@@ -936,8 +1024,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Cotton jersey 180 GSM",
     care: "Machine wash.",
     section: "kids",
-    category: "boys",
-    categoryName: "Boys",
+    category: "boys-t-shirts",
+    categoryName: "T-Shirts",
     pricePaisa: 99000,
     images: [
       { src: "/products/kids-tee-duo-mint-1.jpg", alt: "Kids tee pack" },
@@ -965,8 +1053,8 @@ export const PRODUCTS: Product[] = [
     fabric: "Cotton poplin",
     care: "Gentle wash.",
     section: "kids",
-    category: "girls",
-    categoryName: "Girls",
+    category: "girls-tops",
+    categoryName: "Tops",
     pricePaisa: 89000,
     images: [
       { src: "/products/girls-top-yellow-1.jpg", alt: "Girls yellow top" },

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ProductImage } from "@/lib/catalog";
 import { cn } from "@/lib/format";
+import ZoomImage from "@/components/zoom-image";
 
 const RING =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]";
@@ -19,12 +20,55 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
   const dialogRef = useRef<HTMLDivElement>(null);
   const prevFocus = useRef<HTMLElement | null>(null);
 
+  // ── Lightbox pinch-to-zoom / pan (touch) ────────────────────────────────
+  const [pinch, setPinch] = useState({ scale: 1, x: 0, y: 0 });
+  const pointers = useRef(new Map<number, { x: number; y: number }>());
+  const gesture = useRef({
+    scale: 1,
+    x: 0,
+    y: 0,
+    startDist: 0,
+    startX: 0,
+    startY: 0,
+    mode: "" as "" | "pan" | "pinch",
+  });
+
+  function onLBStart(e: React.PointerEvent<HTMLDivElement>) {
+    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+    pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.current.size === 2) {
+      const [a, b] = [...pointers.current.values()];
+      gesture.current = { scale: pinch.scale, x: pinch.x, y: pinch.y, startDist: Math.hypot(a.x - b.x, a.y - b.y) || 1, startX: 0, startY: 0, mode: "pinch" };
+    } else if (pointers.current.size === 1) {
+      gesture.current = { scale: pinch.scale, x: pinch.x, y: pinch.y, startDist: 0, startX: e.clientX, startY: e.clientY, mode: "pan" };
+    }
+  }
+  function onLBMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (!pointers.current.has(e.pointerId)) return;
+    pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const pts = [...pointers.current.values()];
+    if (pts.length === 1 && gesture.current.mode === "pan") {
+      setPinch((p) => ({ ...p, x: gesture.current.x + (e.clientX - gesture.current.startX), y: gesture.current.y + (e.clientY - gesture.current.startY) }));
+    } else if (pts.length === 2) {
+      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      const s = Math.min(4, Math.max(1, gesture.current.scale * (dist / gesture.current.startDist)));
+      setPinch((p) => ({ ...p, scale: s }));
+    }
+  }
+  function onLBEnd(e: React.PointerEvent<HTMLDivElement>) {
+    pointers.current.delete(e.pointerId);
+    if (pointers.current.size === 0 && pinch.scale <= 1) setPinch({ scale: 1, x: 0, y: 0 });
+  }
+  function resetPinch() {
+    setPinch({ scale: 1, x: 0, y: 0 });
+  }
+
   const prev = useCallback(() => {
-    setLightbox((cur) =>
-      cur === null ? cur : (cur - 1 + images.length) % images.length,
-    );
+    resetPinch();
+    setLightbox((cur) => (cur === null ? cur : (cur - 1 + images.length) % images.length));
   }, [images.length]);
   const next = useCallback(() => {
+    resetPinch();
     setLightbox((cur) => (cur === null ? cur : (cur + 1) % images.length));
   }, [images.length]);
 
@@ -95,13 +139,12 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
                 : "aspect-[3/4]",
             )}
           >
-            <Image
+            <ZoomImage
               src={img.src}
               alt={img.alt || `${name} view ${i + 1}`}
-              fill
               priority={i === 0}
               sizes="(max-width: 768px) 50vw, 32vw"
-              className="object-cover transition-transform duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] motion-reduce:transition-none"
+              viewer={false}
             />
             <span
               aria-hidden="true"
@@ -123,11 +166,25 @@ export default function Gallery({ images, name }: { images: ProductImage[]; name
           onClick={() => setLightbox(null)}
         >
           <div
-            className="relative aspect-[4/5] w-full max-w-2xl overflow-hidden rounded-xl bg-[var(--color-dark-iron)]"
+            className="relative aspect-[4/5] w-full max-w-2xl touch-none overflow-hidden rounded-xl bg-[var(--color-dark-iron)]"
             onClick={(e) => e.stopPropagation()}
+            onPointerDown={onLBStart}
+            onPointerMove={onLBMove}
+            onPointerUp={onLBEnd}
+            onPointerCancel={onLBEnd}
           >
-            <Image src={current.src} alt={current.alt || name} fill sizes="100vw" className="object-contain" />
-            <p aria-live="polite" className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs text-white">
+            <Image
+              src={current.src}
+              alt={current.alt || name}
+              fill
+              sizes="100vw"
+              className="object-contain"
+              style={{
+                transform: `translate(${pinch.x}px, ${pinch.y}px) scale(${pinch.scale})`,
+                transformOrigin: "center center",
+              }}
+            />
+            <p aria-live="polite" className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs text-white">
               {lightbox + 1} of {images.length}
             </p>
             <button

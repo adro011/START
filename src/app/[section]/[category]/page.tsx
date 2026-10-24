@@ -10,22 +10,8 @@ import { getLiveCategories, getLiveProducts } from "@/lib/storefront";
 
 export const revalidate = 300;
 
-export async function generateStaticParams() {
-  // Live-first so new Supabase categories get static pages; local fallback
-  // keeps offline builds green.
-  let cats = CATEGORIES;
-  try {
-    const live = await getLiveCategories();
-    if (live.categories.length > 0) cats = live.categories;
-  } catch {
-    /* local fallback */
-  }
-  const out: { section: string; category: string }[] = [];
-  for (const c of cats) {
-    out.push({ section: c.section, category: c.slug });
-    for (const k of c.children ?? []) out.push({ section: c.section, category: k.slug });
-  }
-  return out;
+export function generateStaticParams() {
+  return CATEGORIES.map((c) => ({ section: c.section, category: c.slug }));
 }
 
 export async function generateMetadata({
@@ -73,11 +59,7 @@ export default async function CategoryPage({
   const allProducts = liveProducts.length > 0 ? liveProducts : undefined;
   const allCategories = liveCategories.length > 0 ? liveCategories : CATEGORIES;
   const cat = getCategory(category, allCategories);
-  if (!cat || (cat.section !== section && !allCategories.find((c) => c.section === section && c.children?.some((k) => k.slug === category)))) {
-    // Allow child slugs belonging to this section
-    const belongs = allCategories.some((c) => c.section === section && (c.slug === category || c.children?.some((k) => k.slug === category)));
-    if (!belongs) notFound();
-  }
+  if (!cat || cat.section !== section) notFound();
   const raw = await searchParams;
   const first = (v: string | string[] | undefined): string | undefined => (Array.isArray(v) ? v[0] : v);
   const sp = { sort: first(raw.sort), maxPrice: first(raw.maxPrice), sizes: first(raw.sizes), inStock: first(raw.inStock), page: first(raw.page) };

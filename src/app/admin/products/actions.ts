@@ -4,18 +4,31 @@ import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
 
+export interface VariantInput {
+  size: string;
+  color: string;
+  colorHex: string;
+  stock: number;
+  /** Variant-specific selling price (paisa). Omit/null → inherit base price. */
+  priceOverridePaisa?: number | null;
+  sku?: string;
+}
+
 export interface SaveProductInput {
   id?: string;
   name: string;
   slug: string;
   section: "men" | "women" | "kids";
   category: string;
+  description?: string;
+  fabric?: string;
   price_paisa: number;
   compare_at_paisa: number | null;
   active: boolean;
-  sizes: string[];
-  colors: { name: string; hex: string }[];
-  stock: Record<string, number>;
+  is_new?: boolean;
+  is_sale?: boolean;
+  is_featured?: boolean;
+  variants: VariantInput[];
   images: { position: number; alt: string; name: string }[];
 }
 
@@ -31,10 +44,19 @@ function buildSku(slug: string, size: string, color: string): string {
 }
 
 export async function saveProduct(input: SaveProductInput): Promise<SaveProductResult> {
-  // Server actions are public POST endpoints — catalog writes are admin-only.
   await requireAdmin();
   const supabase = createServiceRoleClient();
   if (!supabase) return { ok: false, error: "Supabase not configured" };
+
+  if (!Number.isFinite(input.price_paisa) || input.price_paisa < 0) {
+    return { ok: false, error: "Price must be a non-negative number." };
+  }
+  if (
+    input.compare_at_paisa != null &&
+    (!Number.isFinite(input.compare_at_paisa) || input.compare_at_paisa <= input.price_paisa)
+  ) {
+    return { ok: false, error: "Compare-at price must be greater than the selling price." };
+  }
 
   let productId = input.id;
 
@@ -65,9 +87,14 @@ export async function saveProduct(input: SaveProductInput): Promise<SaveProductR
         slug: input.slug,
         section: input.section,
         category_id: categoryId,
+        description: input.description ?? undefined,
+        fabric: input.fabric ?? undefined,
         price_paisa: input.price_paisa,
         compare_at_paisa: input.compare_at_paisa,
         active: input.active,
+        is_new: input.is_new ?? false,
+        is_sale: input.is_sale ?? false,
+        is_featured: input.is_featured ?? false,
       })
       .eq("id", productId);
     if (error) return { ok: false, error: error.message };
@@ -79,9 +106,14 @@ export async function saveProduct(input: SaveProductInput): Promise<SaveProductR
         slug: input.slug,
         section: input.section,
         category_id: categoryId,
+        description: input.description ?? "",
+        fabric: input.fabric ?? "",
         price_paisa: input.price_paisa,
         compare_at_paisa: input.compare_at_paisa,
         active: input.active,
+        is_new: input.is_new ?? false,
+        is_sale: input.is_sale ?? false,
+        is_featured: input.is_featured ?? false,
       })
       .select("id")
       .single();
@@ -95,18 +127,17 @@ export async function saveProduct(input: SaveProductInput): Promise<SaveProductR
     .eq("product_id", productId!);
   if (delVarErr) return { ok: false, error: delVarErr.message };
 
-  const variants = input.sizes.flatMap((size) =>
-    input.colors.map((color) => ({
+  if (input.variants.length > 0) {
+    const rows = input.variants.map((v) => ({
       product_id: productId,
-      sku: buildSku(input.slug, size, color.name),
-      size,
-      color: color.name,
-      color_hex: color.hex,
-      stock: Math.max(0, input.stock[`${size}__${color.name}`] ?? 0),
-    }))
-  );
-  if (variants.length > 0) {
-    const { error: varErr } = await supabase.from("product_variants").insert(variants);
+      sku: v.sku?.trim() || buildSku(input.slug, v.size, v.color),
+      size: v.size,
+      color: v.color,
+      color_hex: v.colorHex,
+      stock: Math.max(0, v.stock),
+      price_override_paisa: v.priceOverridePaisa ?? null,
+    }));
+    const { error: varErr } = await supabase.from("product_variants").insert(rows);
     if (varErr) return { ok: false, error: varErr.message };
   }
 
@@ -127,6 +158,8 @@ export async function saveProduct(input: SaveProductInput): Promise<SaveProductR
     if (imgErr) return { ok: false, error: imgErr.message };
   }
 
+  revalidatePath("/");
   revalidatePath("/admin/products");
+  revalidatePath("/admin/products/[id]", "page");
   return { ok: true, id: productId! };
 }

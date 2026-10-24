@@ -4,39 +4,29 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/store/cart";
 import { SITE } from "@/config/site";
-import { CATEGORIES } from "@/lib/catalog";
+import { getCategoryGroups } from "@/lib/catalog";
 import { getDict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/dictionary";
 import { cn, hardNav } from "../lib/format";
 
-function sectionLinks(): { key: string; label: string; href: string }[] {
-  try {
-    if (Array.isArray(CATEGORIES) && CATEGORIES.length > 0) {
-      const seen = new Map<string, string>();
-      for (const c of CATEGORIES) {
-        if (
-          (c.section === "men" || c.section === "women" || c.section === "kids") &&
-          !seen.has(c.section)
-        ) {
-          seen.set(c.section, c.name);
-        }
-      }
-      if (seen.size > 0) {
-        return [...seen.entries()].map(([key, label]) => ({
-          key,
-          label: label[0].toUpperCase() + label.slice(1),
-          href: `/${key}`,
-        }));
-      }
-    }
-  } catch {
-    // fall through to static
-  }
-  return [
-    { key: "men", label: "Men", href: "/men" },
-    { key: "women", label: "Women", href: "/women" },
-    { key: "kids", label: "Kids", href: "/kids" },
-  ];
+type DrawerSection = {
+  key: "men" | "women" | "kids";
+  label: string;
+  href: string;
+  groups: { name: string; links: { label: string; href: string }[] }[];
+};
+
+function buildSections(labels: Record<"men" | "women" | "kids", string>): DrawerSection[] {
+  const keys: ("men" | "women" | "kids")[] = ["men", "women", "kids"];
+  return keys.map((key) => ({
+    key,
+    label: labels[key],
+    href: `/${key}`,
+    groups: getCategoryGroups(key).map((g) => ({
+      name: g.name,
+      links: g.children.map((k) => ({ label: k.name, href: `/${key}/${k.slug}` })),
+    })),
+  }));
 }
 
 function Icon({ d, label }: { d: string; label: string }) {
@@ -107,7 +97,7 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
     };
   }, [open ]);
 
-  const sections = sectionLinks();
+  const sections = buildSections({ men: d.nav_men, women: d.nav_women, kids: d.nav_kids });
   const openSearch = () =>
     window.dispatchEvent(new CustomEvent("open-search"));
 
@@ -267,41 +257,58 @@ export function MobileNav({ locale = "en" }: { locale?: Locale }) {
                   )}
                 >
                   <div className="overflow-hidden">
-                    <ul className="space-y-1 pb-3 pl-1">
-                      <li>
-                        <Link
-                          href={s.href}
-                          onClick={() => setOpen(false)}
-                          className="block py-1.5 text-[14px] text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
-                        >
-                          {d.view_all} →
-                        </Link>
-                      </li>
-                      <li>
+                    <div className="pb-3 pl-1">
+                      <Link
+                        href={s.href}
+                        onClick={() => setOpen(false)}
+                        className="block py-1.5 text-[14px] text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
+                      >
+                        {d.view_all} →
+                      </Link>
+                      {s.groups.map((g) => (
+                        <div key={g.name} className="mt-3">
+                          <p className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.16em] text-ash uppercase">
+                            <span aria-hidden="true" className="h-px w-3 bg-gold" />
+                            {g.name}
+                          </p>
+                          <ul className="mt-1 grid grid-cols-2 gap-x-3">
+                            {g.links.map((l) => (
+                              <li key={l.href}>
+                                <Link
+                                  href={l.href}
+                                  onClick={() => setOpen(false)}
+                                  className="block py-1 text-[13.5px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
+                                >
+                                  {l.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                      <div className="mt-3 flex gap-4 border-t border-white/10 pt-3">
                         <Link
                           href="/new-arrivals"
                           onClick={(e) => {
                             setOpen(false);
                             hardNav("/new-arrivals")(e);
                           }}
-                          className="block py-1.5 text-[14px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
+                          className="text-[13px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                         >
                           {d.nav_new}
                         </Link>
-                      </li>
-                      <li>
                         <Link
                           href="/sale"
                           onClick={(e) => {
                             setOpen(false);
                             hardNav("/sale")(e);
                           }}
-                          className="block py-1.5 text-[14px] text-steel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
+                          className="text-[13px] text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]"
                         >
                           {d.nav_sale}
                         </Link>
-                      </li>
-                    </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

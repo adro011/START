@@ -9,6 +9,7 @@ import {
   searchProducts,
   type Category,
   type Product,
+  type Section,
 } from "@/lib/catalog";
 
 /**
@@ -148,31 +149,47 @@ async function fetchCategories(): Promise<Category[] | null> {
     .order("slug", { ascending: true });
   if (error || !data || data.length === 0) return null;
   const rows = data as unknown as DbCategory[];
-  const roots = rows.filter((r) => r.parent_id === null);
-  const rootIds = new Set(roots.map((r) => r.id));
-  // Level-2 (parent = section root) become top-level groups; level-3 become children.
-  const groups: Category[] = [];
+  const byId = new Map(rows.map((r) => [r.id, r]));
+  const rootIds = new Set(rows.filter((r) => r.parent_id === null).map((r) => r.id));
+
+  // New taxonomy: sections (parent NULL) → groups (parent = section) → leaves
+  // (parent = group). Map level-3 leaves onto the flat Category shape.
+  const leaves: Category[] = [];
   for (const row of rows) {
-    if (!row.parent_id || !rootIds.has(row.parent_id)) continue;
-    const section = row.section;
-    const kids: { slug: string; name: string }[] = [];
-    for (const child of rows) {
-      if (child.parent_id !== row.id) continue;
-      kids.push({ slug: mapCategorySlug(child.slug, section), name: child.name });
-    }
-    groups.push({
-      slug: mapCategorySlug(row.slug, section),
+    if (!row.parent_id || rootIds.has(row.parent_id)) continue; // roots + groups
+    const groupRow = byId.get(row.parent_id);
+    if (!groupRow?.parent_id || !rootIds.has(groupRow.parent_id)) continue;
+    leaves.push({
+      slug: mapCategorySlug(row.slug, row.section),
       name: row.name,
       nameBn: row.name_bn ?? undefined,
-      section,
-      image: row.image_path ?? IMAGE_FALLBACK[section],
-      ...(kids.length > 0 ? { children: kids } : {}),
+      section: row.section,
+      group: mapCategorySlug(groupRow.slug, row.section),
     });
   }
-  // Preserve section order men → women → kids, then DB sort via stable order.
-  const order = { men: 0, women: 1, kids: 2 } as const;
-  groups.sort((a, b) => order[a.section] - order[b.section]);
-  return groups.length > 0 ? groups : null;
+
+  // Guard: the live tree must match the authoritative local taxonomy (64 leaf
+  // slugs per section), otherwise fall back so the storefront never renders a
+  // stale category tree after a taxonomy change.
+  if (leaves.length !== CATEGORIES.length) return null;
+  const localBySection = new Map<Section, Set<string>>();
+  for (const c of CATEGORIES) {
+    const set = localBySection.get(c.section) ?? new Set<string>();
+    set.add(c.slug);
+    localBySection.set(c.section, set);
+  }
+  const liveBySection = new Map<Section, Set<string>>();
+  for (const l of leaves) {
+    const set = liveBySection.get(l.section) ?? new Set<string>();
+    set.add(l.slug);
+    liveBySection.set(l.section, set);
+  }
+  for (const [section, localSet] of localBySection) {
+    const liveSet = liveBySection.get(section);
+    if (!liveSet || liveSet.size !== localSet.size) return null;
+    for (const slug of localSet) if (!liveSet.has(slug)) return null;
+  }
+  return leaves;
 }
 
 async function fetchProducts(): Promise<Product[] | null> {
@@ -287,7 +304,13 @@ async function fetchProducts(): Promise<Product[] | null> {
       isFeatured: p.is_featured ?? false,
     });
   }
-  return out.length > 0 ? out : null;
+  if (out.length === 0) return null;
+  // Guard: products must reference categories from the authoritative local
+  // taxonomy; a stale DB tree falls back to the local mirror so filters,
+  // category pages and related products stay consistent.
+  const knownCategories = new Set(CATEGORIES.map((c) => c.slug));
+  if (!out.every((p) => knownCategories.has(p.category))) return null;
+  return out;
 }
 
 async function fetchLiveReviews(productSlug: string): Promise<LiveReview[] | null> {

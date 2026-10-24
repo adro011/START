@@ -4,6 +4,7 @@ export * from './spacing';
 export * from './borders';
 export * from './breakpoints';
 export * from './animation';
+export * from './gradients';
 
 export const designTokens = {
   colors: require('./colors').colors,
@@ -14,6 +15,7 @@ export const designTokens = {
   breakpoints: require('./breakpoints').breakpoints,
   mediaQueries: require('./breakpoints').mediaQueries,
   animations: require('./animation').animations,
+  gradients: require('./gradients').gradients,
 } as const;
 
 export type DesignTokens = typeof designTokens;

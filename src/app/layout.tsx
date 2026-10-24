@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { cookies } from "next/headers";
 import "./globals.css";
 import "./editable.css";
+import "./obsidian.css";
 import { SITE } from "@/config/site";
 import { asset, feature, motionValue } from "@/lib/content";
 import { Providers } from "../components/providers";
@@ -14,9 +14,22 @@ import SearchPalette from "../components/search-palette";
 import { SwRegister } from "../components/sw-register";
 import { TabRefresh } from "../components/tab-refresh";
 import { ThemeStyle } from "../components/theme-style";
+import { ThemePreview } from "../components/theme-preview";
 import { isRegistrationOpen } from "@/lib/registrations";
 
+export const dynamic = "force-dynamic";
+
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+
+/** Reads locale from middleware header (falls back to cookie for backward compat). */
+async function getLocale(): Promise<"en" | "bn"> {
+  const headersList = await import("next/headers").then((m) => m.headers());
+  const locale = headersList.get("x-locale");
+  if (locale === "bn") return "bn";
+  // Fallback to cookie for any routes that bypass middleware
+  const cookieStore = await import("next/headers").then((m) => m.cookies());
+  return cookieStore.get("locale")?.value === "bn" ? "bn" : "en";
+}
 
 /** Loader timings are editable in content/motion/effects.txt. */
 const LOADER_MIN_MS =
@@ -62,8 +75,7 @@ export const viewport: Viewport = {
  * and the catalog-owned palette listens for it.
  */
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  // Locale cookie drives <html lang> + footer dictionary (header reads it client-side).
-  const locale = (await cookies()).get("locale")?.value === "bn" ? "bn" : "en";
+  const locale = await getLocale();
   const joinEnabled = await isRegistrationOpen();
   return (
     <html lang={locale} className="overflow-x-clip">
@@ -85,6 +97,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       </head>
       <body className="overflow-x-clip bg-[var(--color-black)] text-[var(--color-smoke)] antialiased">
         <ThemeStyle />
+        <ThemePreview />
         {/* Single full-screen brand loader: server-rendered black stage + gold
             ring (#abrar-loader in globals.css). The gate style holds the hero
             entrance at frame 0 until the loader fades. The boot script NEVER

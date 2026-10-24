@@ -25,3 +25,6 @@ library/
 
 .vercel
 *.log
+
+# Manual design backups (not app code)
+.design-backups/

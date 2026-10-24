@@ -289,7 +289,7 @@ export default async function SectionPage({
             data-editable="true"
           >
             <Suspense>
-              <Filters categories={cats.slice(0, 18)} sizes={sizes} bounds={priceBounds(allProducts)} />
+              <Filters categories={cats} sizes={sizes} bounds={priceBounds(allProducts)} />
             </Suspense>
           </div>
           <div

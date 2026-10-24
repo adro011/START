@@ -41,6 +41,27 @@
   --color-overlay-medium: rgba(0,0,0,0.5);
   --color-overlay-light: rgba(0,0,0,0.25);
 
+  --gradient-surface-abyss: linear-gradient(180deg, #000000 0%, #000000 100%);
+  --gradient-surface-rise: linear-gradient(180deg, #000000 0%, #181818 100%);
+  --gradient-surface-panel: linear-gradient(180deg, #181818 0%, #202020 100%);
+  --gradient-surface-graphite: linear-gradient(180deg, #202020 0%, #494949 100%);
+  --gradient-surface-elevation: linear-gradient(180deg, #000000 0%, #181818 50%, #202020 100%);
+
+  --gradient-gold-solid: linear-gradient(135deg, #FFCE3E 0%, #FFC000 50%, #917300 100%);
+  --gradient-gold-cta: linear-gradient(180deg, #FFC000 0%, #917300 100%);
+  --gradient-gold-bloom: radial-gradient(circle at center, rgba(255,192,0,0.18) 0%, rgba(255,192,0,0) 70%);
+  --gradient-gold-hairline: linear-gradient(90deg, rgba(255,192,0,0) 0%, rgba(255,192,0,0.5) 50%, rgba(255,192,0,0) 100%);
+  --gradient-gold-edge: linear-gradient(180deg, rgba(255,192,0,0.12) 0%, rgba(0,0,0,0) 60%);
+
+  --gradient-overlay-top: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+  --gradient-overlay-bottom: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+  --gradient-overlay-edges: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,0.55) 100%);
+  --gradient-overlay-scrim: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.25) 100%);
+
+  --gradient-light-spotlight: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0) 60%);
+  --gradient-light-gold-spotlight: radial-gradient(circle at 50% 0%, rgba(255,192,0,0.16) 0%, rgba(0,0,0,0) 65%);
+  --gradient-light-vignette: radial-gradient(circle at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.7) 100%);
+
   --font-family-display: "LamboType", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-family-ui: "LamboType", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-family-fallback: "Open Sans", Roboto, "Helvetica Neue", Arial, sans-serif;
